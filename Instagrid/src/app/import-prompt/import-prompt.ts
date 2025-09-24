@@ -122,7 +122,7 @@ export class ImportPrompt {
   // TODO: Refactor this method to cut image pieces of 1080x1350
   private updateEditedImage(newSrc: string): void {
     // Cut the image into x*y pieces and create a list with them
-    const tempPieces: { src: string; }[] = [];
+    const tempPieces: { src: string; num: number }[] = [];
     const img = new window.Image();
     img.src = newSrc;
     img.onload = () => {
@@ -139,7 +139,7 @@ export class ImportPrompt {
           if (!pieceContext) return;
           pieceContext.drawImage(img, pieceX, pieceY, pieceWidth, pieceHeight, 0, 0, pieceWidth, pieceHeight);
           const pieceSrc = pieceCanvas.toDataURL('image/jpeg');
-          tempPieces.push({ src: pieceSrc });
+          tempPieces.push({ src: pieceSrc, num: 10*y+x });
         }
       }
       this.pieces = tempPieces;
@@ -177,7 +177,6 @@ export class ImportPrompt {
   onPlaceholderClick(index: number): void {
     // Lock the selection
     this.selectedSize = index+1;
-    console.log('Selected grid size:', this.selectedSize);
   }
 
   // Send the pieces to the grid

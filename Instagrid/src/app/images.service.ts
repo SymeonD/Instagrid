@@ -45,7 +45,6 @@ export class ImageService {
     }
 
     addGridItems(images: any) {
-        console.log('Adding grid items:', images);
         this.gridItemsSubject.next(images);
     }
 
