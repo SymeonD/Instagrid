@@ -18,7 +18,11 @@ export class AppGrid {
 
   constructor(private imageService: ImageService) {
     this.imageService.gridItems$.subscribe(images => {
-      this.items = this.imageService.getGridItems();
+      // Add images received at the start of the items array
+      this.items = images.concat(Array.from({ length: 12 - images.length }, (_, i) => ({
+        src: ``,
+        alt: `Item ${images.length + i + 1}`
+      })));
     });
   }
 }
