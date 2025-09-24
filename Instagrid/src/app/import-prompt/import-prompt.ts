@@ -81,7 +81,7 @@ export class ImportPrompt {
     if (this.image) {
       this.gridX = this.gridImageSizes[this.selectedSize][0] || 1;
       this.gridY = this.gridImageSizes[this.selectedSize][1] || 1;
-      const targetWidth = 1080 * this.gridX;
+      const targetWidth = 1010 * this.gridX + 70;
       const targetHeight = 1350 * this.gridY;
       const aspectRatio = targetWidth / targetHeight;
 
@@ -113,13 +113,13 @@ export class ImportPrompt {
           0, 0, targetWidth, targetHeight // destination: scale to output
         );
         const newSrc = canvas.toDataURL('image/jpeg');
-        this.imageService.editImage(this.image, newSrc);
         // Update local image property so modal preview updates
         this.updateEditedImage(newSrc);
       };
     }
   }
 
+  // TODO: Refactor this method to cut image pieces of 1080x1350
   private updateEditedImage(newSrc: string): void {
     // Cut the image into x*y pieces and create a list with them
     const tempPieces: { src: string; }[] = [];

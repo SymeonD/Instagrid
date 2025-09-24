@@ -3,37 +3,37 @@ import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ImageService {
-  private imagesSubject = new BehaviorSubject<any[]>([]);
-  images$ = this.imagesSubject.asObservable();
+    private imagesSubject = new BehaviorSubject<any[]>([]);
+    images$ = this.imagesSubject.asObservable();
 
-  private selectedImageSubject = new BehaviorSubject<any | null>(null);
-  selectedImage$ = this.selectedImageSubject.asObservable();
+    private selectedImageSubject = new BehaviorSubject<any | null>(null);
+    selectedImage$ = this.selectedImageSubject.asObservable();
 
-  getImages() {
-    return this.imagesSubject.value;
-  }
+    getImages() {
+        return this.imagesSubject.value;
+    }
 
-  setImages(images: any[]) {
-    this.imagesSubject.next(images);
-  }
+    setImages(images: any[]) {
+        this.imagesSubject.next(images);
+    }
 
-  addImage(image: any) {
-    this.imagesSubject.next([...this.imagesSubject.value, image]);
-  }
+    addImage(image: any) {
+        this.imagesSubject.next([...this.imagesSubject.value, image]);
+    }
 
-  removeImage(image: any) {
-    this.imagesSubject.next(this.imagesSubject.value.filter(img => img !== image));
-  }
+    removeImage(image: any) {
+        this.imagesSubject.next(this.imagesSubject.value.filter(img => img !== image));
+    }
 
-  setSelectedImage(image: any) {
-    this.selectedImageSubject.next(image);
-  }
+    setSelectedImage(image: any) {
+        this.selectedImageSubject.next(image);
+    }
 
-  getSelectedImage() {
-    return this.selectedImageSubject.value;
-  }
+    getSelectedImage() {
+        return this.selectedImageSubject.value;
+    }
 
     editImage(oldImage: any, newSrc: string) {
-      this.imagesSubject.next(this.imagesSubject.value.map(img => img === oldImage ? { ...img, src: newSrc } : img));
+        this.imagesSubject.next(this.imagesSubject.value.map(img => img === oldImage ? { ...img, src: newSrc } : img));
     }
 }
