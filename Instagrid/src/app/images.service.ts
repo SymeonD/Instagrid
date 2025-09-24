@@ -32,4 +32,8 @@ export class ImageService {
   getSelectedImage() {
     return this.selectedImageSubject.value;
   }
+
+    editImage(oldImage: any, newSrc: string) {
+      this.imagesSubject.next(this.imagesSubject.value.map(img => img === oldImage ? { ...img, src: newSrc } : img));
+    }
 }

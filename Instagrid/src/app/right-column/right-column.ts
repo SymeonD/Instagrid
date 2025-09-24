@@ -67,7 +67,6 @@ export class RightColumn {
   protected openImportPrompt(image: any): void {
     this.modalImage = image;
     this.showImportPrompt = true;
-    console.log('Opening import prompt for image:', image);
   }
 
   protected closeImportPrompt(): void {
