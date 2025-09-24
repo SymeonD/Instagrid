@@ -63,14 +63,16 @@ export class ImportPrompt {
   private selectedSize = 0; // Default to 0
 
   // Method to download the selected image
-  protected downloadImage(): void {
-    if (this.image) {
-      const link = document.createElement('a');
-      link.href = this.image.src;
-      link.download = this.image.alt || 'downloaded_image';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+  protected downloadImages(): void {
+    if (this.pieces && this.pieces.length > 0) {
+      this.pieces.forEach((piece, index) => {
+        const link = document.createElement('a');
+        link.href = piece.src;
+        link.download = `piece_${index}.jpg`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
     }
   }
 
@@ -79,7 +81,7 @@ export class ImportPrompt {
     if (this.image) {
       this.gridX = this.gridImageSizes[this.selectedSize][0] || 1;
       this.gridY = this.gridImageSizes[this.selectedSize][1] || 1;
-      const targetWidth = 1010 * this.gridX + 70;
+      const targetWidth = 1080 * this.gridX;
       const targetHeight = 1350 * this.gridY;
       const aspectRatio = targetWidth / targetHeight;
 
