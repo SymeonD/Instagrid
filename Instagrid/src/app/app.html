@@ -1,0 +1,51 @@
+<style>
+  /* Style the colums */
+  .left-column {
+    width: 25%;
+    height: 90vh; /* Full height */
+    background-color: #f1f1f1; /* Grey background */
+    position: fixed;
+    left: 0;
+    bottom: 0;
+  }
+
+  .center-column {
+    width: 50%;
+    height: 100vh; /* Full height */
+    background-color: #ffffff; /* White background */
+    margin: 0 auto; /* Center the column */
+    padding: 9vh 0;
+  }
+
+  .right-column {
+    width: 25%;
+    height: 90vh; /* Full height */
+    background-color: #f1f1f1; /* Grey background */
+    position: fixed;
+    right: 0;
+    bottom: 0;
+  }
+</style>
+
+<main class="main">
+  <div class="content">
+    <!-- Divide the content in three columns, 25%, 50%, 25% -->
+
+     <!-- Left column contains the image menu, edit, download and remove image, as well as image preview -->
+    <div class="left-column">
+      <left-column></left-column>
+    </div>
+
+     <!-- Center column contains the main grid component -->
+    <div class="center-column">
+      <app-grid></app-grid>
+    </div>
+
+     <!-- Right column contains the image import elements, as well as image library -->
+    <div class="right-column">
+      <right-column></right-column>
+    </div>
+  </div>
+</main>
+
+<router-outlet />

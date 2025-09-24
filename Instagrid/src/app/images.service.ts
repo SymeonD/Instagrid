@@ -1,0 +1,35 @@
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+
+@Injectable({ providedIn: 'root' })
+export class ImageService {
+  private imagesSubject = new BehaviorSubject<any[]>([]);
+  images$ = this.imagesSubject.asObservable();
+
+  private selectedImageSubject = new BehaviorSubject<any | null>(null);
+  selectedImage$ = this.selectedImageSubject.asObservable();
+
+  getImages() {
+    return this.imagesSubject.value;
+  }
+
+  setImages(images: any[]) {
+    this.imagesSubject.next(images);
+  }
+
+  addImage(image: any) {
+    this.imagesSubject.next([...this.imagesSubject.value, image]);
+  }
+
+  removeImage(image: any) {
+    this.imagesSubject.next(this.imagesSubject.value.filter(img => img !== image));
+  }
+
+  setSelectedImage(image: any) {
+    this.selectedImageSubject.next(image);
+  }
+
+  getSelectedImage() {
+    return this.selectedImageSubject.value;
+  }
+}
