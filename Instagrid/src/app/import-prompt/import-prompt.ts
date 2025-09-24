@@ -151,6 +151,7 @@ export class ImportPrompt {
     if (this.image) {
       this.imageService.removeImage(this.image);
       this.imageService.setSelectedImage(null);
+      this.close.emit();
     }
   }
 
@@ -170,11 +171,21 @@ export class ImportPrompt {
 
   onPlaceholderHover(index: number): void {
     this.hoveredSize = index+1;
+    this.checkImage()
   }
 
   onPlaceholderClick(index: number): void {
     // Lock the selection
     this.selectedSize = index+1;
     console.log('Selected grid size:', this.selectedSize);
+  }
+
+  // Send the pieces to the grid
+  sendImage(): void {
+    if (this.pieces && this.pieces.length > 0) {
+      // Remove the old image from the service
+      this.imageService.addGridItems(this.pieces);
+      this.close.emit();
+    }
   }
 }

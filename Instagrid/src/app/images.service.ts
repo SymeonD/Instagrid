@@ -9,6 +9,9 @@ export class ImageService {
     private selectedImageSubject = new BehaviorSubject<any | null>(null);
     selectedImage$ = this.selectedImageSubject.asObservable();
 
+    private gridItemsSubject = new BehaviorSubject<any | null>(0);
+    gridItems$ = this.gridItemsSubject.asObservable();
+
     getImages() {
         return this.imagesSubject.value;
     }
@@ -35,5 +38,24 @@ export class ImageService {
 
     editImage(oldImage: any, newSrc: string) {
         this.imagesSubject.next(this.imagesSubject.value.map(img => img === oldImage ? { ...img, src: newSrc } : img));
+    }
+
+    getGridItems() {
+        return this.gridItemsSubject.value;
+    }
+
+    addGridItems(images: any) {
+        console.log('Adding grid items:', images);
+        this.gridItemsSubject.next(images);
+    }
+
+    setGridItems(images: any) {
+        this.gridItemsSubject.next(images);
+    }
+
+    clearImages() {
+        this.imagesSubject.next([]);
+        this.selectedImageSubject.next(null);
+        this.gridItemsSubject.next(0);
     }
 }
