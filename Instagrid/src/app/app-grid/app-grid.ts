@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ImageService } from '../images.service';
-import { KtdDragEnd, KtdDragStart, ktdGridCompact, KtdGridComponent, KtdGridLayout, KtdGridLayoutItem, KtdGridModule } from '@katoid/angular-grid-layout';
+import { KtdDragEnd, KtdDragStart, ktdGridCompact, KtdGridComponent, KtdGridLayout, KtdGridLayoutItem, KtdGridModule, KtdResizeEnd, KtdResizeStart } from '@katoid/angular-grid-layout';
 import { ktdTrackById } from '@katoid/angular-grid-layout';
 import { Subscription } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
@@ -17,20 +17,8 @@ import { MatSelectChange } from '@angular/material/select';
 
 export class AppGrid {
 
-  private placeholderLayout: KtdGridLayout = [
-    // { id: '0', x: 0, y: 0, w: 1, h: 1 },
-    // { id: '1', x: 1, y: 0, w: 1, h: 1 },
-    // { id: '2', x: 2, y: 0, w: 1, h: 1 },
-    // { id: '3', x: 0, y: 1, w: 1, h: 1 },
-    // { id: '4', x: 1, y: 1, w: 1, h: 1 },
-    // { id: '5', x: 2, y: 2, w: 1, h: 1 },
-    // { id: '6', x: 0, y: 0, w: 1, h: 1 },
-    // { id: '7', x: 1, y: 0, w: 1, h: 1 },
-    // { id: '8', x: 2, y: 1, w: 1, h: 1 },
-    // { id: '9', x: 0, y: 1, w: 1, h: 1 },
-    // { id: '10', x: 1, y: 0, w: 1, h: 1 },
-    // { id: '11', x: 2, y: 0, w: 1, h: 1 },
-  ];
+  private placeholderLayout: KtdGridLayout = [];
+  protected items: any[] = [];
 
   @ViewChild(KtdGridComponent, {static: true}) grid: KtdGridComponent | undefined;
   trackById = ktdTrackById;
@@ -44,10 +32,6 @@ export class AppGrid {
 
   private _isDraggingResizing: boolean = false;
 
-
-  // Initiate items as an empty array
-  items: any = []
-
   ngOnInit() {
     // Update gridWidth and rowHeight on window resize
     window.addEventListener('resize', () => {
@@ -56,28 +40,21 @@ export class AppGrid {
     });
   }
 
-  constructor(private imageService: ImageService) {
-    this.imageService.gridItems$.subscribe(images => {
-      const generateGroupId = () => Math.floor(Math.random() * 1000000);
-      const groupId = generateGroupId();
+  constructor(protected imageService: ImageService) {
+    this.imageService.gridItems$.subscribe(gridItems => {
+      let newItems : any = [];
+      // clear layout
+      this.layout = [];
 
-      // Clone the items array to avoid mutating while iterating
-      let newItems = [...this.items];
+      gridItems.forEach((gridItem) => {
+        let newId : number = +this.addItemToLayout(gridItem[1], gridItem[2]);
 
-      images.forEach((img) => {
-        // const targetIdx = Math.floor(img.num / 10) * 3 + img.num % 10;
-        // Insert image at targetIdx, shifting others to the right
-        // newItems.splice(targetIdx, 0, { ...img, groupId: groupId });
-
-        // Add items to the grid
-        let newId : number = +this.addItemToLayout(undefined, img.num);
-
-        newItems[newId] = { ...img, groupId: groupId };
+        newItems.push({ id: newId, src: gridItem[0].src, alt: gridItem[0].alt });
       });
 
       this.items = newItems;
-    });
-  }
+  })
+};
 
   onDragStarted(event: KtdDragStart) {
         this._isDraggingResizing = true;
@@ -85,6 +62,17 @@ export class AppGrid {
 
     onDragEnded(event: KtdDragEnd) {
         this._isDraggingResizing = false;
+    }
+
+    onResizeStarted(event: KtdResizeStart) {
+        this._isDraggingResizing = true;
+        console.log('onResizeStarted', event);
+    }
+
+    onResizeEnded(event: KtdResizeEnd) {
+        this._isDraggingResizing = false;
+        console.log('onResizeEnded', event);
+        // TODO: update the grid items specs in the list
     }
 
     onCompactTypeChange(change: MatSelectChange) {
@@ -96,24 +84,20 @@ export class AppGrid {
     }
 
   /** Adds a grid item to the layout */
-    addItemToLayout(item?: KtdGridLayoutItem, index?: number) : string{
+    addItemToLayout(width: number, height: number, item?: KtdGridLayoutItem) : string{
         let newLayoutItem: KtdGridLayoutItem | undefined = item;
-        let xIndex = index ? index % 10 : -1;
-        let yIndex = index ? Math.floor(index / 10) : -1;
-        if (!newLayoutItem) {
-
-
-            const maxId = this.layout.reduce(
+        const maxId = this.layout.reduce(
                 (acc, cur) => Math.max(acc, parseInt(cur.id, 10)),
                 -1
             );
             const nextId = maxId + 1;
+        if (!newLayoutItem) {
             newLayoutItem = {
                 id: nextId.toString(),
-                x: xIndex,
-                y: yIndex,
-                w: 1,
-                h: 1
+                x: -1,
+                y: -1,
+                w: width,
+                h: height
             };
         }
         // Important: Don't mutate the array, create new instance. This way notifies the Grid component that the layout has changed.
@@ -149,7 +133,9 @@ export class AppGrid {
                     this.selectedItems = [];
                 } else {
                     this.selectedItems = [selectedItem.id];
-                    this.imageService.setSelectedImage(this.items[+selectedItem.id]);
+                    // Get selected image in the griditems
+                    let imageId = this.imageService.getGridItems()[+selectedItem.id][3];
+                    this.imageService.setSelectedImage(imageId);
                 }
             }
         }

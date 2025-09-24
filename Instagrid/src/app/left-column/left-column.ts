@@ -15,7 +15,7 @@ export class LeftColumn {
 
   constructor(private imageService: ImageService) {
     this.imageService.selectedImage$.subscribe(image => {
-      this.selectedImage = image;
+      image ? this.selectedImage = this.imageService.getGridItems().find((item: any) => item[3] === image) ?? null : null;
     });
   }
 
@@ -39,8 +39,9 @@ export class LeftColumn {
   // Delete the selected image
   protected deleteImage(): void {
     if (this.selectedImage) {
-      this.imageService.removeImage(this.selectedImage);
+      this.imageService.removeGridItem(this.selectedImage[3]);
       this.imageService.setSelectedImage(null);
+      this.selectedImage = null;
     }
   }
 }

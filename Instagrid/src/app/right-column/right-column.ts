@@ -58,11 +58,6 @@ export class RightColumn {
     });
   }
 
-  // Set selected image in service
-  protected selectImage(image: any): void {
-    this.imageService.setSelectedImage(image);
-  }
-
   // Open image prompt
   protected openImportPrompt(image: any): void {
     this.modalImage = image;

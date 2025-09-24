@@ -21,13 +21,14 @@
             [selectedItemsIds]="selectedItems"
             (dragStarted)="onDragStarted($event)"
             (dragEnded)="onDragEnded($event)"
+            (resizeStarted)="onResizeStarted($event)"
+            (resizeEnded)="onResizeEnded($event)"
             (layoutUpdated)="onLayoutUpdated($event)"
             >
         <ktd-grid-item 
         *ngFor="let item of layout; 
         trackBy:trackById" 
-        [id]="item.id" 
-        resizable="false"
+        [id]="item.id"
         [ngClass]="{
                         'grid-item-content--selected': isItemSelected(item)
                     }"
@@ -36,8 +37,9 @@
             <!-- Your grid item content goes here -->
             <!-- <img [src]="this.items[+item.id].src" style="width: 100%; height: 100%; object-fit: cover;"/> -->
 
-            <ng-container *ngIf="this.items[+item.id]?.src; else placeholder">
+            <ng-container *ngIf="this.items[+item.id].src; else placeholder">
                 <img [src]="this.items[+item.id].src" [alt]="this.items[+item.id].alt" style="width: 100%; height: 100%; object-fit: cover;" />
+                
             </ng-container>
 
             <!-- If the src is empty, display a placeholder, a grey background -->

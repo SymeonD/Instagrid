@@ -183,7 +183,7 @@ export class ImportPrompt {
   sendImage(): void {
     if (this.pieces && this.pieces.length > 0) {
       // Remove the old image from the service
-      this.imageService.addGridItems(this.pieces);
+      this.imageService.addGridItems(this.image, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]);
       this.close.emit();
     }
   }

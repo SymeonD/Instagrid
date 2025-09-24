@@ -28,8 +28,8 @@ export class ImageService {
         this.imagesSubject.next(this.imagesSubject.value.filter(img => img !== image));
     }
 
-    setSelectedImage(image: any) {
-        this.selectedImageSubject.next(image);
+    setSelectedImage(imageId: any) {
+        this.selectedImageSubject.next(imageId);
     }
 
     getSelectedImage() {
@@ -44,12 +44,12 @@ export class ImageService {
         return this.gridItemsSubject.value;
     }
 
-    addGridItems(images: any) {
-        this.gridItemsSubject.next(images);
+    addGridItems(image: any, gridX: number, gridY: number) {
+        this.gridItemsSubject.next([...this.gridItemsSubject.value,[image, gridX, gridY, Math.random().toString(36).substr(2, 9)]]);
     }
 
-    setGridItems(images: any) {
-        this.gridItemsSubject.next(images);
+    removeGridItem(index: any) {
+        this.gridItemsSubject.next(this.gridItemsSubject.value.filter(item => item[3] !== index));
     }
 
     clearImages() {
