@@ -1,14 +1,29 @@
 <!-- This element is a grid, 3 columns large of elements of aspect ratio 1080:1350 -->
 <style>
-
+    .grid-item-content--selected {
+        border: 1px solid rgb(163, 0, 0);
+    }
 </style>
 
-<div class="grid">
+<div class="grid" id="image-grid-container">
     <ktd-grid [cols]="cols"
             [rowHeight]="rowHeight"
             [layout]="layout"
+            [gap]="2"
+            [selectedItemsIds]="selectedItems"
+            (dragStarted)="onDragStarted($event)"
+            (dragEnded)="onDragEnded($event)"
+            (layoutUpdated)="onLayoutUpdated($event)"
             >
-        <ktd-grid-item *ngFor="let item of layout; trackBy:trackById" [id]="item.id">
+        <ktd-grid-item 
+        *ngFor="let item of layout; 
+        trackBy:trackById" 
+        [id]="item.id" 
+        [ngClass]="{
+                        'grid-item-content--selected': isItemSelected(item)
+                    }"
+                    (pointerdown)="pointerDownItemSelection($event, item)"
+                (pointerup)="pointerUpItemSelection($event, item)">
             <!-- Your grid item content goes here -->
             <img [src]="this.items[+item.id].src" style="width: 100%; height: 100%; object-fit: cover;"/>
             <!-- Optional Custom placeholder template -->
