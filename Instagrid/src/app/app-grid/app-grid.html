@@ -1,39 +1,21 @@
 <!-- This element is a grid, 3 columns large of elements of aspect ratio 1080:1350 -->
 <style>
-    .grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2px;
-        padding: 0px 5px;
-    }
-    
-    .grid-item {
-        width: 100%;
-        aspect-ratio: 1080 / 1350;
-        background-color: #e2e2e2;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-    }
-    
-    .grid-item img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+
 </style>
 
 <div class="grid">
-    <div class="grid-item" *ngFor="let item of items">
-        <!-- If the src is not empty, display the image -->
-        <ng-container *ngIf="item.src; else placeholder">
-            <img [src]="item.src" [alt]="item.alt" />
-        </ng-container>
-
-        <!-- If the src is empty, display a placeholder, a grey background -->
-        <ng-template #placeholder>
-            <div class="placeholder"></div>
-        </ng-template>
-    </div>
+    <ktd-grid [cols]="cols"
+            [rowHeight]="rowHeight"
+            [layout]="layout"
+            >
+        <ktd-grid-item *ngFor="let item of layout; trackBy:trackById" [id]="item.id">
+            <!-- Your grid item content goes here -->
+            <img [src]="this.items[+item.id].src" style="width: 100%; height: 100%; object-fit: cover;"/>
+            <!-- Optional Custom placeholder template -->
+            <ng-template ktdGridItemPlaceholder>
+                <!-- Custom placeholder content goes here -->
+                
+            </ng-template>
+        </ktd-grid-item>
+    </ktd-grid>
 </div>
