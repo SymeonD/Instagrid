@@ -9,7 +9,7 @@ export class ImageService {
     private selectedImageSubject = new BehaviorSubject<any | null>(null);
     selectedImage$ = this.selectedImageSubject.asObservable();
 
-    private gridItemsSubject = new BehaviorSubject<any | null>(0);
+    private gridItemsSubject = new BehaviorSubject<any[]>([]);
     gridItems$ = this.gridItemsSubject.asObservable();
 
     getImages() {
@@ -56,6 +56,6 @@ export class ImageService {
     clearImages() {
         this.imagesSubject.next([]);
         this.selectedImageSubject.next(null);
-        this.gridItemsSubject.next(0);
+        this.gridItemsSubject.next([]);
     }
 }
