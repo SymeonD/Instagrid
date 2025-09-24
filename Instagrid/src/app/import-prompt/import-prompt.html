@@ -1,1 +1,111 @@
-<p>import-prompt works!</p>
+<!-- This element is a popup window, 90% of the screen height and width, blurring and darkening the background -->
+<!-- It is opened when an image in the right column is clicked -->
+ <!-- It shows on the left side the photo selected -->
+  <!-- On the right is a 3x3 grid of 1080x1350 aspect ratio elements, and three buttons for downloading, editing and deleting -->
+
+<style>
+    .modal-backdrop {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 1000;
+    }
+
+    .modal-container {
+        position: fixed;
+        top: 5%; left: 5%;
+        width: 90vw; height: 90vh;
+        background: #fff;
+        z-index: 1001;
+        border-radius: 16px;
+        box-shadow: 0 4px 32px rgba(0,0,0,0.2);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .image-preview {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 90%;
+    }
+
+    .image-controls {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+        gap: 10px;
+    }
+
+    /* The download button is a grey rounded square */
+    .download-button {
+        background-color: #e0e0e0;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 20px;
+        cursor: pointer;
+    }
+
+    /* The edit button is a bigger green rounded square */
+    .edit-button {
+        background-color: #4CAF50;
+        border: none;
+        border-radius: 12px;
+        padding: 20px 24px;
+        cursor: pointer;
+        aspect-ratio: 1 / 1;
+    }
+
+    /* The delete button is a red rounded square same size as the download button */
+    /* it has to be a square */
+    .delete-button {
+        background-color: #f44336;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 20px;
+        cursor: pointer;
+    }
+
+    .download-button,
+    .delete-button {
+        width: 48px;
+        height: 48px;
+        aspect-ratio: 1 / 1;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .edit-button {
+        width: 72px;
+        height: 72px;
+        font-size: 48px;
+        aspect-ratio: 1 / 1;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+
+<div class="modal-backdrop" (click)="close.emit()"></div>
+<div class="modal-container">
+    <div class="image-preview">
+        <img [src]="image?.src" alt="Image Preview" style="max-width: 100%; max-height: 100%;" />
+    </div>
+    <div class="image-controls">
+        <button class="download-button" (click)="downloadImage()">
+            <mat-icon>download</mat-icon>
+        </button>
+        <button class="edit-button" (click)="editImage()">
+            <mat-icon style="font-size: 36px; height: 36px; width: 36px;">edit</mat-icon>
+        </button>
+        <button class="delete-button" (click)="deleteImage()">
+            <mat-icon>delete</mat-icon>
+        </button>
+    </div>
+</div>

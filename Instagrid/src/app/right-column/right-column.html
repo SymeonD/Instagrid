@@ -61,7 +61,7 @@
     <div class="image-library">
   <div class="image-column" *ngFor="let column of columns">
     <div class="image-item" *ngFor="let image of column">
-      <img (click)="selectImage(image)" [src]="image.src" [alt]="image.alt" style="max-width: 100%; max-height: 100%;" />
+      <img (click)="openImportPrompt(image)" [src]="image.src" [alt]="image.alt" style="max-width: 100%; max-height: 100%;" />
     </div>
   </div>
 </div>
@@ -69,3 +69,8 @@
         <button (click)="importImages()">Import Image</button>
     </div>
 </div>
+<import-prompt
+  *ngIf="showImportPrompt"
+  [image]="modalImage"
+  (close)="closeImportPrompt()">
+</import-prompt>

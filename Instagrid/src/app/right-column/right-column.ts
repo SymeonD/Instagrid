@@ -1,16 +1,20 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ImageService } from '../images.service';
+import { MatIcon } from '@angular/material/icon';
+import { ImportPrompt } from '../import-prompt/import-prompt';
 
 @Component({
   selector: 'right-column',
-  imports: [CommonModule],
+  imports: [CommonModule, MatIcon, ImportPrompt],
   templateUrl: './right-column.html',
   styleUrl: './right-column.scss'
 })
 export class RightColumn {
   columns: any[][] = [];
   images: any[] = [];
+  showImportPrompt = false;
+  modalImage: any = null;
 
   constructor(private imageService: ImageService) {}
 
@@ -57,5 +61,17 @@ export class RightColumn {
   // Set selected image in service
   protected selectImage(image: any): void {
     this.imageService.setSelectedImage(image);
+  }
+
+  // Open image prompt
+  protected openImportPrompt(image: any): void {
+    this.modalImage = image;
+    this.showImportPrompt = true;
+    console.log('Opening import prompt for image:', image);
+  }
+
+  protected closeImportPrompt(): void {
+    this.showImportPrompt = false;
+    this.modalImage = null;
   }
 }
