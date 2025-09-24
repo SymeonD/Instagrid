@@ -18,11 +18,18 @@ import { MatSelectChange } from '@angular/material/select';
 export class AppGrid {
 
   private placeholderLayout: KtdGridLayout = [
-    { id: '0', x: 0, y: 0, w: 1, h: 1 },
-    { id: '1', x: 1, y: 0, w: 1, h: 1 },
-    { id: '2', x: 2, y: 0, w: 1, h: 1 },
-    { id: '3', x: 0, y: 1, w: 1, h: 1 },
-    { id: '4', x: 1, y: 1, w: 1, h: 1 },
+    // { id: '0', x: 0, y: 0, w: 1, h: 1 },
+    // { id: '1', x: 1, y: 0, w: 1, h: 1 },
+    // { id: '2', x: 2, y: 0, w: 1, h: 1 },
+    // { id: '3', x: 0, y: 1, w: 1, h: 1 },
+    // { id: '4', x: 1, y: 1, w: 1, h: 1 },
+    // { id: '5', x: 2, y: 2, w: 1, h: 1 },
+    // { id: '6', x: 0, y: 0, w: 1, h: 1 },
+    // { id: '7', x: 1, y: 0, w: 1, h: 1 },
+    // { id: '8', x: 2, y: 1, w: 1, h: 1 },
+    // { id: '9', x: 0, y: 1, w: 1, h: 1 },
+    // { id: '10', x: 1, y: 0, w: 1, h: 1 },
+    // { id: '11', x: 2, y: 0, w: 1, h: 1 },
   ];
 
   @ViewChild(KtdGridComponent, {static: true}) grid: KtdGridComponent | undefined;
@@ -38,19 +45,14 @@ export class AppGrid {
   private _isDraggingResizing: boolean = false;
 
 
-  // Initiate items as an empty array of size 12
-  items = Array.from({ length: 12 }, (_, i) => ({
-    src: ``,
-    alt: `Item ${i + 1}`,
-    groupId: null // assign a number if part of a group
-  }));
+  // Initiate items as an empty array
+  items: any = []
 
   ngOnInit() {
     // Update gridWidth and rowHeight on window resize
     window.addEventListener('resize', () => {
       this.gridWidth = document.getElementById('image-grid-container')?.clientWidth || window.innerWidth*0.5;
       this.rowHeight = 1350 / 1010 * (this.gridWidth / this.cols);
-      console.log('Resized: ', this.gridWidth, this.rowHeight);
     });
   }
 
@@ -68,44 +70,36 @@ export class AppGrid {
         // newItems.splice(targetIdx, 0, { ...img, groupId: groupId });
 
         // Add items to the grid
-        let newId : number = +this.addItemToLayout();
+        let newId : number = +this.addItemToLayout(undefined, img.num);
 
-        newItems.splice(newId, 0, { ...img, groupId: groupId });
+        newItems[newId] = { ...img, groupId: groupId };
       });
 
-      // Truncate to grid size (12)
-      newItems = newItems.slice(0, 12);
-
-      // Fill any undefined slots with empty items
-      this.items = Array.from({ length: 12 }, (_, i) =>
-        newItems[i] ? newItems[i] : { src: ``, alt: `Item ${i + 1}`, groupId: null }
-      );
+      this.items = newItems;
     });
   }
 
   onDragStarted(event: KtdDragStart) {
         this._isDraggingResizing = true;
-        console.log('onDragStarted', event);
     }
 
     onDragEnded(event: KtdDragEnd) {
         this._isDraggingResizing = false;
-        console.log('onDragEnded', event);
     }
 
     onCompactTypeChange(change: MatSelectChange) {
-        console.log('onCompactTypeChange', change);
         this.compactType = change.value;
     }
 
     onLayoutUpdated(layout: KtdGridLayout) {
-        console.log('onLayoutUpdated', layout);
         this.layout = layout;
     }
 
   /** Adds a grid item to the layout */
-    addItemToLayout(item?: KtdGridLayoutItem) : string{
+    addItemToLayout(item?: KtdGridLayoutItem, index?: number) : string{
         let newLayoutItem: KtdGridLayoutItem | undefined = item;
+        let xIndex = index ? index % 10 : -1;
+        let yIndex = index ? Math.floor(index / 10) : -1;
         if (!newLayoutItem) {
 
 
@@ -116,8 +110,8 @@ export class AppGrid {
             const nextId = maxId + 1;
             newLayoutItem = {
                 id: nextId.toString(),
-                x: -1,
-                y: -1,
+                x: xIndex,
+                y: yIndex,
                 w: 1,
                 h: 1
             };
@@ -125,7 +119,6 @@ export class AppGrid {
         // Important: Don't mutate the array, create new instance. This way notifies the Grid component that the layout has changed.
         this.layout = [newLayoutItem, ...this.layout];
         this.layout = ktdGridCompact(this.layout, this.compactType, this.cols);
-        console.log('addItemToLayout', newLayoutItem);
 
         return newLayoutItem.id;
     }
@@ -145,7 +138,6 @@ export class AppGrid {
         selectedItem: KtdGridLayoutItem
     ) {
         const ctrlOrCmd = event.ctrlKey;
-        console.log('Clicked')
         if (!ctrlOrCmd) {
             const selectedItemExist = this.selectedItems.includes(
                 selectedItem.id
@@ -157,6 +149,7 @@ export class AppGrid {
                     this.selectedItems = [];
                 } else {
                     this.selectedItems = [selectedItem.id];
+                    this.imageService.setSelectedImage(this.items[+selectedItem.id]);
                 }
             }
         }

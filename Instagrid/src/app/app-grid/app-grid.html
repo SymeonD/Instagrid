@@ -3,6 +3,14 @@
     .grid-item-content--selected {
         border: 1px solid rgb(163, 0, 0);
     }
+
+    ktd-grid {
+        z-index: 0;
+    }
+
+    ktd-grid-item {
+        z-index: 0;
+    }
 </style>
 
 <div class="grid" id="image-grid-container">
@@ -19,18 +27,24 @@
         *ngFor="let item of layout; 
         trackBy:trackById" 
         [id]="item.id" 
+        resizable="false"
         [ngClass]="{
                         'grid-item-content--selected': isItemSelected(item)
                     }"
                     (pointerdown)="pointerDownItemSelection($event, item)"
                 (pointerup)="pointerUpItemSelection($event, item)">
             <!-- Your grid item content goes here -->
-            <img [src]="this.items[+item.id].src" style="width: 100%; height: 100%; object-fit: cover;"/>
-            <!-- Optional Custom placeholder template -->
-            <ng-template ktdGridItemPlaceholder>
-                <!-- Custom placeholder content goes here -->
-                
+            <!-- <img [src]="this.items[+item.id].src" style="width: 100%; height: 100%; object-fit: cover;"/> -->
+
+            <ng-container *ngIf="this.items[+item.id]?.src; else placeholder">
+                <img [src]="this.items[+item.id].src" [alt]="this.items[+item.id].alt" style="width: 100%; height: 100%; object-fit: cover;" />
+            </ng-container>
+
+            <!-- If the src is empty, display a placeholder, a grey background -->
+            <ng-template #placeholder>
+                <div class="placeholder" style="width: 100%; height: 100%; background-color: #dcdcdc;"></div>
             </ng-template>
+
         </ktd-grid-item>
     </ktd-grid>
 </div>
