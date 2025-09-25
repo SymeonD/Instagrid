@@ -172,19 +172,7 @@
         </button>
     </div>
     <div class="image-preview">
-        <!-- Grid of size x*y -->
-         <div class="image-grid"
-         [style.gridTemplateColumns]="'repeat(' + gridX + ', 1fr)'"
-         [style.gridTemplateRows]="'repeat(' + gridY + ', 1fr)'"
-         [style.aspectRatio]="(gridX * 1010) + ' / ' + (gridY * 1350)"
-         [style.width]="gridX > gridY ? '100%' : ''"
-         [style.height]="gridY >= gridX ? '100%' : ''">
-            <div class="image-grid-item"
-            *ngFor="let piece of pieces; let i = index"
-            >
-                <img [src]="piece?.src" alt="Piece {{i}}"/>
-            </div>
-         </div>
+        <img [src]="croppedImageSrc" alt="Image Preview" style="max-width: 100%; max-height: 100%;" />
     </div>
     <div class="image-editor">
         

@@ -77,7 +77,7 @@
     <div class="image-library">
   <div class="image-column" *ngFor="let column of columns">
     <div class="image-item" *ngFor="let image of column">
-      <img (click)="openImportPrompt(image)" [src]="image.lowResSrc ?? image.highResSrc" [alt]="image.alt" style="max-width: 100%; max-height: 100%;" />
+      <img (click)="openImportPrompt(image)" [src]="image.lowResSrc" [alt]="image.alt" style="max-width: 100%; max-height: 100%;" />
     </div>
   </div>
 </div>

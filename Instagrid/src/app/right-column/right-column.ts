@@ -22,7 +22,6 @@ export class RightColumn {
 
   ngOnInit() {
     this.appControllerService.globalImages$.subscribe(globalImgs => {
-      console.log(globalImgs);
       this.images = globalImgs;
       this.updateColumns();
     });
