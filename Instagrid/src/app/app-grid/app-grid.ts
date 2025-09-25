@@ -48,8 +48,8 @@ export class AppGrid {
 
       gridItems.forEach((gridItem) => {
         let newId : number = +this.addItemToLayout(gridItem[1], gridItem[2]);
-
-        newItems.push({ id: newId, src: gridItem[0].src, alt: gridItem[0].alt });
+        console.log(gridItem);
+        newItems.push([newId, gridItem[0], gridItem[1], gridItem[2], gridItem[3]]);
       });
 
       this.items = newItems;
@@ -66,13 +66,29 @@ export class AppGrid {
 
     onResizeStarted(event: KtdResizeStart) {
         this._isDraggingResizing = true;
-        console.log('onResizeStarted', event);
+        console.log(event.layoutItem);
     }
 
     onResizeEnded(event: KtdResizeEnd) {
         this._isDraggingResizing = false;
-        console.log('onResizeEnded', event);
         // TODO: update the grid items specs in the list
+        // Get the element that was resized
+        const resizedItem = event.layoutItem;
+        // change it in gridItems
+        if (resizedItem) {
+            const gridItems = this.items;
+            const itemIndex = gridItems.findIndex(item => item[0] === +event.layoutItem.id);
+            if (itemIndex !== -1) {
+                gridItems[itemIndex][2] = event.layoutItem.w;
+                gridItems[itemIndex][3] = event.layoutItem.h;
+                // If gridItems is only one array, update it in the service
+                if(gridItems.length <= 1) {
+                    this.imageService.setGridItems([gridItems]);
+                }else{
+                    this.imageService.setGridItems(gridItems);
+                }
+            }
+        }
     }
 
     onCompactTypeChange(change: MatSelectChange) {

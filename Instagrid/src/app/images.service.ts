@@ -44,8 +44,12 @@ export class ImageService {
         return this.gridItemsSubject.value;
     }
 
-    addGridItems(image: any, gridX: number, gridY: number) {
-        this.gridItemsSubject.next([...this.gridItemsSubject.value,[image, gridX, gridY, Math.random().toString(36).substr(2, 9)]]);
+    addGridItems(id: any, image: any, gridX: number, gridY: number) {
+        this.gridItemsSubject.next([...this.gridItemsSubject.value,[id, image, gridX, gridY, Math.random().toString(36).substr(2, 9)]]);
+    }
+
+    setGridItems(gridItems: any[]) {
+        this.gridItemsSubject.next(gridItems);
     }
 
     removeGridItem(index: any) {
