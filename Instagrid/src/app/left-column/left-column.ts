@@ -3,6 +3,7 @@ import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { AppControllerService } from '../shared/app-controller.service';
 import { gridImg } from '../shared/grid-img-class';
+import { cropImage } from '../utils/crop-img';
 
 @Component({
   selector: 'left-column',
@@ -21,16 +22,18 @@ export class LeftColumn {
   }
 
   // Download the selected image
-  // TODO: Implement image cutting logic
+  // The selected image will be cut in a (1010*cols+70) x (1350*rows) image, centered
+  // Then this new image will be cut in segments of 1080 x 1350
+  // From top left corner to bottom right corner
   protected downloadImage(): void {
-    if (this.selectedImage) {
+    if(!this.selectedImage || this.selectedImage == null) return;
+  
+    cropImage(this.selectedImage, false).then(src => {
       const link = document.createElement('a');
-      link.href = this.selectedImage.globalImg.lowResSrc || this.selectedImage.globalImg.highResSrc;
-      link.download = this.selectedImage.globalImg.alt || 'downloaded_image';
-      document.body.appendChild(link);
+      link.download = 'image.jpg';
+      link.href = src;
       link.click();
-      document.body.removeChild(link);
-    }
+    });
   }
 
   // Edit the selected image
