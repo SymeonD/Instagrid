@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
+import { AppControllerService } from '../shared/app-controller.service';
+import { gridImg } from '../shared/grid-img-class';
 
 @Component({
   selector: 'left-column',
@@ -10,20 +12,21 @@ import { CommonModule } from '@angular/common';
 })
 export class LeftColumn {
   // Get image selected from service
-  selectedImage: any = null;
+  selectedImage: gridImg | null = null;
 
-  // constructor(private imageService: ImageService) {
-  //   this.imageService.selectedImage$.subscribe(image => {
-  //     image ? this.selectedImage = this.imageService.getGridItems().find((item: any) => item[3] === image) ?? null : null;
-  //   });
-  // }
+  constructor(private appControllerService: AppControllerService) {
+    this.appControllerService.selectedGridImage$.subscribe(image => {
+      this.selectedImage = image;
+    });
+  }
 
   // Download the selected image
+  // TODO: Implement image cutting logic
   protected downloadImage(): void {
     if (this.selectedImage) {
       const link = document.createElement('a');
-      link.href = this.selectedImage.src;
-      link.download = this.selectedImage.alt || 'downloaded_image';
+      link.href = this.selectedImage.globalImg.lowResSrc || this.selectedImage.globalImg.highResSrc;
+      link.download = this.selectedImage.globalImg.alt || 'downloaded_image';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -38,8 +41,8 @@ export class LeftColumn {
   // Delete the selected image
   protected deleteImage(): void {
     if (this.selectedImage) {
-      // this.imageService.removeGridItem(this.selectedImage[3]);
-      // this.imageService.setSelectedImage(null);
+      this.appControllerService.removeGridImage(this.selectedImage.id!);
+      this.appControllerService.setSelectedGridImage(null);
       this.selectedImage = null;
     }
   }
