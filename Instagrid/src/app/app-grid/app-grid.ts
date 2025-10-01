@@ -72,7 +72,7 @@ export class AppGrid {
         // Get the element that was resized
         const resizedItem = event.layoutItem;
         // change it in gridItems
-        if (resizedItem) {
+        if (resizedItem && this.layout) {
             const itemIndex = this.layout.findIndex(item => item.id === event.layoutItem.id);
             if (itemIndex !== -1) {
                 this.layout[itemIndex].w = event.layoutItem.w;
@@ -88,6 +88,8 @@ export class AppGrid {
     }
 
     onLayoutUpdated(newLayout: KtdGridLayout) {
+        if (!newLayout || !this.layout) return;
+
         newLayout.forEach(l => {
             const old = this.layout.find(i => i.id === l.id);
             if (old) {
