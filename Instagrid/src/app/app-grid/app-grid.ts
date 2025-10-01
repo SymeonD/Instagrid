@@ -18,7 +18,7 @@ import { gridImg } from '../shared/grid-img-class';
 
 export class AppGrid {
 
-  private placeholderLayout: KtdGridLayout = [];
+  private placeholderLayout: gridImg[] = [];
 
   @ViewChild(KtdGridComponent, {static: true}) grid: KtdGridComponent | undefined;
   trackById = ktdTrackById;
@@ -29,7 +29,7 @@ export class AppGrid {
   rowHeight = 1350 / 1010 * (this.gridWidth / this.cols);
   compactType: 'vertical' | 'horizontal' | null = 'vertical';
   selectedItems: string[] = [];
-  layout: KtdGridLayout = this.placeholderLayout;
+  layout: gridImg[] = this.placeholderLayout;
 
   private _isDraggingResizing: boolean = false;
 
@@ -67,41 +67,50 @@ export class AppGrid {
     }
 
     onResizeEnded(event: KtdResizeEnd) {
-        // this._isDraggingResizing = false;
-        // // TODO: update the grid items specs in the list
-        // // Get the element that was resized
-        // const resizedItem = event.layoutItem;
-        // // change it in gridItems
-        // if (resizedItem) {
-        //     const gridItems = this.items;
-        //     const itemIndex = gridItems.findIndex(item => item[0] === +event.layoutItem.id);
-        //     if (itemIndex !== -1) {
-        //         gridItems[itemIndex][2] = event.layoutItem.w;
-        //         gridItems[itemIndex][3] = event.layoutItem.h;
-        //         // If gridItems is only one array, update it in the service
-        //         if(gridItems.length <= 1) {
-        //             this.imageService.setGridItems([gridItems]);
-        //         }else{
-        //             this.imageService.setGridItems(gridItems);
-        //         }
-        //     }
-        // }
+        this._isDraggingResizing = false;
+        // TODO: update the grid items specs in the list
+        // Get the element that was resized
+        const resizedItem = event.layoutItem;
+        // change it in gridItems
+        if (resizedItem) {
+            const itemIndex = this.layout.findIndex(item => item.id === event.layoutItem.id);
+            if (itemIndex !== -1) {
+                this.layout[itemIndex].w = event.layoutItem.w;
+                this.layout[itemIndex].h = event.layoutItem.h;
+                
+                this.appControllerService.setGridImages(this.layout);
+            }
+        }
     }
 
     onCompactTypeChange(change: MatSelectChange) {
         this.compactType = change.value;
     }
 
-    onLayoutUpdated(layout: KtdGridLayout) {
-        this.layout = layout;
+    onLayoutUpdated(newLayout: KtdGridLayout) {
+        // this.layout = newLayout.map(l => {
+        //     const old = this.layout.find(i => i.id === l.id);
+        //     return { ...l, ...(old || {}) } as gridImg;
+        // });
+
+        newLayout.forEach(l => {
+            const old = this.layout.find(i => i.id === l.id);
+            if (old) {
+            old.x = l.x;
+            old.y = l.y;
+            old.w = l.w;
+            old.h = l.h;
+            // keep old.src, old.title, etc.
+            }
+        });
     }
 
     /** Adds a grid item to the layout */
     addItemToLayout(item: gridImg){
         // Important: Don't mutate the array, create new instance. This way notifies the Grid component that the layout has changed.
         this.layout = [item, ...this.layout];
-        console.log(this.layout);
-        this.layout = ktdGridCompact(this.layout, this.compactType, this.cols);
+        // const compacted: KtdGridLayout = ktdGridCompact(this.layout, this.compactType, this.cols);
+        // this.onLayoutUpdated(compacted);
     }
 
     /**
@@ -118,6 +127,7 @@ export class AppGrid {
         event: MouseEvent,
         selectedItem: KtdGridLayoutItem
     ) {
+        console.log(selectedItem);
         const ctrlOrCmd = event.ctrlKey;
         if (!ctrlOrCmd) {
             const selectedItemExist = this.selectedItems.includes(

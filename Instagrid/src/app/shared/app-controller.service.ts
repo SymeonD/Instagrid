@@ -33,6 +33,10 @@ export class AppControllerService {
         return this.gridImagesSubject.value;
     }
 
+    setGridImages(images: gridImg[]) {
+        this.gridImagesSubject.next(images);
+    }
+
     addGridImage(image: gridImg) {
         this.gridImagesSubject.next([...this.gridImagesSubject.value, image]);
     }
