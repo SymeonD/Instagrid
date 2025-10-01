@@ -4,9 +4,9 @@ import { createLowResImage } from "../utils/low-res";
 import { AppControllerService } from "./app-controller.service";
 
 export class globalImg {
-    constructor(public highResSrc: string, public alt: string, public id?: number, public lowResSrc?: string) {
+    constructor(public highResSrc: string, public alt: string, public id?: string, public lowResSrc?: string) {
         // Create an id for the image
-        this.id ?? +Math.random().toString(36).substr(2, 9);
+        this.id = this.id ?? Math.random().toString(36).substr(2, 9);
 
         // Create a low resolution version of the image
         createLowResImage(highResSrc).then((lowRes) => {

@@ -25,7 +25,7 @@ export class AppControllerService {
         this.globalImagesSubject.next([...this.globalImagesSubject.value, image]);
     }
 
-    removeGlobalImage(imageId: number) {
+    removeGlobalImage(imageId: string) {
         this.globalImagesSubject.next(this.globalImagesSubject.value.filter(img => img.id !== imageId));}
 
     // Grid Images
@@ -37,7 +37,7 @@ export class AppControllerService {
         this.gridImagesSubject.next([...this.gridImagesSubject.value, image]);
     }
 
-    removeGridImage(imageId: number) {
+    removeGridImage(imageId: string) {
         this.gridImagesSubject.next(this.gridImagesSubject.value.filter(img => img.id !== imageId));
     }
 }

@@ -3,7 +3,7 @@
 import { globalImg } from "./global-img-class";
 
 export class gridImg {
-    constructor(public globalImg: globalImg, public x: number, public y: number, public w: number, public h: number, public id?: number) {
-        this.id ?? +Math.random().toString(36).substr(2, 9);
+    constructor(public globalImg: globalImg, public x: number, public y: number, public w: number, public h: number, public id?: string) {
+        this.id = this.id ?? Math.random().toString(36).substr(2, 9);
     }
 }
