@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { ImageService } from '../images.service';
 import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 
@@ -13,11 +12,11 @@ export class LeftColumn {
   // Get image selected from service
   selectedImage: any = null;
 
-  constructor(private imageService: ImageService) {
-    this.imageService.selectedImage$.subscribe(image => {
-      image ? this.selectedImage = this.imageService.getGridItems().find((item: any) => item[3] === image) ?? null : null;
-    });
-  }
+  // constructor(private imageService: ImageService) {
+  //   this.imageService.selectedImage$.subscribe(image => {
+  //     image ? this.selectedImage = this.imageService.getGridItems().find((item: any) => item[3] === image) ?? null : null;
+  //   });
+  // }
 
   // Download the selected image
   protected downloadImage(): void {
@@ -39,8 +38,8 @@ export class LeftColumn {
   // Delete the selected image
   protected deleteImage(): void {
     if (this.selectedImage) {
-      this.imageService.removeGridItem(this.selectedImage[3]);
-      this.imageService.setSelectedImage(null);
+      // this.imageService.removeGridItem(this.selectedImage[3]);
+      // this.imageService.setSelectedImage(null);
       this.selectedImage = null;
     }
   }

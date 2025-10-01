@@ -41,9 +41,8 @@
             <!-- Your grid item content goes here -->
             <!-- <img [src]="this.items[+item.id].src" style="width: 100%; height: 100%; object-fit: cover;"/> -->
 
-            <ng-container *ngIf="this.items; else placeholder">
-                <img [src]="this.items[+item.id][1].src" [alt]="this.items[+item.id][1].alt" style="width: 100%; height: 100%; object-fit: cover;" />
-                
+            <ng-container *ngIf="item; else placeholder">
+                <!-- <img [src]="item.lowResSrc" [alt]="this.items[+item.id][1].alt" style="width: 100%; height: 100%; object-fit: cover;" /> -->
             </ng-container>
 
             <!-- If the src is empty, display a placeholder, a grey background -->

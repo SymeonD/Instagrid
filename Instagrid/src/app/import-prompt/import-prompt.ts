@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ImageService } from '../images.service';
 import { MatIcon } from '@angular/material/icon';
 import { AppControllerService } from '../shared/app-controller.service';
 import { gridImg } from '../shared/grid-img-class';
@@ -152,9 +151,7 @@ export class ImportPrompt {
 
   // Send the pieces to the grid
   sendImage(): void {
-    if (this.croppedImageSrc) {
-      // Set the new image low res src to the cropped image
-      this.image.lowResSrc = this.croppedImageSrc;
+    if (this.image) {
       // Add the image to the grid
       this.appControllerService.addGridImage(new gridImg(this.image, -1, -1, this.gridX, this.gridY));
       this.close.emit();

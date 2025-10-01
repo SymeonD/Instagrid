@@ -1,12 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ImageService } from '../images.service';
 import { KtdDragEnd, KtdDragStart, ktdGridCompact, KtdGridComponent, KtdGridLayout, KtdGridLayoutItem, KtdGridModule, KtdResizeEnd, KtdResizeStart } from '@katoid/angular-grid-layout';
 import { ktdTrackById } from '@katoid/angular-grid-layout';
 import { Subscription } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
 import { AppControllerService } from '../shared/app-controller.service';
-import { globalImg } from '../shared/global-img-class';
 import { gridImg } from '../shared/grid-img-class';
 
 
@@ -21,7 +19,6 @@ import { gridImg } from '../shared/grid-img-class';
 export class AppGrid {
 
   private placeholderLayout: KtdGridLayout = [];
-  protected items: globalImg[] = [];
 
   @ViewChild(KtdGridComponent, {static: true}) grid: KtdGridComponent | undefined;
   trackById = ktdTrackById;
@@ -47,17 +44,12 @@ export class AppGrid {
   constructor(protected appControllerService: AppControllerService) {
     // Subscription to the list of grid images
     this.appControllerService.gridImages$.subscribe(gridImgs => {
-        let newItems : any = [];
         // clear layout
         this.layout = [];
 
         gridImgs.forEach((gridImg) => {
-          let newId : number = +this.addItemToLayout(gridImg.w, gridImg.h);
-          newItems.push(gridImg);
+          this.addItemToLayout(gridImg);
         });
-
-        // Set the new items
-        this.items = newItems;
     });
 };
 
@@ -105,30 +97,11 @@ export class AppGrid {
     }
 
     /** Adds a grid item to the layout */
-
-    addItemToLayout(item: gridImg) : string{
-        // let newLayoutItem: KtdGridLayoutItem | undefined = item;
-        let newLayoutItem: gridImg = item;
-
-        const maxId = this.layout.reduce(
-                (acc, cur) => Math.max(acc, parseInt(cur.id, 10)),
-                -1
-            );
-            const nextId = maxId + 1;
-        if (!newLayoutItem) {
-            newLayoutItem = {
-                id: nextId.toString(),
-                x: -1,
-                y: -1,
-                w: width,
-                h: height
-            };
-        }
+    addItemToLayout(item: gridImg){
         // Important: Don't mutate the array, create new instance. This way notifies the Grid component that the layout has changed.
-        this.layout = [newLayoutItem, ...this.layout];
+        this.layout = [item, ...this.layout];
+        console.log(this.layout);
         this.layout = ktdGridCompact(this.layout, this.compactType, this.cols);
-
-        return newLayoutItem.id;
     }
 
     /**
