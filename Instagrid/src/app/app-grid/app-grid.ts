@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { KtdDragEnd, KtdDragStart, ktdGridCompact, KtdGridComponent, KtdGridLayout, KtdGridLayoutItem, KtdGridModule, KtdResizeEnd, KtdResizeStart } from '@katoid/angular-grid-layout';
+import { KtdDragEnd, KtdDragStart, KtdGridBackgroundCfg, ktdGridCompact, KtdGridComponent, KtdGridLayout, KtdGridLayoutItem, KtdGridModule, KtdResizeEnd, KtdResizeStart } from '@katoid/angular-grid-layout';
 import { ktdTrackById } from '@katoid/angular-grid-layout';
 import { Subscription } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
@@ -30,6 +30,13 @@ export class AppGrid {
   compactType: 'vertical' | 'horizontal' | null = 'vertical';
   selectedItems: string[] = [];
   layout: gridImg[] = this.placeholderLayout;
+  gridBackgroundConfig: Required<KtdGridBackgroundCfg> = { show: 'always',
+        borderColor: 'rgba(128, 128, 128, 0.10)',
+        gapColor: 'transparent',
+        borderWidth: 1,
+        rowColor: 'rgba(128, 128, 128, 0.10)',
+        columnColor: 'rgba(128, 128, 128, 0.10)',};
+    height = this.rowHeight;
 
   private _isDraggingResizing: boolean = false;
 
@@ -41,17 +48,17 @@ export class AppGrid {
     });
   }
 
-  constructor(protected appControllerService: AppControllerService) {
-    // Subscription to the list of grid images
-    this.appControllerService.gridImages$.subscribe(gridImgs => {
-        // clear layout
-        this.layout = [];
+    constructor(protected appControllerService: AppControllerService) {
+        // Subscription to the list of grid images
+        this.appControllerService.gridImages$.subscribe(gridImgs => {
+            // clear layout
+            this.layout = [];
 
-        gridImgs.forEach((gridImg) => {
-          this.addItemToLayout(gridImg);
+            gridImgs.forEach((gridImg) => {
+            this.addItemToLayout(gridImg);
+            });
         });
-    });
-};
+    };
 
   onDragStarted(event: KtdDragStart) {
         this._isDraggingResizing = true;
@@ -100,6 +107,9 @@ export class AppGrid {
             // keep old.src, old.title, etc.
             }
         });
+
+        // set new grid height
+        this.height = this.getGridHeight();
     }
 
     /** Adds a grid item to the layout */
@@ -177,6 +187,18 @@ export class AppGrid {
                 this.selectedItems = [selectedItem.id];
             }
         }
+    }
+
+    getGridHeight() : number {
+        if (!this.layout || this.layout.length === 0) {
+            return this.rowHeight * 1; // at least one row
+        }
+        
+        // Find the bottom-most point of all items
+        const maxRow = this.layout.reduce((max, item) => Math.max(max, item.y + item.h), 0);
+        
+        // Add one extra row
+        return (maxRow + 1) * this.rowHeight;
     }
 }
 
