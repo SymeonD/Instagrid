@@ -8,10 +8,11 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 export class AppControllerService {
     constructor() {}
 
-    // Subscriptions
+    // List of images, accessible from outside and displayed in the right column
     private globalImagesSubject = new BehaviorSubject<globalImg[]>([]);
     globalImages$ = this.globalImagesSubject.asObservable();
 
+    // List of images, accessible from outside and displayed in the grid
     private gridImagesSubject = new BehaviorSubject<gridImg[]>([]);
     gridImages$ = this.gridImagesSubject.asObservable();
 

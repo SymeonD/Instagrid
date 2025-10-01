@@ -61,7 +61,7 @@ export class ImportPrompt {
     }
   }
 
-  // Method to download the selected image
+  //TODO:  Method to download the selected image, make it a util
   protected downloadImages(): void {
     // if (this.pieces && this.pieces.length > 0) {
     //   this.pieces.forEach((piece, index) => {
@@ -153,7 +153,9 @@ export class ImportPrompt {
   // Send the pieces to the grid
   sendImage(): void {
     if (this.croppedImageSrc) {
-      // Remove the old image from the service
+      // Set the new image low res src to the cropped image
+      this.image.lowResSrc = this.croppedImageSrc;
+      // Add the image to the grid
       this.appControllerService.addGridImage(new gridImg(this.image, -1, -1, this.gridX, this.gridY));
       this.close.emit();
     }
