@@ -9,7 +9,7 @@ export function cropImage(image: gridImg, lowResolution: boolean): Promise<strin
 
     const gridX = image.w;
     const gridY = image.h;
-    const targetWidth = 1010 * gridX + 70;
+    const targetWidth = 1015 * gridX + 65;
     const targetHeight = 1350 * gridY;
     const aspectRatio = targetWidth / targetHeight;
 

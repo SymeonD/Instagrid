@@ -89,7 +89,7 @@ export class LeftColumn {
               if (!context) return;
               canvas.width = targetWidth;
               canvas.height = targetHeight;
-              const sx = Math.min(c * (targetWidth - 35), img.width - targetWidth);
+              const sx = Math.min(c * (targetWidth - 32.5), img.width - targetWidth);
               const sy = Math.min(r * targetHeight, img.height - targetHeight);
               context.drawImage(
                 img,
