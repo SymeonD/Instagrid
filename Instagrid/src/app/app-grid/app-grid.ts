@@ -88,11 +88,6 @@ export class AppGrid {
     }
 
     onLayoutUpdated(newLayout: KtdGridLayout) {
-        // this.layout = newLayout.map(l => {
-        //     const old = this.layout.find(i => i.id === l.id);
-        //     return { ...l, ...(old || {}) } as gridImg;
-        // });
-
         newLayout.forEach(l => {
             const old = this.layout.find(i => i.id === l.id);
             if (old) {
@@ -125,9 +120,8 @@ export class AppGrid {
      */
     pointerDownItemSelection(
         event: MouseEvent,
-        selectedItem: KtdGridLayoutItem
+        selectedItem: gridImg
     ) {
-        console.log(selectedItem);
         const ctrlOrCmd = event.ctrlKey;
         if (!ctrlOrCmd) {
             const selectedItemExist = this.selectedItems.includes(
@@ -140,9 +134,8 @@ export class AppGrid {
                     this.selectedItems = [];
                 } else {
                     this.selectedItems = [selectedItem.id];
-                    // Get selected image in the griditems
-                    // let imageId = this.imageService.getGridItems()[+selectedItem.id][3];
-                    // this.imageService.setSelectedImage(imageId);
+                    // Send to left column
+                    this.appControllerService.setSelectedGridImage(selectedItem);
                 }
             }
         }

@@ -16,6 +16,10 @@ export class AppControllerService {
     private gridImagesSubject = new BehaviorSubject<gridImg[]>([]);
     gridImages$ = this.gridImagesSubject.asObservable();
 
+    // Selected image, set in the grid and displayed in the left column 
+    private selectedGridImageSubject = new BehaviorSubject<gridImg | null>(null);
+    selectedGridImage$ = this.selectedGridImageSubject.asObservable();
+
     // Global Images
     getGlobalImages(): globalImg[] {    
         return this.globalImagesSubject.value;
@@ -43,5 +47,10 @@ export class AppControllerService {
 
     removeGridImage(imageId: string) {
         this.gridImagesSubject.next(this.gridImagesSubject.value.filter(img => img.id !== imageId));
+    }
+
+    // Selected Image
+    setSelectedGridImage(image: gridImg | null) {
+        this.selectedGridImageSubject.next(image);
     }
 }
