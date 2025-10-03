@@ -2,7 +2,7 @@
 An image splitter and grid maker for the new instagram layout
 
 # TODO
-- [ ] Show in the left column the cut down image to the right format
+- [x] Show in the left column the cut down image to the right format
 - [x] Check the dimension so that it works best for instagram (1010, 1015...) maybe put in global settings
 - [ ] Add visible image separation on the images in the grid
 - [ ] Publish

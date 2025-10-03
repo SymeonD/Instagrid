@@ -73,49 +73,6 @@ export class ImportPrompt {
     // }
   }
 
-  // Method to edit the selected image
-  // protected cropImage(): void {
-  //   if (this.image) {
-  //     this.gridX = this.gridImageSizes[this.selectedSize][0] || 1;
-  //     this.gridY = this.gridImageSizes[this.selectedSize][1] || 1;
-  //     const targetWidth = 1010 * this.gridX + 70;
-  //     const targetHeight = 1350 * this.gridY;
-  //     const aspectRatio = targetWidth / targetHeight;
-
-  //     const img = new window.Image();
-  //     img.src = this.image.lowResSrc!; // Always use original
-  //     img.onload = () => {
-  //       let cropWidth = img.width;
-  //       let cropHeight = Math.round(cropWidth / aspectRatio);
-
-  //       if (cropHeight > img.height) {
-  //         cropHeight = img.height;
-  //         cropWidth = Math.round(cropHeight * aspectRatio);
-  //       }
-
-  //       // Center crop coordinates
-  //       const sx = Math.floor((img.width - cropWidth) / 2);
-  //       const sy = Math.floor((img.height - cropHeight) / 2);
-
-  //       const canvas = document.createElement('canvas');
-  //       const context = canvas.getContext('2d');
-  //       if (!context) return;
-  //       canvas.width = targetWidth;
-  //       canvas.height = targetHeight;
-
-  //       // Draw the cropped rectangle, scaling to output size
-  //       context.drawImage(
-  //         img,
-  //         sx, sy, cropWidth, cropHeight, // source: crop rectangle
-  //         0, 0, targetWidth, targetHeight // destination: scale to output
-  //       );
-  //       const newSrc = canvas.toDataURL('image/jpeg');
-  //       // Update local image property so modal preview updates
-  //       this.croppedImageSrc = newSrc;
-  //     };
-  //   }
-  // }
-
   // Method to delete the selected image
   protected deleteImage(): void {
     if (this.image) {
@@ -150,9 +107,10 @@ export class ImportPrompt {
 
   // Send the pieces to the grid
   sendImage(): void {
-    if (this.image) {
+    if (this.image && this.croppedImageSrc) {
+      console.log(this.croppedImageSrc);
       // Add the image to the grid
-      this.appControllerService.addGridImage(new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]));
+      this.appControllerService.addGridImage(new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1], this.croppedImageSrc));
       this.close.emit();
     }
   }

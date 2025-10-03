@@ -19,6 +19,12 @@
         gap: 10px;
     }
 
+    .image-preview {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
     /* The download button is a grey rounded square */
     .download-button {
         background-color: #e0e0e0;
@@ -72,7 +78,7 @@
 </style>
 <div class="selected-image-container" *ngIf="selectedImage">
     <div class="image-preview">
-        <img [src]="selectedImage.globalImg.lowResSrc" alt="Image Preview" style="max-width: 100%; max-height: 100%;" />
+        <img [src]="selectedImage.croppedSrc" alt="Image Preview" style="max-width: 100%; max-height: 100%;" />
     </div>
     <div class="image-controls">
         <button class="download-button" (click)="downloadImage()">

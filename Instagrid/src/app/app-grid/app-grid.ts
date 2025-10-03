@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
 import { AppControllerService } from '../shared/app-controller.service';
 import { gridImg } from '../shared/grid-img-class';
+import { cropImage } from '../utils/crop-img';
 
 
 
@@ -51,6 +52,8 @@ export class AppGrid {
     constructor(protected appControllerService: AppControllerService) {
         // Subscription to the list of grid images
         this.appControllerService.gridImages$.subscribe(gridImgs => {
+            console.log('gridImgs', gridImgs);
+
             // clear layout
             this.layout = [];
 
@@ -70,7 +73,6 @@ export class AppGrid {
 
     onResizeStarted(event: KtdResizeStart) {
         this._isDraggingResizing = true;
-        console.log(event.layoutItem);
     }
 
     onResizeEnded(event: KtdResizeEnd) {
@@ -84,8 +86,10 @@ export class AppGrid {
             if (itemIndex !== -1) {
                 this.layout[itemIndex].w = event.layoutItem.w;
                 this.layout[itemIndex].h = event.layoutItem.h;
-                
-                this.appControllerService.setGridImages(this.layout);
+                cropImage(new gridImg(this.layout[itemIndex].globalImg, -1, -1, this.layout[itemIndex].w, this.layout[itemIndex].h), true).then(src => {
+                    this.layout[itemIndex].croppedSrc = src; 
+                    this.appControllerService.setGridImages(this.layout);
+                });
             }
         }
     }
