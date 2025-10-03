@@ -36,7 +36,8 @@ export class AppGrid {
         gapColor: 'transparent',
         borderWidth: 1,
         rowColor: 'rgba(128, 128, 128, 0.10)',
-        columnColor: 'rgba(128, 128, 128, 0.10)',};
+        columnColor: 'rgba(128, 128, 128, 0.10)',
+    };
     height = this.rowHeight;
 
   private _isDraggingResizing: boolean = false;
