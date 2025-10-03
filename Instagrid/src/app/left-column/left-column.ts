@@ -32,6 +32,8 @@ export class LeftColumn {
     cropImage(this.selectedImage, false).then(src => {
       this.divideImage(src, this.selectedImage!.w, this.selectedImage!.h).then(images => {
         const zip = new JSZip();
+        // Add src image to zip
+        zip.file('src.jpg', src.split(',')[1], { base64: true });
         images.forEach((image, index) => {
           const base64Data = image.split(',')[1];
           zip.file(`image-${index}.jpg`, base64Data, { base64: true });
@@ -89,8 +91,9 @@ export class LeftColumn {
               if (!context) return;
               canvas.width = targetWidth;
               canvas.height = targetHeight;
-              const sx = Math.min(c * (targetWidth - 32.5), img.width - targetWidth);
-              const sy = Math.min(r * targetHeight, img.height - targetHeight);
+              console.log('Target width', targetWidth, "displacement", c * (targetWidth - 70));
+              const sx = c * (targetWidth - 70);
+              const sy = r * targetHeight;
               context.drawImage(
                 img,
                 sx, sy,

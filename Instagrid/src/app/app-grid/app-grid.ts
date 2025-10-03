@@ -26,7 +26,7 @@ export class AppGrid {
   // Settings for the grid
   cols = 3;
   gridWidth = document.getElementById('image-grid-container')?.clientWidth || window.innerWidth*0.5;
-  rowHeight = 1350 / 1015 * (this.gridWidth / this.cols);
+  rowHeight = 1350 / 1010 * (this.gridWidth / this.cols);
   compactType: 'vertical' | 'horizontal' | null = 'vertical';
   selectedItems: string[] = [];
   layout: gridImg[] = this.placeholderLayout;
@@ -44,7 +44,7 @@ export class AppGrid {
     // Update gridWidth and rowHeight on window resize
     window.addEventListener('resize', () => {
       this.gridWidth = document.getElementById('image-grid-container')?.clientWidth || window.innerWidth*0.5;
-      this.rowHeight = 1350 / 1015 * (this.gridWidth / this.cols);
+      this.rowHeight = 1350 / 1010 * (this.gridWidth / this.cols);
     });
   }
 
