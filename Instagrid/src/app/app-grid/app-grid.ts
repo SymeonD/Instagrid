@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, HostListener, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { KtdDragEnd, KtdDragStart, KtdGridBackgroundCfg, ktdGridCompact, KtdGridComponent, KtdGridLayout, KtdGridLayoutItem, KtdGridModule, KtdResizeEnd, KtdResizeStart } from '@katoid/angular-grid-layout';
 import { ktdTrackById } from '@katoid/angular-grid-layout';
@@ -40,15 +40,15 @@ export class AppGrid {
     };
     height = this.rowHeight;
 
-  private _isDraggingResizing: boolean = false;
+    private _isDraggingResizing: boolean = false;
 
-  ngOnInit() {
-    // Update gridWidth and rowHeight on window resize
-    window.addEventListener('resize', () => {
-      this.gridWidth = document.getElementById('image-grid-container')?.clientWidth || window.innerWidth*0.5;
-      this.rowHeight = 1350 / 1010 * (this.gridWidth / this.cols);
-    });
-  }
+    ngOnInit() {
+        // Update gridWidth and rowHeight on window resize
+        window.addEventListener('resize', () => {
+            this.gridWidth = document.getElementById('image-grid-container')?.clientWidth || window.innerWidth*0.5;
+            this.rowHeight = 1350 / 1010 * (this.gridWidth / this.cols);
+        });
+    }
 
     constructor(protected appControllerService: AppControllerService) {
         // Subscription to the list of grid images
@@ -129,6 +129,18 @@ export class AppGrid {
      */
     isItemSelected(selectedItem: KtdGridLayoutItem): boolean {
         return this.selectedItems.includes(selectedItem.id);
+    }
+
+    @HostListener('document:keydown', ['$event'])
+    handleKeyDown(event: KeyboardEvent) {
+        if ((event.key === 'Delete' || event.key === 'Backspace') && this.selectedItems.length > 0) {
+            this.selectedItems.forEach(item => {
+                this.appControllerService.removeGridImage(item);
+            })
+            this.appControllerService.setSelectedGridImage(null);
+            this.selectedItems = [];
+            event.preventDefault();
+        }
     }
 
     /*

@@ -6,6 +6,8 @@ An image splitter and grid maker for the new instagram layout
 - [x] Check the dimension so that it works best for instagram (1010, 1015...) maybe put in global settings
 - [ ] Add visible image separation on the images in the grid
 - [ ] Publish
+- [x] When grid image is selected and del or backspace pressed, remove it
+- [ ] if grid is clicked outside an image, reset the selected element
 
 Test / Check for vulnerabilities
 
