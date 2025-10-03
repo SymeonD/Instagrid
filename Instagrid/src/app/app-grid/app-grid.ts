@@ -52,7 +52,6 @@ export class AppGrid {
     constructor(protected appControllerService: AppControllerService) {
         // Subscription to the list of grid images
         this.appControllerService.gridImages$.subscribe(gridImgs => {
-            console.log('gridImgs', gridImgs);
 
             // clear layout
             this.layout = [];

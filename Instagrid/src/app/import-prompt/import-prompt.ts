@@ -108,7 +108,6 @@ export class ImportPrompt {
   // Send the pieces to the grid
   sendImage(): void {
     if (this.image && this.croppedImageSrc) {
-      console.log(this.croppedImageSrc);
       // Add the image to the grid
       this.appControllerService.addGridImage(new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1], this.croppedImageSrc));
       this.close.emit();
