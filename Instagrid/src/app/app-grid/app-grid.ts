@@ -216,5 +216,13 @@ export class AppGrid {
         // Add one extra row
         return (maxRow + 1) * this.rowHeight;
     }
+
+    onGridClick(event: MouseEvent) {
+        // If event.target is a ktd-grid element
+        if ((event.target as Element).tagName === 'KTD-GRID') {
+            this.selectedItems = [];
+            this.appControllerService.setSelectedGridImage(null);
+        }
+    }
 }
 
