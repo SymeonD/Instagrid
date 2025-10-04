@@ -137,7 +137,6 @@ export class AppGrid {
             this.selectedItems.forEach(item => {
                 this.appControllerService.removeGridImage(item);
             })
-            this.appControllerService.setSelectedGridImage(null);
             this.selectedItems = [];
             event.preventDefault();
         }

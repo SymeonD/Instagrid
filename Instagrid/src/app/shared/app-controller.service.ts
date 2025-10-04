@@ -47,6 +47,11 @@ export class AppControllerService {
 
     removeGridImage(imageId: string) {
         this.gridImagesSubject.next(this.gridImagesSubject.value.filter(img => img.id !== imageId));
+
+        const selected = this.selectedGridImageSubject.value;
+        if (selected && selected.id === imageId) {
+            this.selectedGridImageSubject.next(null);
+        }
     }
 
     // Selected Image

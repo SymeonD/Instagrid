@@ -67,13 +67,17 @@ export class RightColumn {
     this.modalImage = image;
     this.showImportPrompt = true;
     // Set header z-index to 0
-    document.querySelector('header')!.style.zIndex = '0';
+    document.querySelector('header')
+      ? (document.querySelector('header') as HTMLElement).style.zIndex = '0'
+      : null;
   }
 
   protected closeImportPrompt(): void {
     this.showImportPrompt = false;
     this.modalImage = null;
     // Reset header z-index to 1
-    document.querySelector('header')!.style.zIndex = '1';
+    document.querySelector('header')
+      ? (document.querySelector('header') as HTMLElement).style.zIndex = '1'
+      : null;
   }
 }

@@ -57,7 +57,6 @@ export class LeftColumn {
   protected deleteImage(): void {
     if (this.selectedImage) {
       this.appControllerService.removeGridImage(this.selectedImage.id!);
-      this.appControllerService.setSelectedGridImage(null);
       this.selectedImage = null;
     }
   }
