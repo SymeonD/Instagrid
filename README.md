@@ -7,7 +7,7 @@ An image splitter and grid maker for the new instagram layout
 - [ ] Add visible image separation on the images in the grid
 - [ ] Publish
 - [x] When grid image is selected and del or backspace pressed, remove it
-- [ ] if grid is clicked outside an image, reset the selected element
+- [x] if grid is clicked outside an image, reset the selected element
 
 Test / Check for vulnerabilities
 
