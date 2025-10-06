@@ -4,6 +4,7 @@ import { MatIcon } from '@angular/material/icon';
 import { ImportPrompt } from '../import-prompt/import-prompt';
 import { AppControllerService } from '../shared/app-controller.service';
 import { globalImg } from '../shared/global-img-class';
+import { ImageProcessingService } from '../shared/image-processing-service';
 
 @Component({
   selector: 'right-column',
@@ -18,7 +19,7 @@ export class RightColumn {
   showImportPrompt = false;
   modalImage: any = null;
 
-  constructor(private appControllerService: AppControllerService) {}
+  constructor(private appControllerService: AppControllerService, private imageProcessing: ImageProcessingService) {}
 
   ngOnInit() {
     this.appControllerService.globalImages$.subscribe(globalImgs => {
@@ -44,7 +45,7 @@ export class RightColumn {
             const image = { src: reader.result as string, alt: file.name };
 
             // Use the service to add images
-            this.appControllerService.addGlobalImage(new globalImg(image.src, image.alt));
+            this.appControllerService.addGlobalImage(new globalImg(image.src, image.alt, this.imageProcessing));
           };
           reader.readAsDataURL(file);
         });

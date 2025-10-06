@@ -1,12 +1,11 @@
 import { Component, HostListener, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { KtdDragEnd, KtdDragStart, KtdGridBackgroundCfg, ktdGridCompact, KtdGridComponent, KtdGridLayout, KtdGridLayoutItem, KtdGridModule, KtdResizeEnd, KtdResizeStart } from '@katoid/angular-grid-layout';
+import { KtdDragEnd, KtdDragStart, KtdGridBackgroundCfg, KtdGridComponent, KtdGridLayout, KtdGridLayoutItem, KtdGridModule, KtdResizeEnd, KtdResizeStart } from '@katoid/angular-grid-layout';
 import { ktdTrackById } from '@katoid/angular-grid-layout';
-import { Subscription } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
 import { AppControllerService } from '../shared/app-controller.service';
 import { gridImg } from '../shared/grid-img-class';
-import { cropImage } from '../utils/crop-img';
+import { ImageProcessingService } from '../shared/image-processing-service';
 
 
 
@@ -50,7 +49,7 @@ export class AppGrid {
         });
     }
 
-    constructor(protected appControllerService: AppControllerService) {
+    constructor(protected appControllerService: AppControllerService, protected imageProcessing: ImageProcessingService) {
         // Subscription to the list of grid images
         this.appControllerService.gridImages$.subscribe(gridImgs => {
 
@@ -86,7 +85,7 @@ export class AppGrid {
             if (itemIndex !== -1) {
                 this.layout[itemIndex].w = event.layoutItem.w;
                 this.layout[itemIndex].h = event.layoutItem.h;
-                cropImage(new gridImg(this.layout[itemIndex].globalImg, -1, -1, this.layout[itemIndex].w, this.layout[itemIndex].h), true).then(src => {
+                this.imageProcessing.cropImage(new gridImg(this.layout[itemIndex].globalImg, -1, -1, this.layout[itemIndex].w, this.layout[itemIndex].h), true).then(src => {
                     this.layout[itemIndex].croppedSrc = src; 
                     this.appControllerService.setGridImages(this.layout);
                 });

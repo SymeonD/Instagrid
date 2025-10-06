@@ -4,7 +4,7 @@ import { MatIcon } from '@angular/material/icon';
 import { AppControllerService } from '../shared/app-controller.service';
 import { gridImg } from '../shared/grid-img-class';
 import { globalImg } from '../shared/global-img-class';
-import { cropImage } from '../utils/crop-img';
+import { ImageProcessingService } from '../shared/image-processing-service';
 
 @Component({
   selector: 'import-prompt',
@@ -47,15 +47,15 @@ export class ImportPrompt {
   private selectedSize = 1; // Default to 0
   croppedImageSrc = '';
 
-  constructor(private appControllerService: AppControllerService) {
+  constructor(private appControllerService: AppControllerService, private imageProcessing: ImageProcessingService) {
     // Pieces
-    this.image && cropImage(new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true).then(src => this.croppedImageSrc = src);
+    this.image && this.imageProcessing.cropImage(new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true).then(src => this.croppedImageSrc = src);
   }
 
   ngOnChanges() {
     // Store the original src only once, when the image input changes
     if (this.image) {
-      cropImage(new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true).then(src => this.croppedImageSrc = src); // Always update pieces when image changes
+      this.imageProcessing.cropImage(new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true).then(src => this.croppedImageSrc = src); // Always update pieces when image changes
     }
   }
 
@@ -102,7 +102,7 @@ export class ImportPrompt {
   onPlaceholderClick(index: number): void {
     // Lock the selection
     this.selectedSize = index+1;
-    cropImage(new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true).then(src => this.croppedImageSrc = src);
+    this.imageProcessing.cropImage(new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true).then(src => this.croppedImageSrc = src);
   }
 
   // Send the pieces to the grid
