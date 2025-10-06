@@ -10,9 +10,11 @@ An image splitter and grid maker for the new instagram layout
 - [x] if grid is clicked outside an image, reset the selected element
 - [ ] Remove or implement edit buttons
 - [ ] Check for image format
+- [ ] Rework style / add dark mode
 
 Test / Check for vulnerabilities
 
 # Improvements
 - [ ] Add image crop settings where you can move the zone that's gonna be selected and cut, link it to the menu on the left
 - [ ] Enable selection of output image type
+- [ ] Add instagram account preview with header
