@@ -9,7 +9,7 @@ An image splitter and grid maker for the new instagram layout
 - [x] Tests
 
 # V.1
-- [ ] Remove or implement edit buttons
+- [x] Remove or implement edit buttons
 - [ ] Check for image format
 - [ ] Rework style 
 - [ ] Publish
@@ -21,3 +21,4 @@ An image splitter and grid maker for the new instagram layout
 - [ ] Enable selection of output image type
 - [ ] Add instagram account preview with header
 - [ ] Add visible image separation on the images in the grid
+- [ ] Mobile version

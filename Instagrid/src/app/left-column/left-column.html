@@ -17,6 +17,7 @@
         justify-content: center;
         margin-top: 20px;
         gap: 10px;
+        padding-left: 20%;
     }
 
     .image-preview {
@@ -30,9 +31,10 @@
     .download-button {
         background-color: #e0e0e0;
         border: none;
-        border-radius: 8px;
-        padding: 10px 20px;
+        border-radius: 12px;
+        padding: 15px;
         cursor: pointer;
+        aspect-ratio: 1 / 1;
     }
 
     /* The edit button is a bigger green rounded square */
@@ -55,7 +57,7 @@
         cursor: pointer;
     }
 
-    .download-button,
+    
     .delete-button {
         width: 48px;
         height: 48px;
@@ -66,9 +68,9 @@
         justify-content: center;
     }
 
-    .edit-button {
-        width: 72px;
-        height: 72px;
+    .download-button > mat-icon{
+        width: 48px;
+        height: 48px;
         font-size: 48px;
         aspect-ratio: 1 / 1;
         padding: 0;
@@ -85,9 +87,11 @@
         <button class="download-button" (click)="downloadImage()">
             <mat-icon>download</mat-icon>
         </button>
+        <!-- For future versions
         <button class="edit-button" (click)="editImage()">
             <mat-icon style="font-size: 36px; height: 36px; width: 36px;">edit</mat-icon>
         </button>
+        -->
         <button class="delete-button" (click)="deleteImage()">
             <mat-icon>delete</mat-icon>
         </button>
