@@ -65,7 +65,7 @@ export class RightColumn {
             new globalImg(image.src, image.alt, this.imageProcessing)
           );
           this._snackBar.open(`✅ Image imported successfully!`, 'Close', {
-            duration: 300000,
+            duration: 3000,
             panelClass: ['snackbar-success']
           });
         };

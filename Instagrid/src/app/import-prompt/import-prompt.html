@@ -33,6 +33,7 @@
         height: 90%;
         padding: 10px;
         gap: 20px;
+        width: 30%;
     }
 
     .image-controls {
@@ -175,7 +176,11 @@
         <img [src]="croppedImageSrc" alt="Image Preview" style="max-width: 100%; max-height: 100%;" />
     </div>
     <div class="image-editor">
-        
+        <div class="grid-explanation">
+            <h3>Import to the grid</h3>
+            Select the way the image will be cut to be imported in the grid,
+            you can change it once it is in the grid as well.
+        </div>
         <div class="grid-size-selector"
         (mouseleave)="onPlaceholderHover(-1)">
             <!-- The grid size selector is a 3x3 grid of 1080x1350 aspect ratio grey squares -->
