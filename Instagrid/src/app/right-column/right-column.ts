@@ -5,10 +5,12 @@ import { ImportPrompt } from '../import-prompt/import-prompt';
 import { AppControllerService } from '../shared/app-controller.service';
 import { globalImg } from '../shared/global-img-class';
 import { ImageProcessingService } from '../shared/image-processing-service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+
 
 @Component({
   selector: 'right-column',
-  imports: [CommonModule, MatIcon, ImportPrompt],
+  imports: [CommonModule, MatIcon, ImportPrompt, MatSnackBarModule],
   templateUrl: './right-column.html',
   styleUrl: './right-column.scss'
 })
@@ -19,7 +21,7 @@ export class RightColumn {
   showImportPrompt = false;
   modalImage: any = null;
 
-  constructor(private appControllerService: AppControllerService, private imageProcessing: ImageProcessingService) {}
+  constructor(private appControllerService: AppControllerService, private imageProcessing: ImageProcessingService, private _snackBar: MatSnackBar) {}
 
   ngOnInit() {
     this.appControllerService.globalImages$.subscribe(globalImgs => {
@@ -37,19 +39,38 @@ export class RightColumn {
 
     input.onchange = (event: Event) => {
       const target = event.target as HTMLInputElement;
-      if (target.files) {
-        const files = Array.from(target.files);
-        files.forEach((file) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            const image = { src: reader.result as string, alt: file.name };
+      if (!target.files) return;
 
-            // Use the service to add images
-            this.appControllerService.addGlobalImage(new globalImg(image.src, image.alt, this.imageProcessing));
-          };
-          reader.readAsDataURL(file);
-        });
-      }
+      const files = Array.from(target.files);
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
+      const allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'svg'];
+
+      files.forEach((file) => {
+        const ext = file.name.toLowerCase().split('.').pop();
+
+        // Check both MIME type and extension
+        if (!allowedTypes.includes(file.type) || !allowedExtensions.includes(ext!)) {
+          this._snackBar.open(
+            `⚠️ ${file.type} is not supported. Please upload JPG, JPEG, PNG, WEBP, or SVG files.`,
+            'Close',
+            { duration: 5000, panelClass: ['snackbar-warning'] }
+          );
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          const image = { src: reader.result as string, alt: file.name };
+          this.appControllerService.addGlobalImage(
+            new globalImg(image.src, image.alt, this.imageProcessing)
+          );
+          this._snackBar.open(`✅ Image imported successfully!`, 'Close', {
+            duration: 300000,
+            panelClass: ['snackbar-success']
+          });
+        };
+        reader.readAsDataURL(file);
+      });
     };
     input.click();
   }
