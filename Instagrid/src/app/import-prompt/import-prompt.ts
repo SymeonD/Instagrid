@@ -60,17 +60,25 @@ export class ImportPrompt {
   }
 
   //TODO:  Method to download the selected image, make it a util
-  protected downloadImages(): void {
-    // if (this.pieces && this.pieces.length > 0) {
-    //   this.pieces.forEach((piece, index) => {
-    //     const link = document.createElement('a');
-    //     link.href = piece.src;
-    //     link.download = `piece_${index}.jpg`;
-    //     document.body.appendChild(link);
-    //     link.click();
-    //     document.body.removeChild(link);
-    //   });
-    // }
+  protected async downloadImages(): Promise<void> {
+    if (!this.image) return;
+
+    const downloadableImage : gridImg = new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1], this.croppedImageSrc)
+
+    try {
+      const cropped = await this.imageProcessing.cropImage(downloadableImage, false);
+      const divided = await this.imageProcessing.divideImage(cropped, downloadableImage.w, downloadableImage.h);
+      const zipBlob = await this.imageProcessing.createZip(divided);
+
+      const url = window.URL.createObjectURL(zipBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'images.zip';
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Error downloading image:', err);
+    }
   }
 
   // Method to delete the selected image
