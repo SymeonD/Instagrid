@@ -9,33 +9,9 @@ html {
   ));
 }
 
-
-/* You can add global styles to this file, and also import other style files */
-header {
-  font-family: 'Roboto', sans-serif;
-  padding-left: 1%;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  border-bottom: 1px solid #ccc;
-  height: 75px;
-  background-color: white;
-  z-index: 1;
-}
-
 body {
   margin: 0;
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
-}
-
-footer {
-  font-family: 'Roboto', sans-serif;
-  width: 25%;
-  position: fixed;
-  bottom: 0;
-
-  p{
-    text-align: center;
-  }
+  color: black;
 }

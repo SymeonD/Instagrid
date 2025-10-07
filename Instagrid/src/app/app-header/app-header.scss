@@ -1,0 +1,32 @@
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: var(--header-bg, #fff);
+  z-index: 1;
+  border-bottom: 1px solid #ccc;
+  height: 75px;
+  position: fixed;
+  width: 100%;
+
+  h1 {
+    margin: 0;
+  }
+
+  .fab {
+    mat-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+      transition: transform 0.3s ease-in-out;
+    }
+  }
+}
+
+/* Optional dark mode */
+body.dark-mode {
+  background-color: #121212;
+  color: #fff;
+  --header-bg: #1f1f1f;
+}
