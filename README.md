@@ -17,6 +17,7 @@ An image splitter and grid maker for the new instagram layout
 - [ ] Publish
 
 # Improvements
+- [ ] Improve canvas performances
 - [ ] Add image crop settings where you can move the zone that's gonna be selected and cut, link it to the menu on the left
 - [ ] Enable selection of output image type
 - [ ] Add instagram account preview with header
