@@ -15,9 +15,14 @@ export class AppHeader {
 
   private readonly ThemeService = new ThemeService();
 
+  onInit() {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    this.darkMode = prefersDark;
+    this.ThemeService.setTheme(this.darkMode ? 'dark' : 'light');
+  }
+
   toggleDarkMode() {
     this.darkMode = !this.darkMode;
-
     this.ThemeService.setTheme(this.darkMode ? 'dark' : 'light');
   }
 }

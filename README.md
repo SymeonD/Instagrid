@@ -12,10 +12,10 @@ An image splitter and grid maker for the new instagram layout
 - [x] Remove or implement edit buttons
 - [x] Check for image format
 - [x] Add texts in the prompts, explanations about preview quality
-- [ ] Add dark mode
+- [x] Add dark mode
+- [x] Fix error where the imported element can be put on top of another
 - [ ] Rework style
 - [ ] Publish
-- [x] Fix error where the imported element can be put on top of another
 
 # Improvements
 - [ ] Improve canvas performances
