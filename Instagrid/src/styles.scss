@@ -1,23 +1,59 @@
 @use '@angular/material' as mat;
 @use "./app/styles/theme-colors" as theme-colors;
 
-html {
-  @include mat.theme(
-    (
-      color: (
-        theme-type: light,
-        primary: theme-colors.$primary-palette,
-        tertiary: theme-colors.$tertiary-palette,
-      ),
-      typography: Roboto,
-      density: 0,
-    )
-  );
+// @include mat.core();
+
+
+/* Define palettes */
+$primary: theme-colors.$primary-palette;
+$tertiary: theme-colors.$tertiary-palette;
+
+/* Create light and dark themes */
+$light-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: $primary,
+    tertiary: $tertiary,
+  ),
+  typography: (
+    plain-family: Roboto,
+  ),
+  density: (
+    scale: 0
+  )
+));
+
+$dark-theme: mat.define-theme((
+  color: (
+    theme-type: dark,
+    primary: $primary,
+    tertiary: $tertiary,
+  ),
+  typography: (
+    plain-family: Roboto,
+  ),
+  density: (
+    scale: 0
+  )
+));
+
+:root{
+  @include mat.all-component-themes($light-theme);
+}
+
+:root,
+.light-theme{
+  @include mat.all-component-colors($light-theme);
+}
+
+.dark-theme{
+  @include mat.all-component-colors($dark-theme);
 }
 
 body {
   margin: 0;
   font-family: Roboto, Arial, sans-serif;
-  background: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
+  background: var(--mat-app-background-color);
+  color: var(--mat-app-text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }

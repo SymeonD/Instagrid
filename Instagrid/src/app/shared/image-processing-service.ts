@@ -58,7 +58,9 @@ export class ImageProcessingService {
         if (lowResolution) {
           const stepX = targetWidth / (gridX);
           const stepY = targetHeight / (gridY);
-          context.strokeStyle = 'white';
+          // Get body background color
+          const bgColor = window.getComputedStyle(document.body, null).getPropertyValue('background-color'); 
+          context.strokeStyle = bgColor;
           context.lineWidth = 10;
           for (let i = 0; i < gridX; i++) {
             context.beginPath();
