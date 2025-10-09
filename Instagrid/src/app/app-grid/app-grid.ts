@@ -76,7 +76,6 @@ export class AppGrid {
 
     onResizeEnded(event: KtdResizeEnd) {
         this._isDraggingResizing = false;
-        // TODO: update the grid items specs in the list
         // Get the element that was resized
         const resizedItem = event.layoutItem;
         // change it in gridItems
@@ -91,10 +90,6 @@ export class AppGrid {
                 });
             }
         }
-    }
-
-    onCompactTypeChange(change: MatSelectChange) {
-        this.compactType = change.value;
     }
 
     onLayoutUpdated(newLayout: KtdGridLayout) {
@@ -182,11 +177,9 @@ export class AppGrid {
                     // Control + click an element inside the selection group
                     if (!this._isDraggingResizing) {
                         // If not dragging, remove the selected item from the group
-                        // TODO: Fix
-                        // this.selectedItems = ktdArrayRemoveItem(
-                        //     this.selectedItems,
-                        //   (itemId: string) => itemId === selectedItem.id
-                        // );
+                        this.selectedItems = this.selectedItems.filter(
+                            item => item !== selectedItem.id
+                        )
                     }
                 } else {
                     // Control + click an element outside the selection group

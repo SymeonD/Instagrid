@@ -45,10 +45,4 @@ export class LeftColumn {
     this.appControllerService.removeGridImage(this.selectedImage.id!);
     this.selectedImage = null;
   }
-
-  // TODO: Implement or remove
-  protected editImage() {
-    // if (!this.selectedImage) return;
-    // this.appControllerService.setSelectedGridImage(this.selectedImage);
-  }
 }

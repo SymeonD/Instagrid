@@ -59,7 +59,6 @@ export class ImportPrompt {
     }
   }
 
-  //TODO:  Method to download the selected image, make it a util
   protected async downloadImages(): Promise<void> {
     if (!this.image) return;
 
