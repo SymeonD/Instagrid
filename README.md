@@ -13,7 +13,7 @@ An image splitter and grid maker for the new instagram layout
 - [x] Check for image format
 - [x] Add texts in the prompts, explanations about preview quality
 - [ ] Add dark mode
-- [ ] Rework style 
+- [ ] Rework style
 - [ ] Publish
 - [x] Fix error where the imported element can be put on top of another
 

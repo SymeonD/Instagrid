@@ -22,12 +22,6 @@
         justify-content: center;
     }
 
-    /* .image-library {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 5px;
-    } */
-
     .image-library {
     display: flex;
     flex-direction: row;
@@ -45,18 +39,6 @@
 
     img{
         cursor: pointer;
-    }
-
-    .add-image-button{
-        cursor: pointer;
-        background-color: #5d7eb6;
-        border-radius: 30px;
-        font-size: 16px;
-        border:none;
-        color: white;
-        padding: 10px 10px 10px 20px;
-        display: flex;
-        align-items: center;
     }
 
     .add-icon{
@@ -82,7 +64,7 @@
   </div>
 </div>
     <div class="image-picker">
-        <button class="add-image-button" (click)="importImages()">Add image<mat-icon class="add-icon">add</mat-icon></button>
+        <button matButton="elevated" class="add-image-button" (click)="importImages()">Add image<mat-icon class="add-icon">add</mat-icon></button>
     </div>
 </div>
 <import-prompt

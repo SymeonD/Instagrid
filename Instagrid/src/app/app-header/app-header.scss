@@ -3,13 +3,15 @@ header {
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: var(--header-bg, #fff);
   z-index: 1;
   border-bottom: 1px solid #ccc;
   height: 10vh;
   position: fixed;
   width: 100%;
   box-sizing: border-box;
+
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
 
   h1 {
     margin: 0;
@@ -23,11 +25,4 @@ header {
       transition: transform 0.3s ease-in-out;
     }
   }
-}
-
-/* Optional dark mode */
-body.dark-mode {
-  background-color: #121212;
-  color: #fff;
-  --header-bg: #1f1f1f;
 }

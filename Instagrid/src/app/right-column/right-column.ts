@@ -6,11 +6,12 @@ import { AppControllerService } from '../shared/app-controller.service';
 import { globalImg } from '../shared/global-img-class';
 import { ImageProcessingService } from '../shared/image-processing-service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @Component({
   selector: 'right-column',
-  imports: [CommonModule, MatIcon, ImportPrompt, MatSnackBarModule],
+  imports: [CommonModule, MatIcon, ImportPrompt, MatSnackBarModule, MatButtonModule],
   templateUrl: './right-column.html',
   styleUrl: './right-column.scss'
 })
