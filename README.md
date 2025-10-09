@@ -15,7 +15,7 @@ An image splitter and grid maker for the new instagram layout
 - [ ] Add dark mode
 - [ ] Rework style 
 - [ ] Publish
-- [ ] Fix error where the imported element can be put on top of another
+- [x] Fix error where the imported element can be put on top of another
 
 # Improvements
 - [ ] Improve canvas performances
@@ -24,3 +24,4 @@ An image splitter and grid maker for the new instagram layout
 - [ ] Add instagram account preview with header
 - [ ] Add visible image separation on the images in the grid
 - [ ] Mobile version
+- [ ] Multiple item selection and download

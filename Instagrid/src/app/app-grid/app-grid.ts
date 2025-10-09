@@ -1,6 +1,6 @@
 import { Component, HostListener, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { KtdDragEnd, KtdDragStart, KtdGridBackgroundCfg, KtdGridComponent, KtdGridLayout, KtdGridLayoutItem, KtdGridModule, KtdResizeEnd, KtdResizeStart } from '@katoid/angular-grid-layout';
+import { KtdDragEnd, KtdDragStart, KtdGridBackgroundCfg, ktdGridCompact, KtdGridComponent, KtdGridLayout, KtdGridLayoutItem, KtdGridModule, KtdResizeEnd, KtdResizeStart } from '@katoid/angular-grid-layout';
 import { ktdTrackById } from '@katoid/angular-grid-layout';
 import { MatSelectChange } from '@angular/material/select';
 import { AppControllerService } from '../shared/app-controller.service';
@@ -62,7 +62,7 @@ export class AppGrid {
         });
     };
 
-  onDragStarted(event: KtdDragStart) {
+    onDragStarted(event: KtdDragStart) {
         this._isDraggingResizing = true;
     }
 
@@ -114,8 +114,8 @@ export class AppGrid {
     addItemToLayout(item: gridImg){
         // Important: Don't mutate the array, create new instance. This way notifies the Grid component that the layout has changed.
         this.layout = [item, ...this.layout];
-        // const compacted: KtdGridLayout = ktdGridCompact(this.layout, this.compactType, this.cols);
-        // this.onLayoutUpdated(compacted);
+        const compacted: KtdGridLayout = ktdGridCompact(this.layout, this.compactType, this.cols);
+        this.onLayoutUpdated(compacted);
     }
 
     /**
