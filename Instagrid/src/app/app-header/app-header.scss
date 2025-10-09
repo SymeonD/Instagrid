@@ -6,9 +6,10 @@ header {
   background-color: var(--header-bg, #fff);
   z-index: 1;
   border-bottom: 1px solid #ccc;
-  height: 75px;
+  height: 10vh;
   position: fixed;
   width: 100%;
+  box-sizing: border-box;
 
   h1 {
     margin: 0;
