@@ -13,6 +13,18 @@ header {
   background: var(--mat-app-background-color);
   color: var(--mat-app-text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
+  
+  .logo{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+
+    img{
+      width: 32px;
+      height: 40px;
+    }
+  }
 
   h1 {
     margin: 0;
