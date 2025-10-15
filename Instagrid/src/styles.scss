@@ -76,4 +76,9 @@ body {
   background: var(--theme-background-level-0);
   color: var(--theme-background-level-1);
   transition: background-color 0.3s ease, color 0.3s ease;
+
+  // Mobile version
+  @media only screen and (max-width: 768px) {
+    font-size: 12px;
+  }
 }

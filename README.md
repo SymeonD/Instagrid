@@ -23,11 +23,10 @@ An image splitter and grid maker for the new instagram layout
 - [ ] Mobile version
   - [x] Change side of chevron
   - [ ] Change import prompt layout
-  - [ ] Change font sizes
-  - [ ] Update header
+  - [x] Change font sizes
+  - [x] Update header
   - [ ] "Add image" button outside the modal
     - [ ] Right modal smaller to account for the outside button
-  - [ ] Open left modal when image is clicked on the grid
   - [ ] Add backdrop on the side modals and close when clicked
 - [ ] Publish
 
