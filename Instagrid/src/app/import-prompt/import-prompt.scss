@@ -9,6 +9,7 @@
     position: fixed;
     top: 15vh; left: 10vw;
     width: 80vw; height: 75vh;
+    max-height: 600px;
     background: var(--theme-background-level-1);
     z-index: 101;
     border-radius: 16px;
@@ -35,7 +36,15 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    max-width: 100%;
+    flex-wrap: wrap;
     gap: 10px;
+}
+
+@media screen and (max-width: 1250px) {
+    :host ::ng-deep .image-editor > .download-button {
+        order: 2;
+    }
 }
 
 /* The download button is a grey rounded square */
@@ -45,6 +54,11 @@
     border-radius: 8px;
     padding: 10px 20px;
     cursor: pointer;
+    order: 0;
+
+    @media screen and (max-width: 1250px){
+        order: 2;
+    }
 }
 
 /* The delete button is a red rounded square same size as the download button */
@@ -55,6 +69,7 @@
     border-radius: 8px;
     padding: 10px 20px;
     cursor: pointer;
+    order: 3;
 }
 
 .download-button,
@@ -91,6 +106,7 @@
     gap: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     transition: all 0.2s ease-in-out;
+    order: 1;
 }
 
 .download-button:hover,
@@ -105,6 +121,7 @@
     gap: 2px;
     padding: 0px 5px;
     width: 35vh;
+    max-width: 250px;
 }
 
 .grid-item {
