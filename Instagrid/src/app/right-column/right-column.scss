@@ -83,6 +83,7 @@ img{
     text-overflow: ellipsis;
     color: var(--theme-background-level-1) !important;
     transition: all 0.2s ease-in-out;
+    gap: 10px;
 }
 
 .add-image-button:hover {
