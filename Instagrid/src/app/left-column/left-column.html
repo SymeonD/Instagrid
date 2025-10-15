@@ -3,8 +3,8 @@
         <img [src]="selectedImage.croppedSrc" alt="Image Preview" style="max-width: 100%; max-height: 100%;" />
     </div>
     <div class="image-controls">
-        <button class="download-button" (click)="downloadImage()">
-            <mat-icon>download</mat-icon> Download Image
+        <button matButton="elevated" class="download-button" (click)="downloadImage()">
+            Download Image <mat-icon>download</mat-icon> 
         </button>
         <!-- For future versions
         <button class="edit-button" (click)="editImage()">

@@ -1,15 +1,29 @@
-footer {
-  font-family: 'Roboto', sans-serif;
-  width: 25%;
-  position: fixed;
-  bottom: 0;
-
-  p{
-    text-align: center;
-  }
-}
-
 app-header{
   height: 10vh;
+  max-height: 100px;
   display: flex;
+}
+
+/* Style the colums */
+.left-column {
+  width: 25%;
+  height: 90vh; /* Full height */
+  position: fixed;
+  left: 0;
+  bottom: 0;
+}
+
+.center-column {
+  width: 50%;
+  height: 100vh; /* Full height */
+  margin: 0 auto; /* Center the column */
+  padding: 2vh 0 0 0;
+}
+
+.right-column {
+  width: 25%;
+  height: 90vh; /* Full height */
+  position: fixed;
+  right: 0;
+  bottom: 0;
 }

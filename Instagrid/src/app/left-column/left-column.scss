@@ -5,6 +5,7 @@
     justify-content: space-between;
     /* padding: 10px; */
     height: 90%;
+    max-height: 650px;
     margin-top: 12%;
     margin-left: 5%;
     border-radius: 15px;
@@ -37,7 +38,7 @@
     font-size: 18px;
     border: none;
     border-radius: 15px;
-    padding: 0 5%;
+    padding: 0 20px;
     gap: 1%;
     display: flex;
     align-items: center;
@@ -50,6 +51,14 @@
     text-overflow: ellipsis;
     color: var(--theme-background-level-1);
     transition: all 0.2s ease-in-out;
+
+    mat-icon{
+        width: 24px;
+        height: 24px;
+        font-size: 30px;
+        aspect-ratio: 1 / 1;
+        margin: 0 8px 0 -8px;
+    }
 }
 
 
@@ -69,6 +78,13 @@
     box-shadow: var(--mat-button-protected-container-elevation-shadow);
     color: var(--theme-background-level-1);
     transition: all 0.2s ease-in-out;
+
+    mat-icon{
+        margin: 0;
+        width: 24px;
+        height: 24px;
+        font-size: 24px;
+    }
 }
 
 .delete-button:hover, .download-button:hover {
@@ -76,17 +92,3 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.delete-button > mat-icon{
-    margin: 0;
-    width: 24px;
-    height: 24px;
-    font-size: 24px;
-}
-
-.download-button > mat-icon{
-    width: 24px;
-    height: 24px;
-    font-size: 30px;
-    aspect-ratio: 1 / 1;
-    margin: 0 6px 0 0;
-}

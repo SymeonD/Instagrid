@@ -13,14 +13,13 @@ An image splitter and grid maker for the new instagram layout
 - [x] Check for image format
 - [x] Add dark mode
 - [x] Fix error where the imported element can be put on top of another
-- [ ] Fix header when modal is opened   
-- [ ] Rework style
+- [x] Rework style
   - [x] New Figma design
-  - [ ] New right column
-  - [ ] New left column
-  - [ ] New header
-  - [ ] New grid
-  - [ ] New import menu
+  - [x] New right column
+  - [x] New left column
+  - [x] New header
+  - [x] New grid
+  - [x] New import menu
 - [ ] Publish
 
 # Improvements
@@ -32,6 +31,7 @@ An image splitter and grid maker for the new instagram layout
 - [ ] Add visible image separation on the images in the grid
 - [ ] Mobile version
 - [ ] Multiple item selection and download
+- [ ] Fix header when modal is opened   
 
 # Discarded
 - [x] Add texts in the prompts, explanations about preview quality
