@@ -4,10 +4,11 @@ import { CommonModule } from '@angular/common';
 import { AppControllerService } from '../shared/app-controller.service';
 import { gridImg } from '../shared/grid-img-class';
 import { ImageProcessingService } from '../shared/image-processing-service';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'left-column',
-  imports: [MatIcon, CommonModule],
+  imports: [MatIcon, CommonModule, MatButtonModule],
   templateUrl: './left-column.html',
   styleUrl: './left-column.scss'
 })
