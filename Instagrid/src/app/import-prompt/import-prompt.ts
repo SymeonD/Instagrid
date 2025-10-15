@@ -1,7 +1,10 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ImageService } from '../images.service';
 import { MatIcon } from '@angular/material/icon';
+import { AppControllerService } from '../shared/app-controller.service';
+import { gridImg } from '../shared/grid-img-class';
+import { globalImg } from '../shared/global-img-class';
+import { ImageProcessingService } from '../shared/image-processing-service';
 
 @Component({
   selector: 'import-prompt',
@@ -10,25 +13,8 @@ import { MatIcon } from '@angular/material/icon';
   styleUrl: './import-prompt.scss'
 })
 export class ImportPrompt {
-  @Input() image: any;
+  @Input() image: globalImg | null = null;
   @Output() close = new EventEmitter<void>();
-
-  private originalSrc: string | null = null;
-
-  constructor(private imageService: ImageService) {
-    this.pieces = [this.image?.src];
-    this.updateEditedImage(this.image?.src);
-  }
-
-  ngOnChanges() {
-    // Store the original src only once, when the image input changes
-    if (this.image) {
-      if (!this.originalSrc) {
-        this.originalSrc = this.image.src;
-      }
-      this.updateEditedImage(this.image.src); // Always update pieces when image changes
-    }
-  }
 
   // Grid selection logic
   private gridSizes: { [key: number]: number[] } = {
@@ -56,101 +42,48 @@ export class ImportPrompt {
     8: [2, 3],
     9: [3, 3]
   };
-  gridX = 1;
-  gridY = 1;
-  pieces: { src: string }[] = [];
+
   private hoveredSize = 0; // Default to 0
-  private selectedSize = 0; // Default to 0
+  private selectedSize = 1; // Default to 0
+  croppedImageSrc = '';
 
-  // Method to download the selected image
-  protected downloadImages(): void {
-    if (this.pieces && this.pieces.length > 0) {
-      this.pieces.forEach((piece, index) => {
-        const link = document.createElement('a');
-        link.href = piece.src;
-        link.download = `piece_${index}.jpg`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      });
-    }
+  constructor(private appControllerService: AppControllerService, private imageProcessing: ImageProcessingService) {
+    // Pieces
+    this.image && this.imageProcessing.cropImage(new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true).then(src => this.croppedImageSrc = src);
   }
 
-  // Method to edit the selected image
-  protected checkImage(): void {
+  ngOnChanges() {
+    // Store the original src only once, when the image input changes
     if (this.image) {
-      this.gridX = this.gridImageSizes[this.selectedSize][0] || 1;
-      this.gridY = this.gridImageSizes[this.selectedSize][1] || 1;
-      const targetWidth = 1010 * this.gridX + 70;
-      const targetHeight = 1350 * this.gridY;
-      const aspectRatio = targetWidth / targetHeight;
-
-      const img = new window.Image();
-      img.src = this.originalSrc || this.image.src; // Always use original
-      img.onload = () => {
-        let cropWidth = img.width;
-        let cropHeight = Math.round(cropWidth / aspectRatio);
-
-        if (cropHeight > img.height) {
-          cropHeight = img.height;
-          cropWidth = Math.round(cropHeight * aspectRatio);
-        }
-
-        // Center crop coordinates
-        const sx = Math.floor((img.width - cropWidth) / 2);
-        const sy = Math.floor((img.height - cropHeight) / 2);
-
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        if (!context) return;
-        canvas.width = targetWidth;
-        canvas.height = targetHeight;
-
-        // Draw the cropped rectangle, scaling to output size
-        context.drawImage(
-          img,
-          sx, sy, cropWidth, cropHeight, // source: crop rectangle
-          0, 0, targetWidth, targetHeight // destination: scale to output
-        );
-        const newSrc = canvas.toDataURL('image/jpeg');
-        // Update local image property so modal preview updates
-        this.updateEditedImage(newSrc);
-      };
+      this.imageProcessing.cropImage(new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true).then(src => this.croppedImageSrc = src); // Always update pieces when image changes
     }
   }
 
-  // TODO: Refactor this method to cut image pieces of 1080x1350
-  private updateEditedImage(newSrc: string): void {
-    // Cut the image into x*y pieces and create a list with them
-    const tempPieces: { src: string; num: number }[] = [];
-    const img = new window.Image();
-    img.src = newSrc;
-    img.onload = () => {
-      const pieceWidth = img.width / this.gridX;
-      const pieceHeight = img.height / this.gridY;
-      for (let y = 0; y < this.gridY; y++) {
-        for (let x = 0; x < this.gridX; x++) {
-          const pieceX = x * pieceWidth;
-          const pieceY = y * pieceHeight;
-          const pieceCanvas = document.createElement('canvas');
-          pieceCanvas.width = pieceWidth;
-          pieceCanvas.height = pieceHeight;
-          const pieceContext = pieceCanvas.getContext('2d');
-          if (!pieceContext) return;
-          pieceContext.drawImage(img, pieceX, pieceY, pieceWidth, pieceHeight, 0, 0, pieceWidth, pieceHeight);
-          const pieceSrc = pieceCanvas.toDataURL('image/jpeg');
-          tempPieces.push({ src: pieceSrc, num: 10*y+x });
-        }
-      }
-      this.pieces = tempPieces;
-    };
+  protected async downloadImages(): Promise<void> {
+    if (!this.image) return;
+
+    const downloadableImage : gridImg = new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1], this.croppedImageSrc)
+
+    try {
+      const cropped = await this.imageProcessing.cropImage(downloadableImage, false);
+      const divided = await this.imageProcessing.divideImage(cropped, downloadableImage.w, downloadableImage.h);
+      const zipBlob = await this.imageProcessing.createZip(divided);
+
+      const url = window.URL.createObjectURL(zipBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'images.zip';
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Error downloading image:', err);
+    }
   }
 
   // Method to delete the selected image
   protected deleteImage(): void {
     if (this.image) {
-      this.imageService.removeImage(this.image);
-      this.imageService.setSelectedImage(null);
+      this.appControllerService.removeGlobalImage(this.image.id!);
       this.close.emit();
     }
   }
@@ -171,19 +104,19 @@ export class ImportPrompt {
 
   onPlaceholderHover(index: number): void {
     this.hoveredSize = index+1;
-    this.checkImage()
   }
 
   onPlaceholderClick(index: number): void {
     // Lock the selection
     this.selectedSize = index+1;
+    this.imageProcessing.cropImage(new gridImg(this.image!, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true).then(src => this.croppedImageSrc = src);
   }
 
   // Send the pieces to the grid
   sendImage(): void {
-    if (this.pieces && this.pieces.length > 0) {
-      // Remove the old image from the service
-      this.imageService.addGridItems(this.pieces);
+    if (this.image && this.croppedImageSrc) {
+      // Add the image to the grid
+      this.appControllerService.addGridImage(new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1], this.croppedImageSrc));
       this.close.emit();
     }
   }

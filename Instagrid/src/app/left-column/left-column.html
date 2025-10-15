@@ -1,86 +1,16 @@
-<!-- This component is used to preview the image selected in the right column -->
- <!-- It also allows the user to download, edit and delete the image -->
-<style>
-    .selected-image-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 10px;
-        height: 90%;
-    }
-
-    .image-controls {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        margin-top: 20px;
-        gap: 10px;
-    }
-
-    /* The download button is a grey rounded square */
-    .download-button {
-        background-color: #e0e0e0;
-        border: none;
-        border-radius: 8px;
-        padding: 10px 20px;
-        cursor: pointer;
-    }
-
-    /* The edit button is a bigger green rounded square */
-    .edit-button {
-        background-color: #4CAF50;
-        border: none;
-        border-radius: 12px;
-        padding: 20px 24px;
-        cursor: pointer;
-        aspect-ratio: 1 / 1;
-    }
-
-    /* The delete button is a red rounded square same size as the download button */
-    /* it has to be a square */
-    .delete-button {
-        background-color: #f44336;
-        border: none;
-        border-radius: 8px;
-        padding: 10px 20px;
-        cursor: pointer;
-    }
-
-    .download-button,
-    .delete-button {
-        width: 48px;
-        height: 48px;
-        aspect-ratio: 1 / 1;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .edit-button {
-        width: 72px;
-        height: 72px;
-        font-size: 48px;
-        aspect-ratio: 1 / 1;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-</style>
 <div class="selected-image-container" *ngIf="selectedImage">
     <div class="image-preview">
-        <img [src]="selectedImage?.src" alt="Image Preview" style="max-width: 100%; max-height: 100%;" />
+        <img [src]="selectedImage.croppedSrc" alt="Image Preview" style="max-width: 100%; max-height: 100%;" />
     </div>
     <div class="image-controls">
-        <button class="download-button" (click)="downloadImage()">
-            <mat-icon>download</mat-icon>
+        <button matButton="elevated" class="download-button" (click)="downloadImage()">
+            Download Image <mat-icon>download</mat-icon> 
         </button>
+        <!-- For future versions
         <button class="edit-button" (click)="editImage()">
             <mat-icon style="font-size: 36px; height: 36px; width: 36px;">edit</mat-icon>
         </button>
+        -->
         <button class="delete-button" (click)="deleteImage()">
             <mat-icon>delete</mat-icon>
         </button>

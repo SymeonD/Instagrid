@@ -1,92 +1,12 @@
-<!-- This element is an image library and picker -->
- <!-- The top 90% of it is the image library, scrollable and displaying the image the user has imported -->
-  <!-- The bottom 10% is the image picker, simple button to import an image -->
-
-<style>
-    .right-column {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
-
-    .image-library {
-        flex: 9;
-        overflow-y: auto;   
-        padding: 5px;
-    }
-
-    .image-picker {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    /* .image-library {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 5px;
-    } */
-
-    .image-library {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-    gap: 5px;
-    }   
-
-    /* Each column */
-    .image-column {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-    }
-
-    img{
-        cursor: pointer;
-    }
-
-    .add-image-button{
-        cursor: pointer;
-        background-color: #5d7eb6;
-        border-radius: 30px;
-        font-size: 16px;
-        border:none;
-        color: white;
-        padding: 10px 10px 10px 20px;
-        display: flex;
-        align-items: center;
-    }
-
-    .add-icon{
-        margin-left: 10px;
-        padding: 5px ;
-        font-size: 30px;
-        background-color: white;
-        border-radius: 20px;
-        color: black;   
-        align-items: center;
-        display: flex;
-        justify-content: center;
-
-    }
-</style>
-
 <div class="right-column">
     <div class="image-library">
-  <div class="image-column" *ngFor="let column of columns">
-    <div class="image-item" *ngFor="let image of column">
-      <img (click)="openImportPrompt(image)" [src]="image.src" [alt]="image.alt" style="max-width: 100%; max-height: 100%;" />
+        <div class="image-column" *ngFor="let column of columns">
+            <div class="image-item" *ngFor="let image of column">
+            <img (click)="openImportPrompt(image)" [src]="image.lowResSrc" [alt]="image.alt" style="max-width: 100%; max-height: 100%;" />
+            </div>
+        </div>
     </div>
-  </div>
-</div>
     <div class="image-picker">
-        <button class="add-image-button" (click)="importImages()">Add image<mat-icon class="add-icon">add</mat-icon></button>
+        <button matButton="elevated" class="add-image-button" (click)="importImages()">Add image<mat-icon class="add-icon">add</mat-icon></button>
     </div>
 </div>
-<import-prompt
-  *ngIf="showImportPrompt"
-  [image]="modalImage"
-  (close)="closeImportPrompt()">
-</import-prompt>

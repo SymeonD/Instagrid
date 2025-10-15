@@ -1,35 +1,17 @@
-<style>
-  /* Style the colums */
-  .left-column {
-    width: 25%;
-    height: 90vh; /* Full height */
-    position: fixed;
-    left: 0;
-    bottom: 0;
-  }
-
-  .center-column {
-    width: 50%;
-    height: 100vh; /* Full height */
-    margin: 0 auto; /* Center the column */
-    padding: 10vh 0;
-  }
-
-  .right-column {
-    width: 25%;
-    height: 90vh; /* Full height */
-    position: fixed;
-    right: 0;
-    bottom: 0;
-  }
-</style>
+<app-header></app-header>
 
 <main class="main">
   <div class="content">
     <!-- Divide the content in three columns, 25%, 50%, 25% -->
 
      <!-- Left column contains the image menu, edit, download and remove image, as well as image preview -->
-    <div class="left-column">
+    <div class="left-column" [class.show]="isLeftColumnOpen">
+      
+      <!-- Opening button for the left column on smaller screens -->
+      <button class="open-left-column-button drawer-button" (click)="toggleLeftColumn()" *ngIf="selectedImage">
+        <mat-icon>{{ isLeftColumnOpen ? 'keyboard_double_arrow_left' : 'keyboard_double_arrow_right' }}</mat-icon>
+      </button>
+
       <left-column></left-column>
     </div>
 
@@ -39,10 +21,29 @@
     </div>
 
      <!-- Right column contains the image import elements, as well as image library -->
-    <div class="right-column">
+    <div class="right-column" [class.show]="isRightColumnOpen">
+
+      <!-- Opening button for the left column on smaller screens -->
+      <button class="open-right-column-button drawer-button" (click)="toggleRightColumn()" >
+        <mat-icon>{{ isRightColumnOpen ? 'keyboard_double_arrow_right' : 'keyboard_double_arrow_left' }}</mat-icon>
+      </button>
+
       <right-column></right-column>
+    </div>
+
+    <import-prompt
+      *ngIf="showImportPrompt"
+      [image]="modalImage"
+      (close)="closeImportPrompt()">
+    </import-prompt>
+
+    <!-- Backdrop modal for mobile -->
+    <div class="modal-backdrop" *ngIf="isLeftColumnOpen || isRightColumnOpen" (click)="toggleColumn()"></div>
+
+    <!-- Image picker -->
+    <div class="image-picker">
+        <button matButton="elevated" class="add-image-button" (click)="importImages()">Add image<mat-icon class="add-icon">add</mat-icon></button>
     </div>
   </div>
 </main>
-
 <router-outlet />

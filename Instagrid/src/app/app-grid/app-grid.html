@@ -1,39 +1,34 @@
-<!-- This element is a grid, 3 columns large of elements of aspect ratio 1080:1350 -->
-<style>
-    .grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2px;
-        padding: 0px 5px;
-    }
-    
-    .grid-item {
-        width: 100%;
-        aspect-ratio: 1080 / 1350;
-        background-color: #e2e2e2;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-    }
-    
-    .grid-item img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-</style>
+<div class="grid" id="image-grid-container">
+    <ktd-grid [cols]="cols"
+            [backgroundConfig]="gridBackgroundConfig"
+            [rowHeight]="rowHeight"
+            [height]="height"
+            [layout]="layout"
+            [gap]="2"
+            [selectedItemsIds]="selectedItems"
+            (dragStarted)="onDragStarted($event)"
+            (dragEnded)="onDragEnded($event)"
+            (resizeStarted)="onResizeStarted($event)"
+            (resizeEnded)="onResizeEnded($event)"
+            (layoutUpdated)="onLayoutUpdated($event)"
+            (click)="onGridClick($event)"
+            >
+        <ktd-grid-item 
+        *ngFor="let item of layout; 
+        trackBy:trackById"
+        [id]="item.id"
+        [ngClass]="{
+                        'grid-item-content--selected': isItemSelected(item)
+                    }"
+        (pointerdown)="pointerDownItemSelection($event, item)"
+        (pointerup)="pointerUpItemSelection($event, item)">
+            <!-- Your grid item content goes here -->
+            <!-- <img [src]="this.items[+item.id].src" style="width: 100%; height: 100%; object-fit: cover;"/> -->
 
-<div class="grid">
-    <div class="grid-item" *ngFor="let item of items">
-        <!-- If the src is not empty, display the image -->
-        <ng-container *ngIf="item.src; else placeholder">
-            <img [src]="item.src" [alt]="item.alt" />
-        </ng-container>
+            <ng-container *ngIf="item;">
+                <img [src]="item.globalImg.lowResSrc" [alt]="item.globalImg.alt" style="width: 100%; height: 100%; object-fit: cover;" />
+            </ng-container>
 
-        <!-- If the src is empty, display a placeholder, a grey background -->
-        <ng-template #placeholder>
-            <div class="placeholder"></div>
-        </ng-template>
-    </div>
+        </ktd-grid-item>
+    </ktd-grid>
 </div>

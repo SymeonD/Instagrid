@@ -1,0 +1,16 @@
+<header>
+  <div class="logo">
+    <img src="SlydCut.png" alt="Logo">
+    <div class="title">
+      <h1>SlydCut</h1>
+      <a href="https://www.linkedin.com/in/symeon-de-almeida" target="_blank"><h4>by Syméon De Almeida</h4></a>
+    </div>
+  </div>
+  
+
+  <button matFab color="primary" (click)="toggleDarkMode()" class="fab">
+    <mat-icon>
+      {{ darkMode ? 'brightness_5' : 'brightness_3' }}
+    </mat-icon>
+  </button>
+</header>

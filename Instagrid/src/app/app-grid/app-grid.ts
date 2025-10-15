@@ -1,7 +1,13 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ImageService } from '../images.service';
-import { KtdGridModule } from '@katoid/angular-grid-layout';
+import { KtdDragEnd, KtdDragStart, KtdGridBackgroundCfg, ktdGridCompact, KtdGridComponent, KtdGridLayout, KtdGridLayoutItem, KtdGridModule, KtdResizeEnd, KtdResizeStart } from '@katoid/angular-grid-layout';
+import { ktdTrackById } from '@katoid/angular-grid-layout';
+import { MatSelectChange } from '@angular/material/select';
+import { AppControllerService } from '../shared/app-controller.service';
+import { gridImg } from '../shared/grid-img-class';
+import { ImageProcessingService } from '../shared/image-processing-service';
+
+
 
 @Component({
   selector: 'app-grid',
@@ -11,52 +17,210 @@ import { KtdGridModule } from '@katoid/angular-grid-layout';
 })
 
 export class AppGrid {
-  // Initiate items as an empty array of size 12
-  items = Array.from({ length: 12 }, (_, i) => ({
-    src: ``,
-    alt: `Item ${i + 1}`,
-    groupId: null // assign a number if part of a group
-  }));
 
-  constructor(private imageService: ImageService) {
-    this.imageService.gridItems$.subscribe(images => {
-      const generateGroupId = () => Math.floor(Math.random() * 1000000);
-      const groupId = generateGroupId();
+  private placeholderLayout: gridImg[] = [];
 
-      // Clone the items array to avoid mutating while iterating
-      let newItems = [...this.items];
+  @ViewChild(KtdGridComponent, {static: true}) grid: KtdGridComponent | undefined;
+  trackById = ktdTrackById;
 
-      images.forEach((img) => {
-        const targetIdx = Math.floor(img.num / 10) * 3 + img.num % 10;
-        // Insert image at targetIdx, shifting others to the right
-        newItems.splice(targetIdx, 0, { ...img, groupId: groupId });
-      });
+  // Settings for the grid
+  cols = 3;
+  gridWidth = document.getElementById('image-grid-container')?.clientWidth || window.innerWidth*0.5;
+  rowHeight = 1350 / 1010 * (this.gridWidth / this.cols);
+  compactType: 'vertical' | 'horizontal' | null = 'vertical';
+  selectedItems: string[] = [];
+  layout: gridImg[] = this.placeholderLayout;
+  gridBackgroundConfig: Required<KtdGridBackgroundCfg> = { show: 'always',
+        borderColor: 'rgba(128, 128, 128, 0.10)',
+        gapColor: 'transparent',
+        borderWidth: 1,
+        rowColor: 'rgba(128, 128, 128, 0.10)',
+        columnColor: 'rgba(128, 128, 128, 0.10)',
+    };
+    height = this.rowHeight;
 
-      // Truncate to grid size (12)
-      newItems = newItems.slice(0, 12);
+    private _isDraggingResizing: boolean = false;
 
-      // Fill any undefined slots with empty items
-      this.items = Array.from({ length: 12 }, (_, i) =>
-        newItems[i] ? newItems[i] : { src: ``, alt: `Item ${i + 1}`, groupId: null }
-      );
-    });
-  }
+    ngOnInit() {
+        // Update gridWidth and rowHeight on window resize
+        window.addEventListener('resize', () => {
+            this.gridWidth = document.getElementById('image-grid-container')?.clientWidth || window.innerWidth*0.5;
+            this.rowHeight = 1350 / 1010 * (this.gridWidth / this.cols);
+        });
+    }
 
-  moveGroup(groupId: number, targetIndexes: number[]) {
-    // Find all items in the group
-    const groupItems = this.items.filter(item => item.groupId === groupId);
+    ngAfterViewInit() {
+        // TODO: Centralize
+        this.gridWidth = document.getElementById('image-grid-container')?.clientWidth || window.innerWidth*0.5;
+        this.rowHeight = 1350 / 1010 * (this.gridWidth / this.cols);
+        this.cdr.detectChanges();
+    }
 
-    // Remove group items from their current positions
-    const otherItems = this.items.filter(item => item.groupId !== groupId);
+    constructor(protected appControllerService: AppControllerService, protected imageProcessing: ImageProcessingService, private cdr: ChangeDetectorRef) {
+        // Subscription to the list of grid images
+        this.appControllerService.gridImages$.subscribe(gridImgs => {
 
-    // Insert group items at the target indexes
-    targetIndexes.forEach((targetIdx, i) => {
-      otherItems[targetIdx] = groupItems[i];
-    });
+            // clear layout
+            this.layout = [];
 
-    // Fill any undefined slots with empty items
-    this.items = otherItems.map((item, i) =>
-      item ? item : { src: ``, alt: `Item ${i + 1}`, groupId: null }
-    );
-  }
+            gridImgs.forEach((gridImg) => {
+            this.addItemToLayout(gridImg);
+            });
+        });
+    };
+
+    onDragStarted(event: KtdDragStart) {
+        this._isDraggingResizing = true;
+    }
+
+    onDragEnded(event: KtdDragEnd) {
+        this._isDraggingResizing = false;
+    }
+
+    onResizeStarted(event: KtdResizeStart) {
+        this._isDraggingResizing = true;
+    }
+
+    onResizeEnded(event: KtdResizeEnd) {
+        this._isDraggingResizing = false;
+        // Get the element that was resized
+        const resizedItem = event.layoutItem;
+        // change it in gridItems
+        if (resizedItem && this.layout) {
+            const itemIndex = this.layout.findIndex(item => item.id === event.layoutItem.id);
+            if (itemIndex !== -1) {
+                this.layout[itemIndex].w = event.layoutItem.w;
+                this.layout[itemIndex].h = event.layoutItem.h;
+                this.imageProcessing.cropImage(new gridImg(this.layout[itemIndex].globalImg, -1, -1, this.layout[itemIndex].w, this.layout[itemIndex].h), true).then(src => {
+                    this.layout[itemIndex].croppedSrc = src; 
+                    this.appControllerService.setGridImages(this.layout);
+                });
+            }
+        }
+    }
+
+    onLayoutUpdated(newLayout: KtdGridLayout) {
+        if (!newLayout || !this.layout) return;
+
+        newLayout.forEach(l => {
+            const old = this.layout.find(i => i.id === l.id);
+            if (old) {
+            old.x = l.x;
+            old.y = l.y;
+            old.w = l.w;
+            old.h = l.h;
+            // keep old.src, old.title, etc.
+            }
+        });
+
+        // set new grid height
+        this.height = this.getGridHeight();
+    }
+
+    /** Adds a grid item to the layout */
+    addItemToLayout(item: gridImg){
+        // Important: Don't mutate the array, create new instance. This way notifies the Grid component that the layout has changed.
+        this.layout = [item, ...this.layout];
+        const compacted: KtdGridLayout = ktdGridCompact(this.layout, this.compactType, this.cols);
+        this.onLayoutUpdated(compacted);
+    }
+
+    /**
+     * Check if 'selectedItem' is on the multi item selection
+     */
+    isItemSelected(selectedItem: KtdGridLayoutItem): boolean {
+        return this.selectedItems.includes(selectedItem.id);
+    }
+
+    @HostListener('document:keydown', ['$event'])
+    handleKeyDown(event: KeyboardEvent) {
+        if ((event.key === 'Delete' || event.key === 'Backspace') && this.selectedItems.length > 0) {
+            this.selectedItems.forEach(item => {
+                this.appControllerService.removeGridImage(item);
+            })
+            this.selectedItems = [];
+            event.preventDefault();
+        }
+    }
+
+    /*
+     * Select an item outside of the group
+     */
+    pointerDownItemSelection(
+        event: MouseEvent,
+        selectedItem: gridImg
+    ) {
+        const ctrlOrCmd = event.ctrlKey;
+        if (!ctrlOrCmd) {
+            const selectedItemExist = this.selectedItems.includes(
+                selectedItem.id
+            );
+            if (!selectedItemExist) {
+                // Click an element outside selection group
+                // Clean all selections and select the new item
+                if (event.button == 2) {
+                    this.selectedItems = [];
+                } else {
+                    this.selectedItems = [selectedItem.id];
+                    // Send to left column
+                    this.appControllerService.setSelectedGridImage(selectedItem);
+                }
+            }
+        }
+    }
+
+    /*
+     * Select an item inside the group or multiselect with Control button
+     */
+    pointerUpItemSelection(event: MouseEvent, selectedItem: KtdGridLayoutItem) {
+        const ctrlOrCmd = event.ctrlKey;
+        if (event.button !== 2) {
+            //Only select with primary button click
+            const selectedItemExist = this.selectedItems.includes(
+                selectedItem.id
+            );
+            if (ctrlOrCmd) {
+                if (selectedItemExist) {
+                    // Control + click an element inside the selection group
+                    if (!this._isDraggingResizing) {
+                        // If not dragging, remove the selected item from the group
+                        this.selectedItems = this.selectedItems.filter(
+                            item => item !== selectedItem.id
+                        )
+                    }
+                } else {
+                    // Control + click an element outside the selection group
+                    // Add the new selected item to the current group
+                    this.selectedItems = [
+                        ...this.selectedItems,
+                        selectedItem.id
+                    ];
+                }
+            } else if (!this._isDraggingResizing && selectedItemExist) {
+                // Click an element inside the selection group
+                this.selectedItems = [selectedItem.id];
+            }
+        }
+    }
+
+    getGridHeight() : number {
+        if (!this.layout || this.layout.length === 0) {
+            return this.rowHeight * 1; // at least one row
+        }
+        
+        // Find the bottom-most point of all items
+        const maxRow = this.layout.reduce((max, item) => Math.max(max, item.y + item.h), 0);
+        
+        // Add one extra row
+        return (maxRow + 1) * this.rowHeight;
+    }
+
+    onGridClick(event: MouseEvent) {
+        // If event.target is a ktd-grid element
+        if ((event.target as Element).tagName === 'KTD-GRID') {
+            this.selectedItems = [];
+            this.appControllerService.setSelectedGridImage(null);
+        }
+    }
 }
+

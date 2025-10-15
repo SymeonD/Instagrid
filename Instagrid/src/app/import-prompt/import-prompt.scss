@@ -1,0 +1,207 @@
+.modal-backdrop {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 100;
+}
+
+.modal-container {
+    position: fixed;
+    top: 15vh; left: 10vw;
+    width: 80vw; height: 75vh;
+    max-height: 600px;
+    background: var(--theme-background-level-1);
+    z-index: 101;
+    border-radius: 16px;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+
+    @media screen and (max-width: 600px) {
+        flex-direction: column;
+    }
+}
+
+.image-editor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: end;
+    height: 90%;
+    padding: 10px;
+    gap: 10%;
+    width: 30%;
+
+    @media screen and (max-width: 600px) {
+        width: 45%;
+        max-width: 225px;
+        flex-direction: row;
+        align-self: flex-end;
+    }
+}
+
+.image-controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+@media screen and (max-width: 1250px) {
+    :host ::ng-deep .image-editor > .download-button {
+        order: 2;
+    }
+}
+
+/* The download button is a grey rounded square */
+.download-button {
+    background-color: var(--theme-green);
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    cursor: pointer;
+    order: 0;
+
+    @media screen and (max-width: 1250px){
+        order: 2;
+    }
+}
+
+/* The delete button is a red rounded square same size as the download button */
+/* it has to be a square */
+.delete-button {
+    background-color: var(--theme-red);
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    cursor: pointer;
+    order: 3;
+}
+
+.download-button,
+.delete-button {
+    width: 48px;
+    height: 48px;
+    aspect-ratio: 1 / 1;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease-in-out;
+    color: var(--theme-background-level-1);
+}
+
+.check-button {
+    height: 48px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--theme-accent);
+    border: none;
+    border-radius: 8px;
+    padding: 20px 24px;
+    cursor: pointer;
+    color: var(--theme-background-level-1);
+    font-size: 18px;
+    font-family: Roboto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    gap: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease-in-out;
+    order: 1;
+}
+
+.download-button:hover,
+.delete-button:hover, .check-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}   
+
+.grid-size-selector{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    padding: 0px 5px;
+    width: 35vh;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.grid-item {
+    width: 100%;
+    aspect-ratio: 1080 / 1350;
+    background-color: var(--theme-grid-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: all 0.2s;
+}
+
+.grid-item.darkened {
+    background-color: var(--theme-grid-color-darkened);
+}
+
+.grid-item.selected {
+    background-color: var(--theme-grid-color-selected);
+}
+
+.image-preview {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90%;
+    width: 55%;
+    
+    @media screen and (max-width: 600px) {
+        margin-top: 5%;
+        max-height: 45%;
+    }
+}
+
+.image-grid {
+    display: grid;
+    gap: 2px;
+    align-items: center;
+    justify-items: center;
+}
+
+
+.image-grid-item {
+    aspect-ratio: 1010 / 1350;      
+}
+
+
+.image-grid-item img{
+    height: 100%;
+    max-width: 100%;
+    object-fit: cover;
+    display: block;
+} 
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: var(--theme-font-color);
+}

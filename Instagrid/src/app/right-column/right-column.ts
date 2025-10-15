@@ -1,76 +1,92 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ImageService } from '../images.service';
 import { MatIcon } from '@angular/material/icon';
-import { ImportPrompt } from '../import-prompt/import-prompt';
+import { AppControllerService } from '../shared/app-controller.service';
+import { globalImg } from '../shared/global-img-class';
+import { ImageProcessingService } from '../shared/image-processing-service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatButtonModule } from '@angular/material/button';
+import { ImportPromptService } from '../shared/import-prompt.service';
+
 
 @Component({
   selector: 'right-column',
-  imports: [CommonModule, MatIcon, ImportPrompt],
+  imports: [CommonModule, MatIcon, MatSnackBarModule, MatButtonModule],
   templateUrl: './right-column.html',
   styleUrl: './right-column.scss'
 })
 export class RightColumn {
-  columns: any[][] = [];
-  images: any[] = [];
+  columns: globalImg[][] = [];
+  images: globalImg[] = [];
+
   showImportPrompt = false;
   modalImage: any = null;
 
-  constructor(private imageService: ImageService) {}
+  constructor(private appControllerService: AppControllerService, private imageProcessing: ImageProcessingService, private _snackBar: MatSnackBar, private importPromptService: ImportPromptService) {}
 
   ngOnInit() {
-    this.imageService.images$.subscribe(images => {
-      this.images = images;
+    this.appControllerService.globalImages$.subscribe(globalImgs => {
+      this.images = globalImgs;
       this.updateColumns();
     });
     // Remove local images array logic
   }
 
-  // Method to import images, prompt file dialog
   protected importImages(): void {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
     input.multiple = true;
+
     input.onchange = (event: Event) => {
       const target = event.target as HTMLInputElement;
-      if (target.files) {
-        const files = Array.from(target.files);
-        files.forEach((file) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            const image = { src: reader.result as string, alt: file.name };
-            // Use the service to add images
-            this.imageService.addImage(image);
-          };
-          reader.readAsDataURL(file);
-        });
-      }
+      if (!target.files) return;
+
+      const files = Array.from(target.files);
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
+      const allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'svg'];
+
+      files.forEach((file) => {
+        const ext = file.name.toLowerCase().split('.').pop();
+
+        // Check both MIME type and extension
+        if (!allowedTypes.includes(file.type) || !allowedExtensions.includes(ext!)) {
+          this._snackBar.open(
+            `⚠️ ${file.type} is not supported. Please upload JPG, JPEG, PNG, WEBP, or SVG files.`,
+            'Close',
+            { duration: 50000, panelClass: ['snackbar-warning'] }
+          );
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          const image = { src: reader.result as string, alt: file.name };
+          this.appControllerService.addGlobalImage(
+            new globalImg(image.src, image.alt, this.imageProcessing)
+          );
+          this._snackBar.open(`✅ Image imported successfully!`, 'Close', {
+            duration: 3000,
+            panelClass: ['snackbar-success']
+          });
+        };
+        reader.readAsDataURL(file);
+      });
     };
     input.click();
   }
 
-  private updateColumns(): void {
+  protected updateColumns(): void {
     const numColumns = 2;
     this.columns = Array.from({ length: numColumns }, () => []);
-    this.images.forEach((img, i) => {
-      this.columns[i % numColumns].push(img);
+    this.images.forEach((image, index) => {
+      const column = index % numColumns;
+      this.columns[column].push(image);
     });
-  }
-
-  // Set selected image in service
-  protected selectImage(image: any): void {
-    this.imageService.setSelectedImage(image);
   }
 
   // Open image prompt
   protected openImportPrompt(image: any): void {
-    this.modalImage = image;
-    this.showImportPrompt = true;
-  }
-
-  protected closeImportPrompt(): void {
-    this.showImportPrompt = false;
-    this.modalImage = null;
+    this.importPromptService.openImportPrompt(image);
   }
 }
