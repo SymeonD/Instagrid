@@ -1,0 +1,94 @@
+.selected-image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    /* padding: 10px; */
+    height: 90%;
+    margin-top: 12%;
+    margin-left: 5%;
+    border-radius: 15px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    background-color: white;
+}
+
+.image-controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 5%;
+    width: 90%;
+}
+
+.image-preview {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-height: 70%;
+    padding: 5%;
+}
+
+/* The download button is a grey rounded square */
+.download-button {
+    height: 48px;
+    background-color: #7EACEF;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--mat-button-protected-container-elevation-shadow);
+    width: 80%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: white;
+    transition: all 0.2s ease-in-out;
+}
+
+
+/* The delete button is a red rounded square same size as the download button */
+/* it has to be a square */
+.delete-button {
+    background-color: #f44336;
+    border: none;
+    border-radius: 8px;
+    padding: 0;
+    cursor: pointer;
+    height: 48px;
+    width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--mat-button-protected-container-elevation-shadow);
+    color: white;
+    transition: all 0.2s ease-in-out;
+}
+
+.delete-button:hover, .download-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.delete-button > mat-icon{
+    margin: 0;
+    width: 24px;
+    height: 24px;
+    font-size: 24px;
+}
+
+.download-button > mat-icon{
+    width: 24px;
+    height: 24px;
+    font-size: 32px;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 6px 0 0;
+}
