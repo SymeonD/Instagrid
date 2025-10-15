@@ -11,10 +11,14 @@ An image splitter and grid maker for the new instagram layout
 # V.1
 - [x] Remove or implement edit buttons
 - [x] Check for image format
-- [x] Add texts in the prompts, explanations about preview quality
 - [x] Add dark mode
 - [x] Fix error where the imported element can be put on top of another
 - [ ] Rework style
+  - [x] New Figma design
+  - [ ] New right column
+  - [ ] New left column
+  - [ ] New grid
+  - [ ] New import menu
 - [ ] Publish
 
 # Improvements
@@ -25,3 +29,6 @@ An image splitter and grid maker for the new instagram layout
 - [ ] Add visible image separation on the images in the grid
 - [ ] Mobile version
 - [ ] Multiple item selection and download
+
+# Discarded
+- [x] Add texts in the prompts, explanations about preview quality
