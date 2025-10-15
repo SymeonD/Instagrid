@@ -9,7 +9,7 @@
     margin-left: 5%;
     border-radius: 15px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-    background-color: white;
+    background-color: var(--theme-background-level-1);
 }
 
 .image-controls {
@@ -33,21 +33,22 @@
 /* The download button is a grey rounded square */
 .download-button {
     height: 48px;
-    background-color: #7EACEF;
+    background-color: var(--theme-accent);
     font-size: 18px;
     border: none;
-    border-radius: 8px;
-    padding: 0 20px;
+    border-radius: 15px;
+    padding: 0 5%;
+    gap: 1%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: start;
     cursor: pointer;
     box-shadow: var(--mat-button-protected-container-elevation-shadow);
     width: 80%;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    color: white;
+    color: var(--theme-background-level-1);
     transition: all 0.2s ease-in-out;
 }
 
@@ -55,9 +56,9 @@
 /* The delete button is a red rounded square same size as the download button */
 /* it has to be a square */
 .delete-button {
-    background-color: #f44336;
+    background-color: var(--theme-red);
     border: none;
-    border-radius: 8px;
+    border-radius: 15px;
     padding: 0;
     cursor: pointer;
     height: 48px;
@@ -66,7 +67,7 @@
     align-items: center;
     justify-content: center;
     box-shadow: var(--mat-button-protected-container-elevation-shadow);
-    color: white;
+    color: var(--theme-background-level-1);
     transition: all 0.2s ease-in-out;
 }
 
@@ -85,10 +86,7 @@
 .download-button > mat-icon{
     width: 24px;
     height: 24px;
-    font-size: 32px;
+    font-size: 30px;
     aspect-ratio: 1 / 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     margin: 0 6px 0 0;
 }
