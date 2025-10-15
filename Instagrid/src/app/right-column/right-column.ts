@@ -54,7 +54,7 @@ export class RightColumn {
           this._snackBar.open(
             `⚠️ ${file.type} is not supported. Please upload JPG, JPEG, PNG, WEBP, or SVG files.`,
             'Close',
-            { duration: 5000, panelClass: ['snackbar-warning'] }
+            { duration: 50000, panelClass: ['snackbar-warning'] }
           );
           return;
         }
@@ -100,7 +100,7 @@ export class RightColumn {
     this.modalImage = null;
     // Reset header z-index to 1
     document.querySelector('header')
-      ? (document.querySelector('header') as HTMLElement).style.zIndex = '1'
+      ? (document.querySelector('header') as HTMLElement).style.zIndex = '10'
       : null;
   }
 }

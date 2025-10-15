@@ -13,8 +13,8 @@
 
     .modal-container {
         position: fixed;
-        top: 5%; left: 5%;
-        width: 90vw; height: 90vh;
+        top: 15vh; left: 10vw;
+        width: 80vw; height: 75vh;
         background: var(--mat-app-background-color);
         z-index: 101;
         border-radius: 16px;
@@ -29,10 +29,10 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        justify-content: end;
         height: 90%;
         padding: 10px;
-        gap: 20px;
+        gap: 10%;
         width: 30%;
     }
 
@@ -46,21 +46,11 @@
 
     /* The download button is a grey rounded square */
     .download-button {
-        background-color: #e0e0e0;
+        background-color: #4CAF50;
         border: none;
         border-radius: 8px;
         padding: 10px 20px;
         cursor: pointer;
-    }
-
-    /* The check button is a bigger green rounded square */
-    .check-button {
-        background-color: #4CAF50;
-        border: none;
-        border-radius: 12px;
-        padding: 20px 24px;
-        cursor: pointer;
-        aspect-ratio: 1 / 1;
     }
 
     /* The delete button is a red rounded square same size as the download button */
@@ -82,18 +72,38 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        transition: all 0.2s ease-in-out;
+        color: white;
     }
 
     .check-button {
-        width: 72px;
-        height: 72px;
-        font-size: 48px;
-        aspect-ratio: 1 / 1;
+        height: 48px;
         padding: 0;
         display: flex;
         align-items: center;
         justify-content: center;
+        background-color: #7EACEF;
+        border: none;
+        border-radius: 8px;
+        padding: 20px 24px;
+        cursor: pointer;
+        color: white;
+        font-size: 18px;
+        font-family: Roboto;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        gap: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        transition: all 0.2s ease-in-out;
     }
+
+    .download-button:hover,
+    .delete-button:hover, .check-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }   
 
     .grid {
         display: grid;
@@ -176,11 +186,6 @@
         <img [src]="croppedImageSrc" alt="Image Preview" style="max-width: 100%; max-height: 100%;" />
     </div>
     <div class="image-editor">
-        <div class="grid-explanation">
-            <h3>Import to the grid</h3>
-            Select the way the image will be cut to be imported in the grid,
-            you can change it once it is in the grid as well.
-        </div>
         <div class="grid-size-selector"
         (mouseleave)="onPlaceholderHover(-1)">
             <!-- The grid size selector is a 3x3 grid of 1080x1350 aspect ratio grey squares -->
@@ -204,7 +209,7 @@
                 <mat-icon>download</mat-icon>
             </button>
             <button class="check-button" (click)="sendImage()">
-                <mat-icon style="font-size: 36px; height: 36px; width: 36px;">check</mat-icon>
+                <mat-icon>check</mat-icon> Import Image
             </button>
             <button class="delete-button" (click)="deleteImage()">
                 <mat-icon>delete</mat-icon>
