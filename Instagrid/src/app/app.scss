@@ -34,6 +34,10 @@ app-header{
   display: none;
 }
 
+.image-picker{
+  display: none;
+}
+
 /* On mobile: drawers act as slide-in modals */
 @media screen and (max-width: 768px) {
 
@@ -87,5 +91,54 @@ app-header{
     justify-content: end;
     align-items: center;
     color: var(--theme-font);
+  }
+
+  .image-picker{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5%;
+    position: fixed;
+    bottom: 1%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60vw;
+  }
+
+  .add-icon{
+    padding: 5px 15px;
+    background-color: var(--theme-background-level-1);
+    border-radius: 10px;
+    color: var(--theme-accent);   
+    align-items: center; 
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    box-shadow: inset 0 2px 2px rgba(0,0,0,0.2);
+  }
+
+  .add-image-button{
+    height: 48px;
+    background-color: var(--theme-accent) !important;
+    font-size: 18px;
+    border: none;
+    border-radius: 15px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    cursor: pointer;
+    box-shadow: var(--mat-button-protected-container-elevation-shadow);
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: var(--theme-background-level-1) !important;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .add-image-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
 }

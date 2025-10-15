@@ -25,8 +25,8 @@ An image splitter and grid maker for the new instagram layout
   - [x] Change import prompt layout
   - [x] Change font sizes
   - [x] Update header
-  - [ ] "Add image" button outside the modal
-    - [ ] Right modal smaller to account for the outside button
+  - [x] "Add image" button outside the modal
+    - [x] Right modal smaller to account for the outside button
   - [ ] Add backdrop on the side modals and close when clicked
 - [ ] Publish
 
