@@ -6,6 +6,12 @@
 
      <!-- Left column contains the image menu, edit, download and remove image, as well as image preview -->
     <div class="left-column">
+      
+      <!-- Opening button for the left column on smaller screens -->
+      <button class="open-left-column-button drawer-button" (click)="toggleLeftColumn()" *ngIf="selectedImage">
+        <mat-icon>keyboard_double_arrow_right</mat-icon>
+      </button>
+
       <left-column></left-column>
     </div>
 
@@ -16,8 +22,20 @@
 
      <!-- Right column contains the image import elements, as well as image library -->
     <div class="right-column">
+
+      <!-- Opening button for the left column on smaller screens -->
+      <button class="open-right-column-button drawer-button" (click)="toggleRightColumn()">
+        <mat-icon>keyboard_double_arrow_left</mat-icon>
+      </button>
+
       <right-column></right-column>
     </div>
+
+    <import-prompt
+      *ngIf="showImportPrompt"
+      [image]="modalImage"
+      (close)="closeImportPrompt()">
+    </import-prompt>
   </div>
 </main>
 <router-outlet />

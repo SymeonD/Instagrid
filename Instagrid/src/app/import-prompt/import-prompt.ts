@@ -13,7 +13,7 @@ import { ImageProcessingService } from '../shared/image-processing-service';
   styleUrl: './import-prompt.scss'
 })
 export class ImportPrompt {
-  @Input() image!: globalImg;
+  @Input() image: globalImg | null = null;
   @Output() close = new EventEmitter<void>();
 
   // Grid selection logic
@@ -109,7 +109,7 @@ export class ImportPrompt {
   onPlaceholderClick(index: number): void {
     // Lock the selection
     this.selectedSize = index+1;
-    this.imageProcessing.cropImage(new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true).then(src => this.croppedImageSrc = src);
+    this.imageProcessing.cropImage(new gridImg(this.image!, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true).then(src => this.croppedImageSrc = src);
   }
 
   // Send the pieces to the grid

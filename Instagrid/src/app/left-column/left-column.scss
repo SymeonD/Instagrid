@@ -34,7 +34,7 @@
 /* The download button is a grey rounded square */
 .download-button {
     height: 48px;
-    background-color: var(--theme-accent);
+    background-color: var(--theme-accent) !important;
     font-size: 18px;
     border: none;
     border-radius: 15px;
@@ -49,7 +49,7 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    color: var(--theme-background-level-1);
+    color: var(--theme-background-level-1) !important;
     transition: all 0.2s ease-in-out;
 
     mat-icon{

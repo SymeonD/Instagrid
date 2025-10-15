@@ -1,17 +1,17 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
-import { ImportPrompt } from '../import-prompt/import-prompt';
 import { AppControllerService } from '../shared/app-controller.service';
 import { globalImg } from '../shared/global-img-class';
 import { ImageProcessingService } from '../shared/image-processing-service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
+import { ImportPromptService } from '../shared/import-prompt.service';
 
 
 @Component({
   selector: 'right-column',
-  imports: [CommonModule, MatIcon, ImportPrompt, MatSnackBarModule, MatButtonModule],
+  imports: [CommonModule, MatIcon, MatSnackBarModule, MatButtonModule],
   templateUrl: './right-column.html',
   styleUrl: './right-column.scss'
 })
@@ -22,7 +22,7 @@ export class RightColumn {
   showImportPrompt = false;
   modalImage: any = null;
 
-  constructor(private appControllerService: AppControllerService, private imageProcessing: ImageProcessingService, private _snackBar: MatSnackBar) {}
+  constructor(private appControllerService: AppControllerService, private imageProcessing: ImageProcessingService, private _snackBar: MatSnackBar, private importPromptService: ImportPromptService) {}
 
   ngOnInit() {
     this.appControllerService.globalImages$.subscribe(globalImgs => {
@@ -87,20 +87,6 @@ export class RightColumn {
 
   // Open image prompt
   protected openImportPrompt(image: any): void {
-    this.modalImage = image;
-    this.showImportPrompt = true;
-    // Set header z-index to 0
-    document.querySelector('header')
-      ? (document.querySelector('header') as HTMLElement).style.zIndex = '0'
-      : null;
-  }
-
-  protected closeImportPrompt(): void {
-    this.showImportPrompt = false;
-    this.modalImage = null;
-    // Reset header z-index to 1
-    document.querySelector('header')
-      ? (document.querySelector('header') as HTMLElement).style.zIndex = '10'
-      : null;
+    this.importPromptService.openImportPrompt(image);
   }
 }

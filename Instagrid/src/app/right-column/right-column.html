@@ -10,8 +10,3 @@
         <button matButton="elevated" class="add-image-button" (click)="importImages()">Add image<mat-icon class="add-icon">add</mat-icon></button>
     </div>
 </div>
-<import-prompt
-  *ngIf="showImportPrompt"
-  [image]="modalImage"
-  (close)="closeImportPrompt()">
-</import-prompt>

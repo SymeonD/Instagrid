@@ -11,6 +11,7 @@ app-header{
   position: fixed;
   left: 0;
   bottom: 0;
+  transition: transform 0.3s ease;
 }
 
 .center-column {
@@ -26,4 +27,65 @@ app-header{
   position: fixed;
   right: 0;
   bottom: 0;
+  transition: transform 0.3s ease;
+}
+
+.drawer-button{
+  display: none;
+}
+
+/* On mobile: drawers act as slide-in modals */
+@media screen and (max-width: 768px) {
+
+  .center-column {
+    width: 80vw;
+  }
+
+  .left-column{
+    transform: translateX(-100%);
+    width: 80vw;
+    max-width: 300px;
+    z-index: 10;
+  }
+
+  .right-column{
+    transform: translateX(100%);
+    width: 80vw;
+    max-width: 300px;
+    z-index: 10;
+  }
+
+  .left-column.show, .right-column.show {
+    transform: translateX(0);
+  }
+
+  .open-right-column-button{
+    position: absolute;
+    left: -30px;
+    margin-top: 12%;
+    background-color: var(--theme-accent);
+    border: none;
+    border-radius: 15px 0 15px 15px;
+    width: 70px;
+    height: 30px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    color: var(--theme-font);
+  }
+
+  .open-left-column-button{
+    position: absolute;
+    right: -30px;
+    margin-top: 12%;
+    background-color: var(--theme-accent);
+    border: none;
+    border-radius: 0 15px 15px 15px;
+    width: 70px;
+    height: 30px;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    color: var(--theme-font);
+  }
 }
