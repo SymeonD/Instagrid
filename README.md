@@ -22,7 +22,7 @@ An image splitter and grid maker for the new instagram layout
   - [x] New import menu
 - [ ] Mobile version
   - [x] Change side of chevron
-  - [ ] Change import prompt layout
+  - [x] Change import prompt layout
   - [x] Change font sizes
   - [x] Update header
   - [ ] "Add image" button outside the modal
