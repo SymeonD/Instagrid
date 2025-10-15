@@ -11,9 +11,10 @@ header {
   border-radius: 0 0 15px 15px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.2);
 
-  background: rgba(255, 255, 255, 0.8);
+  // #TODO: Add transparency
+  background: var(--theme-background-level-1);
   backdrop-filter: blur(10px);
-  color: var(--mat-app-text-color);
+  color: var(--theme-font-color);
   transition: background-color 0.3s ease, color 0.3s ease;
   
   .logo{
@@ -27,7 +28,7 @@ header {
       flex-direction: column;
 
       a{
-        color: #7EACEF;
+        color: var(--theme-accent);
         text-decoration: none;
       }
 
@@ -56,11 +57,11 @@ header {
       width: 32px;
       height: 32px;
       transition: transform 0.3s ease-in-out;
-      color: #7EACEF;
+      color: var(--theme-accent);
     }
 
     box-shadow: inset 0 1px 4px rgba(0,0,0,0.2);
-    background-color: var(--mat-app-background-color);
+    background-color: var(--theme-background-level-0);
     transition: background-color 0.3s ease, color 0.3s ease;
   }
 }
