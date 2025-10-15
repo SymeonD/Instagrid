@@ -20,6 +20,7 @@ An image splitter and grid maker for the new instagram layout
   - [x] New header
   - [x] New grid
   - [x] New import menu
+- [ ] Mobile version
 - [ ] Publish
 
 # Improvements
@@ -29,7 +30,6 @@ An image splitter and grid maker for the new instagram layout
 - [ ] Enable selection of output image type
 - [ ] Add instagram account preview with header
 - [ ] Add visible image separation on the images in the grid
-- [ ] Mobile version
 - [ ] Multiple item selection and download
 - [ ] Fix header when modal is opened   
 
