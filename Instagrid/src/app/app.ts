@@ -24,6 +24,9 @@ export class App {
   protected showImportPrompt = false;
   protected modalImage: globalImg | null = null;
 
+  protected isRightColumnOpen = false;
+  protected isLeftColumnOpen = false;
+
   constructor(private appControllerService: AppControllerService, private importPromptService: ImportPromptService) {}
 
   ngOnInit() {
@@ -40,6 +43,10 @@ export class App {
     document.querySelector('.right-column')
       ? (document.querySelector('.right-column') as HTMLElement).classList.remove('show')
       : null;
+
+    // Set variables to false
+    this.isLeftColumnOpen = !this.isLeftColumnOpen;
+    this.isRightColumnOpen = false;
   }
 
   toggleRightColumn() {
@@ -50,6 +57,10 @@ export class App {
     document.querySelector('.left-column')
       ? (document.querySelector('.left-column') as HTMLElement).classList.remove('show')
       : null;
+
+    // Set variables to false
+    this.isRightColumnOpen = !this.isRightColumnOpen;
+    this.isLeftColumnOpen = false;
   }
 
   closeImportPrompt() {
