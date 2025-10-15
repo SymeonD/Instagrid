@@ -41,6 +41,13 @@ app-header{
 /* On mobile: drawers act as slide-in modals */
 @media screen and (max-width: 768px) {
 
+  .modal-backdrop{
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 10;
+  }
+
   .center-column {
     width: 80vw;
   }
@@ -49,14 +56,14 @@ app-header{
     transform: translateX(-100%);
     width: 80vw;
     max-width: 300px;
-    z-index: 10;
+    z-index: 11;
   }
 
   .right-column{
     transform: translateX(100%);
     width: 80vw;
     max-width: 300px;
-    z-index: 10;
+    z-index: 11;
   }
 
   .left-column.show, .right-column.show {

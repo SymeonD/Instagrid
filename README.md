@@ -20,14 +20,14 @@ An image splitter and grid maker for the new instagram layout
   - [x] New header
   - [x] New grid
   - [x] New import menu
-- [ ] Mobile version
+- [x] Mobile version
   - [x] Change side of chevron
   - [x] Change import prompt layout
   - [x] Change font sizes
   - [x] Update header
   - [x] "Add image" button outside the modal
     - [x] Right modal smaller to account for the outside button
-  - [ ] Add backdrop on the side modals and close when clicked
+  - [x] Add backdrop on the side modals and close when clicked
 - [ ] Publish
 
 # Improvements
@@ -38,7 +38,8 @@ An image splitter and grid maker for the new instagram layout
 - [ ] Add instagram account preview with header
 - [ ] Add visible image separation on the images in the grid
 - [ ] Multiple item selection and download
-- [ ] Fix header when modal is opened   
+- [ ] Fix header when modal is opened
+- [ ] Change right panel mobile state management to service and own parameters
 
 # Discarded
 - [x] Add texts in the prompts, explanations about preview quality

@@ -39,32 +39,24 @@ export class App {
     this.importPromptService.modalOpen$.subscribe(open => this.showImportPrompt = open);
   }
 
-  toggleLeftColumn() {
-    document.querySelector('.left-column')
-      ? (document.querySelector('.left-column') as HTMLElement).classList.toggle('show')
-      : null;
-    // If the left column is open, close the right column
-    document.querySelector('.right-column')
-      ? (document.querySelector('.right-column') as HTMLElement).classList.remove('show')
-      : null;
+  toggleColumn() {
+    if (this.isLeftColumnOpen) {
+      this.toggleLeftColumn();
+    } else if (this.isRightColumnOpen) {
+      this.toggleRightColumn();
+    }
+  }
 
-    // Set variables to false
+  toggleLeftColumn() {
     this.isLeftColumnOpen = !this.isLeftColumnOpen;
-    this.isRightColumnOpen = false;
+    if (this.isLeftColumnOpen) this.isRightColumnOpen = false;
   }
 
   toggleRightColumn() {
-    document.querySelector('.right-column')
-      ? (document.querySelector('.right-column') as HTMLElement).classList.toggle('show')
-      : null;
-    // If the right column is open, close the left column
-    document.querySelector('.left-column')
-      ? (document.querySelector('.left-column') as HTMLElement).classList.remove('show')
-      : null;
-
-    // Set variables to false
     this.isRightColumnOpen = !this.isRightColumnOpen;
-    this.isLeftColumnOpen = false;
+    if (this.isRightColumnOpen) this.isLeftColumnOpen = false;
+
+    console.log(this.isRightColumnOpen);
   }
 
   closeImportPrompt() {
