@@ -36,6 +36,7 @@ An image splitter and grid maker for the new instagram layout
 - [ ] Close modal when photos are deleted
 - [ ] Fix import prompt display when image is edited to 3x1
 - [ ] Fix modal not closing when clicked on top of add image button
+- [ ] Change grid lines sizes on mobile
 
 # Improvements
 - [ ] Improve canvas performances
