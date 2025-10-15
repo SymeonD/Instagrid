@@ -11,6 +11,15 @@
 
 OR
 
+Dark theme: 181818, 212121, 303030
+Light theme: faf9fd, ffffff
+Accent: 7EACEF
+Green: f44336
+Red: 4CAF50
+
+Dark theme font: ffffff
+Light theme font: 181818
+
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins&family=Roboto&display=swap">
 */
 
@@ -147,6 +156,10 @@ OR
   --mat-sys-bold-font-weight: 700;
   --mat-sys-medium-font-weight: 500;
   --mat-sys-regular-font-weight: 400;
+
+  --dark-theme-background-level-0: #181818;
+  --dark-theme-background-level-1: #242424;
+  --dark-theme-background-level-2: #303030;
 
   @include mat.theme-overrides((
     brand-family: Poppins,

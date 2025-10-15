@@ -39,15 +39,28 @@ $dark-theme: mat.define-theme((
 
 :root{
   @include mat.all-component-themes($light-theme);
+
+  --theme-red: #f44336;
+  --theme-green: #4caf50;
+  --theme-accent: #7eacef;
 }
 
 :root,
 .light-theme{
   @include mat.all-component-colors($light-theme);
+
+  
+  --theme-background-level-0: #faf9fd;
+  --theme-background-level-1: #ffffff;
+  --theme-font-color: #181818;
 }
 
 .dark-theme{
   @include mat.all-component-colors($dark-theme);
+
+  --theme-background-level-0: #181818;
+  --theme-background-level-1: #242424;
+  --theme-font-color: #ffffff;
 }
 
 body {
