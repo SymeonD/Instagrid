@@ -53,6 +53,10 @@ $dark-theme: mat.define-theme((
   --theme-background-level-0: #faf9fd;
   --theme-background-level-1: #ffffff;
   --theme-font-color: #181818;
+  --theme-grid-color: #f0f0f0;
+  --theme-grid-color-darkened: #bdbdbd;
+  --theme-grid-color-selected: #9e9e9e;
+
 }
 
 .dark-theme{
@@ -61,6 +65,9 @@ $dark-theme: mat.define-theme((
   --theme-background-level-0: #181818;
   --theme-background-level-1: #242424;
   --theme-font-color: #ffffff;
+  --theme-grid-color: #9e9e9e;
+  --theme-grid-color-darkened: #bdbdbd;
+  --theme-grid-color-selected: #f0f0f0;
 }
 
 body {

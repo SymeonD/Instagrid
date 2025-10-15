@@ -1,0 +1,32 @@
+.grid{
+    height: 100%;
+    display: flex;
+    width: 90%;
+    justify-self: center;
+}
+
+.grid-item-content--selected {
+    border: 3px solid rgb(163, 0, 0);
+    box-sizing: border-box;
+}
+
+.grid > * {
+    min-height: 100vh;
+}
+
+.grid-container {
+    position: relative;
+    opacity: 0.3; /* makes the entire grid semi-transparent */
+}
+
+.grid-item img {
+opacity: 1; /* if you want the images fully opaque */
+}
+
+ktd-grid {
+    z-index: 0;
+}
+
+ktd-grid-item {
+    z-index: 0;
+}

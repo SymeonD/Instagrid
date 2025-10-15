@@ -9,7 +9,7 @@
     position: fixed;
     top: 15vh; left: 10vw;
     width: 80vw; height: 75vh;
-    background: var(--mat-app-background-color);
+    background: var(--theme-background-level-1);
     z-index: 101;
     border-radius: 16px;
     box-shadow: 0 4px 32px rgba(0,0,0,0.2);
@@ -40,7 +40,7 @@
 
 /* The download button is a grey rounded square */
 .download-button {
-    background-color: #4CAF50;
+    background-color: var(--theme-green);
     border: none;
     border-radius: 8px;
     padding: 10px 20px;
@@ -50,7 +50,7 @@
 /* The delete button is a red rounded square same size as the download button */
 /* it has to be a square */
 .delete-button {
-    background-color: #f44336;
+    background-color: var(--theme-red);
     border: none;
     border-radius: 8px;
     padding: 10px 20px;
@@ -68,7 +68,7 @@
     justify-content: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     transition: all 0.2s ease-in-out;
-    color: white;
+    color: var(--theme-background-level-1);
 }
 
 .check-button {
@@ -77,12 +77,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #7EACEF;
+    background-color: var(--theme-accent);
     border: none;
     border-radius: 8px;
     padding: 20px 24px;
     cursor: pointer;
-    color: white;
+    color: var(--theme-background-level-1);
     font-size: 18px;
     font-family: Roboto;
     white-space: nowrap;
@@ -110,24 +110,20 @@
 .grid-item {
     width: 100%;
     aspect-ratio: 1080 / 1350;
-    background-color: #f0f0f0;
+    background-color: var(--theme-grid-color);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-}
-
-.grid-item {
-    background-color: #f0f0f0;
     transition: all 0.2s;
 }
 
 .grid-item.darkened {
-    background-color: #bdbdbd;
+    background-color: var(--theme-grid-color-darkened);
 }
 
 .grid-item.selected {
-    background-color: #9e9e9e;
+    background-color: var(--theme-grid-color-selected);
 }
 
 .image-preview {
@@ -166,4 +162,5 @@
     position: absolute;
     top: 10px;
     right: 10px;
+    color: var(--theme-font-color);
 }
