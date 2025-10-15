@@ -49,6 +49,12 @@ export class AppGrid {
         });
     }
 
+    ngAfterViewInit() {
+        // TODO: Centralize
+        this.gridWidth = document.getElementById('image-grid-container')?.clientWidth || window.innerWidth*0.5;
+        this.rowHeight = 1350 / 1010 * (this.gridWidth / this.cols);
+    }
+
     constructor(protected appControllerService: AppControllerService, protected imageProcessing: ImageProcessingService) {
         // Subscription to the list of grid images
         this.appControllerService.gridImages$.subscribe(gridImgs => {

@@ -56,7 +56,8 @@ app-header{
     transform: translateX(-100%);
     width: 80vw;
     max-width: 300px;
-    z-index: 11;
+    z-index: 14;
+    height: 80vh;
   }
 
   .right-column{
@@ -64,6 +65,7 @@ app-header{
     width: 80vw;
     max-width: 300px;
     z-index: 11;
+    height: 80vh;
   }
 
   .left-column.show, .right-column.show {
@@ -72,32 +74,46 @@ app-header{
 
   .open-right-column-button{
     position: absolute;
-    left: -30px;
+    left: -45px;
     margin-top: 12%;
     background-color: var(--theme-accent);
     border: none;
-    border-radius: 15px 0 15px 15px;
-    width: 70px;
-    height: 30px;
+    border-radius: 30px 0 30px 30px;
+    width: 100px;
+    height: 60px;
     display: flex;
     justify-content: start;
     align-items: center;
     color: var(--theme-font);
+
+    mat-icon{
+      font-size: 32px;
+      height: 32px;
+      width: 32px;
+      justify-self: center;
+    }
   }
 
   .open-left-column-button{
     position: absolute;
-    right: -30px;
+    right: -45px;
     margin-top: 12%;
     background-color: var(--theme-accent);
     border: none;
-    border-radius: 0 15px 15px 15px;
-    width: 70px;
-    height: 30px;
+    border-radius: 0 30px 30px 30px;
+    width: 100px;
+    height: 60px;
     display: flex;
     justify-content: end;
     align-items: center;
     color: var(--theme-font);
+
+    mat-icon{
+      font-size: 32px;
+      height: 32px;
+      width: 32px;
+      justify-self: center;
+    }
   }
 
   .image-picker{
@@ -110,6 +126,7 @@ app-header{
     left: 50%;
     transform: translateX(-50%);
     width: 60vw;
+    z-index: 12;
   }
 
   .add-icon{

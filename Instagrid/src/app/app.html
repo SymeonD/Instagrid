@@ -18,9 +18,6 @@
      <!-- Center column contains the main grid component -->
     <div class="center-column">
       <app-grid></app-grid>
-      <div class="image-picker">
-        <button matButton="elevated" class="add-image-button" (click)="importImages()">Add image<mat-icon class="add-icon">add</mat-icon></button>
-    </div>
     </div>
 
      <!-- Right column contains the image import elements, as well as image library -->
@@ -42,6 +39,11 @@
 
     <!-- Backdrop modal for mobile -->
     <div class="modal-backdrop" *ngIf="isLeftColumnOpen || isRightColumnOpen" (click)="toggleColumn()"></div>
+
+    <!-- Image picker -->
+    <div class="image-picker">
+        <button matButton="elevated" class="add-image-button" (click)="importImages()">Add image<mat-icon class="add-icon">add</mat-icon></button>
+    </div>
   </div>
 </main>
 <router-outlet />
