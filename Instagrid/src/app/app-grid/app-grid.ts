@@ -1,4 +1,4 @@
-import { Component, HostListener, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { KtdDragEnd, KtdDragStart, KtdGridBackgroundCfg, ktdGridCompact, KtdGridComponent, KtdGridLayout, KtdGridLayoutItem, KtdGridModule, KtdResizeEnd, KtdResizeStart } from '@katoid/angular-grid-layout';
 import { ktdTrackById } from '@katoid/angular-grid-layout';
@@ -53,9 +53,10 @@ export class AppGrid {
         // TODO: Centralize
         this.gridWidth = document.getElementById('image-grid-container')?.clientWidth || window.innerWidth*0.5;
         this.rowHeight = 1350 / 1010 * (this.gridWidth / this.cols);
+        this.cdr.detectChanges();
     }
 
-    constructor(protected appControllerService: AppControllerService, protected imageProcessing: ImageProcessingService) {
+    constructor(protected appControllerService: AppControllerService, protected imageProcessing: ImageProcessingService, private cdr: ChangeDetectorRef) {
         // Subscription to the list of grid images
         this.appControllerService.gridImages$.subscribe(gridImgs => {
 
