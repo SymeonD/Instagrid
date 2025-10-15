@@ -17,6 +17,7 @@ An image splitter and grid maker for the new instagram layout
   - [x] New Figma design
   - [ ] New right column
   - [ ] New left column
+  - [ ] New header
   - [ ] New grid
   - [ ] New import menu
 - [ ] Publish
