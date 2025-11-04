@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { gridImg } from './grid-img-class';
-import { globalImg } from './global-img-class';
+import { globalImg } from '../../core/models/global-img-class';
 
 @Injectable({ providedIn: 'root' })
 export class ImportPromptService {

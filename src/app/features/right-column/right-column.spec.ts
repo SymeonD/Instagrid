@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RightColumn } from './right-column';
-import { AppControllerService } from '../shared/app-controller.service';
+import { AppControllerService } from '../../core/services/app-controller.service';
 import { BehaviorSubject } from 'rxjs';
-import { globalImg } from '../shared/global-img-class';
+import { globalImg } from '../../core/models/global-img-class';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 

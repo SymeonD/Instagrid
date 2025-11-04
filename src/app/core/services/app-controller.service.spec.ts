@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { AppControllerService } from './app-controller.service';
-import { globalImg } from './global-img-class';
-import { gridImg } from './grid-img-class';
+import { globalImg } from '../../core/models/global-img-class';
+import { gridImg } from '../../core/models/grid-img-class';
 import { ImageProcessingService } from './image-processing-service';
 import { firstValueFrom } from 'rxjs';
 

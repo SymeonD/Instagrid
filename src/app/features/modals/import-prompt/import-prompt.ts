@@ -1,10 +1,10 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
-import { AppControllerService } from '../shared/app-controller.service';
-import { gridImg } from '../shared/grid-img-class';
-import { globalImg } from '../shared/global-img-class';
-import { ImageProcessingService } from '../shared/image-processing-service';
+import { AppControllerService } from '../../../core/services/app-controller.service';
+import { gridImg } from '../../../core/models/grid-img-class';
+import { globalImg } from '../../../core/models/global-img-class';
+import { ImageProcessingService } from '../../../core/services/image-processing-service';
 
 @Component({
   selector: 'import-prompt',

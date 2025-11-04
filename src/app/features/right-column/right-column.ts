@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
-import { AppControllerService } from '../shared/app-controller.service';
-import { globalImg } from '../shared/global-img-class';
-import { ImageProcessingService } from '../shared/image-processing-service';
+import { AppControllerService } from '../../core/services/app-controller.service';
+import { globalImg } from '../../core/models/global-img-class';
+import { ImageProcessingService } from '../../core/services/image-processing-service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
-import { ImportPromptService } from '../shared/import-prompt.service';
+import { ImportPromptService } from '../../core/services/import-prompt.service';
 
 
 @Component({

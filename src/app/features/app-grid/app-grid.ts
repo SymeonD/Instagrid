@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { KtdDragEnd, KtdDragStart, KtdGridBackgroundCfg, ktdGridCompact, KtdGridComponent, KtdGridLayout, KtdGridLayoutItem, KtdGridModule, KtdResizeEnd, KtdResizeStart } from '@katoid/angular-grid-layout';
 import { ktdTrackById } from '@katoid/angular-grid-layout';
 import { MatSelectChange } from '@angular/material/select';
-import { AppControllerService } from '../shared/app-controller.service';
-import { gridImg } from '../shared/grid-img-class';
-import { ImageProcessingService } from '../shared/image-processing-service';
+import { AppControllerService } from '../../core/services/app-controller.service';
+import { gridImg } from '../../core/models/grid-img-class';
+import { ImageProcessingService } from '../../core/services/image-processing-service';
 
 
 
