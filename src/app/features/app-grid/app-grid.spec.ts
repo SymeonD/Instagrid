@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppGrid } from './app-grid';
-import { AppControllerService } from '../shared/app-controller.service';
-import { ImageProcessingService } from '../shared/image-processing-service';
+import { AppControllerService } from '../../core/services/app-controller.service';
+import { ImageProcessingService } from '../../core/services/image-processing-service';
 import { BehaviorSubject } from 'rxjs';
-import { gridImg } from '../shared/grid-img-class';
-import { globalImg } from '../shared/global-img-class';
+import { gridImg } from '../../core/models/grid-img-class';
+import { globalImg } from '../../core/models/global-img-class';
 import { KtdGridComponent, KtdGridModule } from '@katoid/angular-grid-layout';
 import { CommonModule } from '@angular/common';
 

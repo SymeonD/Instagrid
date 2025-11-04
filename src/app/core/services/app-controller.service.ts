@@ -1,7 +1,7 @@
 // Injectable
 import { Injectable } from '@angular/core';
-import { globalImg } from './global-img-class';
-import { gridImg } from './grid-img-class';
+import { globalImg } from '../../core/models/global-img-class';
+import { gridImg } from '../../core/models/grid-img-class';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 @Injectable({ providedIn: 'root' })

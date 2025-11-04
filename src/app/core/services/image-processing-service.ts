@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { gridImg } from './grid-img-class';
+import { gridImg } from '../../core/models/grid-img-class';
 import JSZip from 'jszip';
 
 @Injectable({ providedIn: 'root' })

@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ImportPrompt } from './import-prompt';
-import { AppControllerService } from '../shared/app-controller.service';
-import { ImageProcessingService } from '../shared/image-processing-service';
-import { gridImg } from '../shared/grid-img-class';
-import { globalImg } from '../shared/global-img-class';
+import { AppControllerService } from '../../../core/services/app-controller.service';
+import { ImageProcessingService } from '../../../core/services/image-processing-service';
+import { globalImg } from '../../../core/models/global-img-class';
 import { BehaviorSubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
