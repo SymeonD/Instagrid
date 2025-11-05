@@ -1,6 +1,9 @@
 # Instagrid
 An image splitter and grid maker for the new instagram layout
 
+# Link
+[https://symeond.github.io/Instagrid/](https://symeond.github.io/Instagrid/)
+
 # TODO
 - [x] Show in the left column the cut down image to the right format
 - [x] Check the dimension so that it works best for instagram (1010, 1015...) maybe put in global settings
@@ -8,7 +11,7 @@ An image splitter and grid maker for the new instagram layout
 - [x] if grid is clicked outside an image, reset the selected element
 - [x] Tests
 
-# V.1
+# V.0.1
 - [x] Remove or implement edit buttons
 - [x] Check for image format
 - [x] Add dark mode
@@ -28,9 +31,9 @@ An image splitter and grid maker for the new instagram layout
   - [x] "Add image" button outside the modal
     - [x] Right modal smaller to account for the outside button
   - [x] Add backdrop on the side modals and close when clicked
-- [ ] Publish
+- [x] Publish
 
-# V1.1
+# V.1.0
 - [ ] Close backdrop when photos are imported
 - [ ] Open modal when photos are imported
 - [ ] Close modal when photos are deleted
