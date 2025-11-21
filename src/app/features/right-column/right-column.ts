@@ -32,48 +32,9 @@ export class RightColumn {
     // Remove local images array logic
   }
 
+  // Used when 
   protected importImages(): void {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
-    input.multiple = true;
-
-    input.onchange = (event: Event) => {
-      const target = event.target as HTMLInputElement;
-      if (!target.files) return;
-
-      const files = Array.from(target.files);
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
-      const allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'svg'];
-
-      files.forEach((file) => {
-        const ext = file.name.toLowerCase().split('.').pop();
-
-        // Check both MIME type and extension
-        if (!allowedTypes.includes(file.type) || !allowedExtensions.includes(ext!)) {
-          this._snackBar.open(
-            `⚠️ ${file.type} is not supported. Please upload JPG, JPEG, PNG, WEBP, or SVG files.`,
-            'Close',
-            { duration: 50000, panelClass: ['snackbar-warning'] }
-          );
-          return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = () => {
-          const image = { src: reader.result as string, alt: file.name };
-          this.appControllerService.addGlobalImage(
-            new globalImg(image.src, image.alt, this.imageProcessing)
-          );
-          this._snackBar.open(`✅ Image imported successfully!`, 'Close', {
-            duration: 3000,
-            panelClass: ['snackbar-success']
-          });
-        };
-        reader.readAsDataURL(file);
-      });
-    };
-    input.click();
+    this.imageProcessing.importImages();
   }
 
   protected updateColumns(): void {

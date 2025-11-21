@@ -35,7 +35,7 @@ An image splitter and grid maker for the new instagram layout
 
 # V.1.0
 - [ ] Close backdrop when photos are imported
-- [ ] Open modal when photos are imported
+- [x] Open modal when photos are imported
 - [ ] Close modal when photos are deleted
 - [ ] Fix import prompt display when image is edited to 3x1
 - [ ] Fix modal not closing when clicked on top of add image button
