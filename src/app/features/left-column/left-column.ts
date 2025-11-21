@@ -5,6 +5,7 @@ import { AppControllerService } from '../../core/services/app-controller.service
 import { gridImg } from '../../core/models/grid-img-class';
 import { ImageProcessingService } from '../../core/services/image-processing-service';
 import { MatButtonModule } from '@angular/material/button';
+import { LeftColumnService } from '../../core/services/left-column-service';
 
 @Component({
   selector: 'left-column',
@@ -17,7 +18,8 @@ export class LeftColumn {
 
   constructor(
     private appControllerService: AppControllerService,
-    private imageProcessing: ImageProcessingService
+    private imageProcessing: ImageProcessingService,
+    private leftColumnService: LeftColumnService
   ) {
     this.appControllerService.selectedGridImage$.subscribe(img => this.selectedImage = img);
   }
@@ -36,6 +38,8 @@ export class LeftColumn {
       a.download = 'images.zip';
       a.click();
       window.URL.revokeObjectURL(url);
+      // Close left column after download
+      this.leftColumnService.close();
     } catch (err) {
       console.error('Error downloading image:', err);
     }
@@ -43,7 +47,10 @@ export class LeftColumn {
 
   protected deleteImage() {
     if (!this.selectedImage) return;
-    this.appControllerService.removeGridImage(this.selectedImage.id!);
-    this.selectedImage = null;
+    this.leftColumnService.close();
+    setTimeout(() => {
+      this.appControllerService.removeGridImage(this.selectedImage!.id);
+      this.selectedImage = null;
+    }, 100); // Delay to allow drawer to close smoothly
   }
 }
