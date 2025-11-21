@@ -41,6 +41,7 @@ An image splitter and grid maker for the new instagram layout
 - [ ] Fix modal not closing when clicked on top of add image button
   - The column is too wide and tall, so the click is not detected as outside the modal, fix the height
 - [ ] Change grid lines sizes on mobile
+- [ ] Fix delay when open and close columns buttnos are clicked
 
 # Improvements
 - [ ] Improve canvas performances
