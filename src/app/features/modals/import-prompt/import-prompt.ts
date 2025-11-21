@@ -5,6 +5,7 @@ import { AppControllerService } from '../../../core/services/app-controller.serv
 import { gridImg } from '../../../core/models/grid-img-class';
 import { globalImg } from '../../../core/models/global-img-class';
 import { ImageProcessingService } from '../../../core/services/image-processing-service';
+import { RightColumnService } from '../../../core/services/right-column-service';
 
 @Component({
   selector: 'import-prompt',
@@ -47,7 +48,7 @@ export class ImportPrompt {
   private selectedSize = 1; // Default to 0
   croppedImageSrc = '';
 
-  constructor(private appControllerService: AppControllerService, private imageProcessing: ImageProcessingService) {
+  constructor(private appControllerService: AppControllerService, private imageProcessing: ImageProcessingService, private rightColumnService: RightColumnService) {
     // Pieces
     this.image && this.imageProcessing.cropImage(new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true).then(src => this.croppedImageSrc = src);
   }
@@ -117,6 +118,8 @@ export class ImportPrompt {
     if (this.image && this.croppedImageSrc) {
       // Add the image to the grid
       this.appControllerService.addGridImage(new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1], this.croppedImageSrc));
+      //Close the right column if open
+      this.rightColumnService.close();
       this.close.emit();
     }
   }
