@@ -65,7 +65,8 @@ export class ImageProcessingService {
           // Get body background color
           const bgColor = window.getComputedStyle(document.body, null).getPropertyValue('background-color'); 
           context.strokeStyle = bgColor;
-          context.lineWidth = 10;
+          // Grid line width, 10px for large screens, 15px for small screens
+          context.lineWidth = window.innerWidth > 768 ? 10 : 15;
           for (let i = 0; i < gridX; i++) {
             context.beginPath();
             context.moveTo(i * stepX, 0);

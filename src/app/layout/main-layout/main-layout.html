@@ -12,7 +12,7 @@
         <mat-icon>{{ isLeftColumnOpen ? 'keyboard_double_arrow_left' : 'keyboard_double_arrow_right' }}</mat-icon>
       </button>
 
-      <left-column></left-column>
+      <left-column  [isActive]="isLeftColumnOpen" (clickOutside)="onOutsideClick()"></left-column>
     </div>
 
      <!-- Center column contains the main grid component -->
@@ -21,14 +21,14 @@
     </div>
 
      <!-- Right column contains the image import elements, as well as image library -->
-    <div class="right-column" [class.show]="isRightColumnOpen">
+    <div class="right-column" [class.show]="isRightColumnOpen"> 
 
       <!-- Opening button for the left column on smaller screens -->
       <button class="open-right-column-button drawer-button" (click)="toggleRightColumn()">
         <mat-icon>{{ isRightColumnOpen ? 'keyboard_double_arrow_right' : 'keyboard_double_arrow_left' }}</mat-icon>
       </button>
 
-      <right-column></right-column>
+      <right-column [isActive]="isRightColumnOpen" (clickOutside)="onOutsideClick()"></right-column>
     </div>
 
     <import-prompt
@@ -38,7 +38,7 @@
     </import-prompt>
 
     <!-- Backdrop modal for mobile -->
-    <div class="modal-backdrop" *ngIf="isLeftColumnOpen || isRightColumnOpen" (click)="toggleColumn()"></div>
+    <div class="modal-backdrop" *ngIf="isLeftColumnOpen || isRightColumnOpen"></div>
 
     <!-- Image picker -->
     <div class="image-picker">

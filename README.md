@@ -38,9 +38,8 @@ An image splitter and grid maker for the new instagram layout
 - [x] Open modal when photos are imported
 - [x] Close modal when photos are deleted
 - [ ] Fix import prompt display when image is edited to 3x1
-- [ ] Fix modal not closing when clicked on top of add image button
-  - The column is too wide and tall, so the click is not detected as outside the modal, fix the height
-- [ ] Change grid lines sizes on mobile
+- [x] Fix modal not closing when clicked on top of add image button
+- [x] Change grid lines sizes on mobile
 - [ ] Fix delay when open and close columns buttnos are clicked
 
 # Improvements
