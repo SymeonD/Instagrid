@@ -33,17 +33,18 @@ An image splitter and grid maker for the new instagram layout
   - [x] Add backdrop on the side modals and close when clicked
 - [x] Publish
 
-# V.1.0
+# V.0.2
 - [x] Close backdrop when photos are imported
 - [x] Open modal when photos are imported
 - [x] Close modal when photos are deleted
-- [ ] Fix import prompt display when image is edited to 3x1
+- [x] Fix import prompt display when image is edited to 3x1
 - [x] Fix modal not closing when clicked on top of add image button
 - [x] Change grid lines sizes on mobile
-- [ ] Fix delay when open and close columns buttnos are clicked
+- [x] Fix delay when open and close columns buttnos are clicked
 
 # Improvements
 - [ ] Improve canvas performances
+- [ ] Add swipe to open and close side columns on mobile
 - [ ] Improve styling system including mat-styling
 - [ ] Add image crop settings where you can move the zone that's gonna be selected and cut, link it to the menu on the left
 - [ ] Enable selection of output image type
@@ -53,6 +54,15 @@ An image splitter and grid maker for the new instagram layout
 - [ ] Fix header when modal is opened
 - [ ] Change right panel mobile state management to service and own parameters
 - [ ] Make add image button white background truly transparent
+
+# Ideas
+- [ ] Add drag and drop to place images directly on the grid
+- [ ] Add drag and drop to import images
+- [ ] Add direct instagram upload (with login)
+- [ ] Add direct cloud upload (Google Drive, Dropbox, OneDrive, iCloud)
+- [ ] Add multi-language support  
+- [ ] Add loading indicator when images are being processed
+- [ ] Add progress bar when multiple images are being processed
 
 # Discarded
 - [x] Add texts in the prompts, explanations about preview quality

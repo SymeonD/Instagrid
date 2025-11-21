@@ -1,3 +1,7 @@
+* {
+  touch-action: manipulation;
+}
+
 app-header{
   height: 10vh;
   max-height: 100px;
@@ -27,7 +31,7 @@ app-header{
   position: fixed;
   right: 0;
   bottom: 0;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease-in-out;
 }
 
 .drawer-button{

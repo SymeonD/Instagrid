@@ -50,6 +50,7 @@ export class MainLayout {
   }
 
   toggleRightColumn() {
+    console.log('Toggling right column');
     this.rightColumnService.toggle();
   }
 
