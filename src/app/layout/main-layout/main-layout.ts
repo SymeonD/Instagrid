@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AppGrid } from '../../features/app-grid/app-grid';
 import { LeftColumn } from '../../features/left-column/left-column';
@@ -50,7 +50,6 @@ export class MainLayout {
   }
 
   toggleRightColumn() {
-    console.log('Toggling right column');
     this.rightColumnService.toggle();
   }
 

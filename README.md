@@ -41,12 +41,15 @@ An image splitter and grid maker for the new instagram layout
 - [x] Fix modal not closing when clicked on top of add image button
 - [x] Change grid lines sizes on mobile
 - [x] Fix delay when open and close columns buttnos are clicked
+- [ ] Add image crop settings where you can move the zone that's gonna be selected and cut, link it to the menu on the left
 
 # Improvements
 - [ ] Improve canvas performances
+  - [ ] Use signals and OnPush change detection where possible
+    - Not on the main layout because of the side columns opening and closing
+  - [ ] Use web workers for image processing
 - [ ] Add swipe to open and close side columns on mobile
 - [ ] Improve styling system including mat-styling
-- [ ] Add image crop settings where you can move the zone that's gonna be selected and cut, link it to the menu on the left
 - [ ] Enable selection of output image type
 - [ ] Add instagram account preview with header
 - [ ] Add visible image separation on the images in the grid

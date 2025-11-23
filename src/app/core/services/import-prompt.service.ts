@@ -15,8 +15,6 @@ export class ImportPromptService {
   openImportPrompt(image: globalImg) {
     this._modalImage.next(image);
     this.open();
-
-    console.log(image);
   }
 
   closeImportPrompt() {

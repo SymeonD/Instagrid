@@ -10,6 +10,8 @@ import { RightColumnService } from './right-column-service';
 export class ImageProcessingService {
   constructor(private _snackBar: MatSnackBar, private appControllerService: AppControllerService) {}
 
+  private imageWorker: Worker | null = null;
+
   async cropImage(image: gridImg, lowResolution: boolean): Promise<string> {
     return new Promise((resolve, reject) => {
       if (!image) {
@@ -118,40 +120,56 @@ export class ImageProcessingService {
   }
 
   divideImage(srcImage: string, cols: number, rows: number, overlap: number = 70): Promise<string[]> {
-    if (!srcImage) return Promise.reject('No image provided');
 
-    const promises: Promise<string>[] = [];
-    const targetWidth = 1080;
-    const targetHeight = 1350;
+    if (!srcImage) throw new Error("Source image is null");
 
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
-        promises.push(
-          new Promise<string>((resolve, reject) => {
-            const img = new window.Image();
-            img.src = srcImage;
-            img.onload = () => {
-              const canvas = document.createElement('canvas');
-              const context = canvas.getContext('2d');
-              if (!context) return reject('Canvas context error');
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.src = srcImage;
 
-              canvas.width = targetWidth;
-              canvas.height = targetHeight;
+      img.onload = () => {
+        const tileWidth = Math.floor(img.width / cols);
+        const tileHeight = Math.floor(img.height / rows);
 
-              const sx = c * (targetWidth - overlap);
-              const sy = r * targetHeight;
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return reject("Canvas context error");
 
-              context.drawImage(img, sx, sy, targetWidth, targetHeight, 0, 0, targetWidth, targetHeight);
-              resolve(canvas.toDataURL('image/jpeg'));
-            };
-            img.onerror = reject;
-          })
-        );
-      }
-    }
+        // Resize each tile to 1080x1350
+        const outputWidth = 1080;
+        const outputHeight = 1350;
+        canvas.width = outputWidth;
+        canvas.height = outputHeight;
 
-    return Promise.all(promises);
+        const results: string[] = [];
+
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            const sx = c * (tileWidth - overlap);
+            const sy = r * tileHeight;
+
+            ctx.clearRect(0, 0, outputWidth, outputHeight);
+
+            ctx.drawImage(
+              img,
+              sx, sy,
+              tileWidth, tileHeight,
+              0, 0,
+              outputWidth, outputHeight
+            );
+
+            results.push(canvas.toDataURL("image/jpeg"));
+          }
+        }
+
+        resolve(results);
+      };
+
+      img.onerror = (err) => reject(err);
+    });
   }
+
 
   async createZip(images: string[]): Promise<Blob> {
     const zip = new JSZip();
@@ -162,6 +180,8 @@ export class ImageProcessingService {
     return zip.generateAsync({ type: 'blob' });
   }
 
+  // TODO: optimize this function to handle large number of images without blocking the UI
+  // Use web workers if necessary
   importImages(rightColumnService? : RightColumnService): void {
     const input = document.createElement('input');
     input.type = 'file';
