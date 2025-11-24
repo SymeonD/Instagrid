@@ -1,7 +1,7 @@
 <div class="modal-backdrop" (click)="close.emit()"></div>
 <div class="modal-container">
     <div>
-        <button class="close-button" (click)="close.emit()">
+        <button aria-label="close-button" class="close-button" (click)="close.emit()">
             <mat-icon>close</mat-icon>
         </button>
     </div>
@@ -28,13 +28,13 @@
             </div>
         </div>
         <div class="image-controls">
-            <button class="download-button" (click)="downloadImages()">
+            <button aria-label="download-button" class="download-button" (click)="downloadImages()">
                 <mat-icon>download</mat-icon>
             </button>
-            <button class="check-button" (click)="sendImage()">
+            <button aria-label="check-button" class="check-button" (click)="sendImage()">
                 <mat-icon>check</mat-icon> Import
             </button>
-            <button class="delete-button" (click)="deleteImage()">
+            <button aria-label="delete-button" class="delete-button" (click)="deleteImage()">
                 <mat-icon>delete</mat-icon>
             </button>
         </div>

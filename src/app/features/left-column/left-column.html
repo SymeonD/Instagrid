@@ -3,7 +3,7 @@
         <img [src]="selectedImage.croppedSrc" alt="Image Preview" style="max-width: 100%; max-height: 100%;" />
     </div>
     <div class="image-controls">
-        <button matButton="elevated" class="download-button" (click)="downloadImage()">
+        <button aria-label="download-button" matButton="elevated" class="download-button" (click)="downloadImage()">
             Download Image <mat-icon>download</mat-icon> 
         </button>
         <!-- For future versions
@@ -11,7 +11,7 @@
             <mat-icon style="font-size: 36px; height: 36px; width: 36px;">edit</mat-icon>
         </button>
         -->
-        <button class="delete-button" (click)="deleteImage()">
+        <button aria-label="delete-button" class="delete-button" (click)="deleteImage()">
             <mat-icon>delete</mat-icon>
         </button>
     </div>
