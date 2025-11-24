@@ -8,6 +8,7 @@
     border-radius: 20px;
     max-height: 650px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    transition: background-color 0.3s ease, color 0.3s ease;
 
     // Mobile version
     @media only screen and (max-width: 768px) {
@@ -20,6 +21,8 @@
     margin-right: 2%;
     overflow-y: scroll;
     scrollbar-color: var(--theme-background-level-0) var(--theme-background-level-1);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: scrollbar-color 0.2s ease-out;
 }
 
 .image-picker {
@@ -63,6 +66,7 @@ img{
     justify-content: center;
     margin: 0;
     box-shadow: inset 0 2px 2px rgba(0,0,0,0.2);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .add-image-button{
