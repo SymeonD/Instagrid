@@ -116,6 +116,8 @@ export class ImportPrompt {
   // Send the pieces to the grid
   sendImage(): void {
     if (this.image && this.croppedImageSrc) {
+      // Confirm that an image was added
+      this.importPromptService.confirmAddImage();
       // Add the image to the grid
       this.appControllerService.addGridImage(new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1], this.croppedImageSrc));
       //Close the right column if open

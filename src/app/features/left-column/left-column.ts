@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { AppControllerService } from '../../core/services/app-controller.service';
@@ -15,6 +15,8 @@ import { LeftColumnService } from '../../core/services/left-column-service';
 })
 export class LeftColumn {
   selectedImage: gridImg | null = null;
+
+  @Output() closeColumn = new EventEmitter<void>();
 
   constructor(
     private appControllerService: AppControllerService,

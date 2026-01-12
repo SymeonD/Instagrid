@@ -57,6 +57,8 @@ An image splitter and grid maker for the new instagram layout
 - [ ] Fix header when modal is opened
 - [ ] Change right panel mobile state management to service and own parameters
 - [ ] Make add image button white background truly transparent
+- [ ] Add drag and drop support for image import
+- [ ] Add rotation of images
 
 # Ideas
 - [ ] Add drag and drop to place images directly on the grid

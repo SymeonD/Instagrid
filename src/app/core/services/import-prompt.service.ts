@@ -9,6 +9,9 @@ export class ImportPromptService {
   modalOpen$ = this._modalOpen.asObservable();
   modalImage$ = this._modalImage.asObservable();
 
+  private resolveCallback?: (added: boolean) => void;
+  private added = false;
+
   private open() { this._modalOpen.next(true); }
   private close() { this._modalOpen.next(false); }
 
@@ -20,5 +23,9 @@ export class ImportPromptService {
   closeImportPrompt() {
     this.close();
     this._modalImage.next(null);
+    if (this.resolveCallback) {
+      this.resolveCallback(this.added);
+      this.resolveCallback = undefined;
+    }
   }
 }
