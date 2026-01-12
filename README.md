@@ -62,7 +62,7 @@ An image splitter and grid maker for the new instagram layout
 - [ ] Add drag and drop to place images directly on the grid
 - [ ] Add drag and drop to import images
 - [ ] Add direct instagram upload (with login)
-- [ ] Add direct cloud upload (Google Drive, Dropbox, OneDrive, iCloud)
+- [ ] Add direct cloud upload (Google Drive, Dropbox, OneDrive, iCloud, Nextcloud...)
 - [ ] Add multi-language support  
 - [ ] Add loading indicator when images are being processed
 - [ ] Add progress bar when multiple images are being processed
