@@ -55,8 +55,6 @@ export class MainLayout {
   toggleRightColumn() {
     this.isRightColumnOpen = !this.isRightColumnOpen;
     if (this.isRightColumnOpen) this.isLeftColumnOpen = false;
-
-    console.log(this.isRightColumnOpen);
   }
 
   closeImportPrompt() {
@@ -65,6 +63,10 @@ export class MainLayout {
 
   // TODO: Add to service
   protected importImages(): void {
+    if (!this.isRightColumnOpen) {
+      this.toggleRightColumn();
+    }
+
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { AppControllerService } from '../../core/services/app-controller.service';
@@ -21,6 +21,8 @@ export class RightColumn {
 
   showImportPrompt = false;
   modalImage: any = null;
+
+  @Output() closeColumn = new EventEmitter<void>();
 
   constructor(private appControllerService: AppControllerService, private imageProcessing: ImageProcessingService, private _snackBar: MatSnackBar, private importPromptService: ImportPromptService) {}
 
@@ -87,6 +89,12 @@ export class RightColumn {
 
   // Open image prompt
   protected openImportPrompt(image: any): void {
-    this.importPromptService.openImportPrompt(image);
+    // Send callback to know when it is closed
+    this.importPromptService.openImportPrompt(image).then((added) => {
+      // Callback when modal is closed
+      if (added) {
+        this.closeColumn.emit();
+      }
+    });
   }
 }

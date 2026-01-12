@@ -5,6 +5,7 @@ import { AppControllerService } from '../../../core/services/app-controller.serv
 import { gridImg } from '../../../core/models/grid-img-class';
 import { globalImg } from '../../../core/models/global-img-class';
 import { ImageProcessingService } from '../../../core/services/image-processing-service';
+import { ImportPromptService } from '../../../core/services/import-prompt.service';
 
 @Component({
   selector: 'import-prompt',
@@ -47,7 +48,7 @@ export class ImportPrompt {
   private selectedSize = 1; // Default to 0
   croppedImageSrc = '';
 
-  constructor(private appControllerService: AppControllerService, private imageProcessing: ImageProcessingService) {
+  constructor(private appControllerService: AppControllerService, private imageProcessing: ImageProcessingService, private importPromptService: ImportPromptService) {
     // Pieces
     this.image && this.imageProcessing.cropImage(new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true).then(src => this.croppedImageSrc = src);
   }
@@ -115,6 +116,8 @@ export class ImportPrompt {
   // Send the pieces to the grid
   sendImage(): void {
     if (this.image && this.croppedImageSrc) {
+      // Confirm that an image was added
+      this.importPromptService.confirmAddImage();
       // Add the image to the grid
       this.appControllerService.addGridImage(new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1], this.croppedImageSrc));
       this.close.emit();

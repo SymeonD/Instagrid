@@ -9,18 +9,31 @@ export class ImportPromptService {
   modalOpen$ = this._modalOpen.asObservable();
   modalImage$ = this._modalImage.asObservable();
 
+  private resolveCallback?: (added: boolean) => void;
+  private added = false;
+
   private open() { this._modalOpen.next(true); }
   private close() { this._modalOpen.next(false); }
 
-  openImportPrompt(image: globalImg) {
-    this._modalImage.next(image);
-    this.open();
+  openImportPrompt(image: globalImg): Promise<boolean> {
+    return new Promise<boolean>((resolve) => {
+      this.resolveCallback = resolve;
+      this.added = false;
+      this._modalImage.next(image);
+      this.open();
+    });
+  }
 
-    console.log(image);
+  confirmAddImage() {
+    this.added = true;
   }
 
   closeImportPrompt() {
     this.close();
     this._modalImage.next(null);
+    if (this.resolveCallback) {
+      this.resolveCallback(this.added);
+      this.resolveCallback = undefined;
+    }
   }
 }
