@@ -2,7 +2,7 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { LeftColumn } from './left-column';
 import { AppControllerService } from '../../core/services/app-controller.service';
 import { ImageProcessingService } from '../../core/services/image-processing-service';
-import { gridImg } from '../../core/models/grid-img-class';
+import { GridImg } from '../../core/models/grid-img-class';
 import { of } from 'rxjs';
 
 describe('LeftColumn', () => {
@@ -11,7 +11,7 @@ describe('LeftColumn', () => {
   let appControllerService: jasmine.SpyObj<AppControllerService>;
   let imageProcessing: jasmine.SpyObj<ImageProcessingService>;
 
-  const mockGridImage = new gridImg(
+  const mockGridImage = new GridImg(
     { highResSrc: 'high.jpg', alt: 'test', id: '1', lowResSrc: 'low.jpg' },
     0, 0, 2, 2
   );

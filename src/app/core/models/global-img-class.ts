@@ -1,8 +1,8 @@
 // Class of a baic image, with original src and lower resolution src for editing
 import { ImageProcessingService } from '../services/image-processing-service';
 
-export class globalImg {
-    constructor(public highResSrc: string, public alt: string,  private imageProcessing?: ImageProcessingService, public id: string = crypto.randomUUID().toString().substring(2, 9), public lowResSrc?: string) {
+export class GlobalImg {
+    constructor(public highResSrc: string, public alt: string,  private imageProcessing?: ImageProcessingService, public id: string = crypto.randomUUID(), public lowResSrc?: string) {
         // Create a low resolution version of the image
         if (imageProcessing) {
             imageProcessing.createLowResImage(highResSrc)

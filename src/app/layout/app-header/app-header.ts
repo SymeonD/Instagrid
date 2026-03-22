@@ -13,17 +13,17 @@ import { ThemeService } from '../../shared/styles/themeService';
 export class AppHeader implements OnInit {
   darkMode = false;
 
-  private readonly ThemeService = new ThemeService();
+  constructor(private themeService: ThemeService) {}
 
   ngOnInit() {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     this.darkMode = prefersDark;
-    this.ThemeService.setTheme(this.darkMode ? 'dark' : 'light');
+    this.themeService.setTheme(this.darkMode ? 'dark' : 'light');
   }
 
   toggleDarkMode() {
     this.darkMode = !this.darkMode;
-    this.ThemeService.setTheme(this.darkMode ? 'dark' : 'light');
+    this.themeService.setTheme(this.darkMode ? 'dark' : 'light');
   }
 }
 

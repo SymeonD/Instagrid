@@ -5,7 +5,7 @@ import { KtdDragEnd, KtdDragStart, KtdGridBackgroundCfg, ktdGridCompact, KtdGrid
 import { ktdTrackById } from '@katoid/angular-grid-layout';
 import { MatSelectChange } from '@angular/material/select';
 import { AppControllerService } from '../../core/services/app-controller.service';
-import { gridImg } from '../../core/models/grid-img-class';
+import { GridImg } from '../../core/models/grid-img-class';
 import { ImageProcessingService } from '../../core/services/image-processing-service';
 
 
@@ -19,7 +19,7 @@ import { ImageProcessingService } from '../../core/services/image-processing-ser
 
 export class AppGrid implements OnDestroy {
 
-  private placeholderLayout: gridImg[] = [];
+  private placeholderLayout: GridImg[] = [];
 
   @ViewChild(KtdGridComponent, {static: true}) grid: KtdGridComponent | undefined;
   trackById = ktdTrackById;
@@ -31,7 +31,7 @@ export class AppGrid implements OnDestroy {
   rowHeight = this.ASPECT_RATIO * (this.gridWidth / this.cols);
   compactType: 'vertical' | 'horizontal' | null = 'vertical';
   selectedItems: string[] = [];
-  layout: gridImg[] = this.placeholderLayout;
+  layout: GridImg[] = this.placeholderLayout;
   gridBackgroundConfig: Required<KtdGridBackgroundCfg> = { show: 'always',
         borderColor: 'rgba(128, 128, 128, 0.10)',
         gapColor: 'transparent',
@@ -64,13 +64,13 @@ export class AppGrid implements OnDestroy {
 
     constructor(protected appControllerService: AppControllerService, protected imageProcessing: ImageProcessingService, private cdr: ChangeDetectorRef) {
         // Subscription to the list of grid images
-        this.appControllerService.gridImages$.pipe(takeUntilDestroyed()).subscribe(gridImgs => {
+        this.appControllerService.gridImages$.pipe(takeUntilDestroyed()).subscribe(imgs => {
 
             // clear layout
             this.layout = [];
 
-            gridImgs.forEach((gridImg) => {
-            this.addItemToLayout(gridImg);
+            imgs.forEach((img) => {
+            this.addItemToLayout(img);
             });
         });
     };
@@ -97,7 +97,7 @@ export class AppGrid implements OnDestroy {
             if (itemIndex !== -1) {
                 this.layout[itemIndex].w = event.layoutItem.w;
                 this.layout[itemIndex].h = event.layoutItem.h;
-                this.imageProcessing.cropImage(new gridImg(this.layout[itemIndex].globalImg, -1, -1, this.layout[itemIndex].w, this.layout[itemIndex].h), true)
+                this.imageProcessing.cropImage(new GridImg(this.layout[itemIndex].globalGridImg, -1, -1, this.layout[itemIndex].w, this.layout[itemIndex].h), true)
                     .then(src => {
                         this.layout[itemIndex].croppedSrc = src;
                         this.appControllerService.setGridImages(this.layout);
@@ -126,7 +126,7 @@ export class AppGrid implements OnDestroy {
     }
 
     /** Adds a grid item to the layout */
-    addItemToLayout(item: gridImg){
+    addItemToLayout(item: GridImg){
         // Important: Don't mutate the array, create new instance. This way notifies the Grid component that the layout has changed.
         this.layout = [item, ...this.layout];
         const compacted: KtdGridLayout = ktdGridCompact(this.layout, this.compactType, this.cols);
@@ -156,7 +156,7 @@ export class AppGrid implements OnDestroy {
      */
     pointerDownItemSelection(
         event: MouseEvent,
-        selectedItem: gridImg
+        selectedItem: GridImg
     ) {
         const ctrlOrCmd = event.ctrlKey;
         if (!ctrlOrCmd) {

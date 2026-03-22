@@ -1,10 +1,10 @@
 // Class of a baic image, with original src and lower resolution src for editing
 
 import { KtdGridLayoutItem } from "@katoid/angular-grid-layout";
-import { globalImg } from "./global-img-class";
+import { GlobalImg } from "./global-img-class";
 
-export class gridImg implements KtdGridLayoutItem {
-    constructor(public globalImg: globalImg, public x: number, public y: number, public w: number, public h: number, public croppedSrc?: string , public id: string = crypto.randomUUID().toString().substring(2, 9)) {
+export class GridImg implements KtdGridLayoutItem {
+    constructor(public globalGridImg: GlobalImg, public x: number, public y: number, public w: number, public h: number, public croppedSrc?: string , public id: string = crypto.randomUUID()) {
         
     }
 }
