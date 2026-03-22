@@ -2,8 +2,8 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { AppControllerService } from '../../../core/services/app-controller.service';
-import { gridImg } from '../../../core/models/grid-img-class';
-import { globalImg } from '../../../core/models/global-img-class';
+import { GridImg } from '../../../core/models/grid-img-class';
+import { GlobalImg } from '../../../core/models/global-img-class';
 import { ImageProcessingService } from '../../../core/services/image-processing-service';
 import { RightColumnService } from '../../../core/services/right-column-service';
 
@@ -14,7 +14,7 @@ import { RightColumnService } from '../../../core/services/right-column-service'
   styleUrl: './import-prompt.scss'
 })
 export class ImportPrompt {
-  @Input() image: globalImg | null = null;
+  @Input() image: GlobalImg | null = null;
   @Output() close = new EventEmitter<void>();
 
   // Grid selection logic
@@ -50,20 +50,26 @@ export class ImportPrompt {
 
   constructor(private appControllerService: AppControllerService, private imageProcessing: ImageProcessingService, private rightColumnService: RightColumnService) {
     // Pieces
-    this.image && this.imageProcessing.cropImage(new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true).then(src => this.croppedImageSrc = src);
+    if (this.image) {
+      this.imageProcessing.cropImage(new GridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true)
+        .then(src => this.croppedImageSrc = src)
+        .catch(err => console.error('Failed to crop image:', err));
+    }
   }
 
   ngOnChanges() {
     // Store the original src only once, when the image input changes
     if (this.image) {
-      this.imageProcessing.cropImage(new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true).then(src => this.croppedImageSrc = src); // Always update pieces when image changes
+      this.imageProcessing.cropImage(new GridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true)
+        .then(src => this.croppedImageSrc = src)
+        .catch(err => console.error('Failed to crop image:', err));
     }
   }
 
   protected async downloadImages(): Promise<void> {
     if (!this.image) return;
 
-    const downloadableImage : gridImg = new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1], this.croppedImageSrc)
+    const downloadableImage : GridImg = new GridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1], this.croppedImageSrc)
 
     try {
       const cropped = await this.imageProcessing.cropImage(downloadableImage, false);
@@ -110,14 +116,16 @@ export class ImportPrompt {
   onPlaceholderClick(index: number): void {
     // Lock the selection
     this.selectedSize = index+1;
-    this.imageProcessing.cropImage(new gridImg(this.image!, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true).then(src => this.croppedImageSrc = src);
+    this.imageProcessing.cropImage(new GridImg(this.image!, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true)
+      .then(src => this.croppedImageSrc = src)
+      .catch(err => console.error('Failed to crop image:', err));
   }
 
   // Send the pieces to the grid
   sendImage(): void {
     if (this.image && this.croppedImageSrc) {
       // Add the image to the grid
-      this.appControllerService.addGridImage(new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1], this.croppedImageSrc));
+      this.appControllerService.addGridImage(new GridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1], this.croppedImageSrc));
       //Close the right column if open
       this.rightColumnService.close();
       this.close.emit();

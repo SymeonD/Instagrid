@@ -1,18 +1,16 @@
 import { Injectable } from '@angular/core';
-import { gridImg } from '../../core/models/grid-img-class';
+import { GridImg } from '../../core/models/grid-img-class';
 import JSZip from 'jszip';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AppControllerService } from './app-controller.service';
-import { globalImg } from '../models/global-img-class';
+import { GlobalImg } from '../models/global-img-class';
 import { RightColumnService } from './right-column-service';
 
 @Injectable({ providedIn: 'root' })
 export class ImageProcessingService {
   constructor(private _snackBar: MatSnackBar, private appControllerService: AppControllerService) {}
 
-  private imageWorker: Worker | null = null;
-
-  async cropImage(image: gridImg, lowResolution: boolean): Promise<string> {
+  async cropImage(image: GridImg, lowResolution: boolean): Promise<string> {
     return new Promise((resolve, reject) => {
       if (!image) {
         resolve('');
@@ -27,7 +25,7 @@ export class ImageProcessingService {
 
       const img = new window.Image();
       img.crossOrigin = 'anonymous'; // if images are external
-      img.src = lowResolution ? image.globalImg.lowResSrc! : image.globalImg.highResSrc;
+      img.src = lowResolution ? image.globalGridImg.lowResSrc! : image.globalGridImg.highResSrc;
 
       img.onload = () => {
         let cropWidth = img.width;
@@ -213,7 +211,7 @@ export class ImageProcessingService {
         reader.onload = () => {
           const image = { src: reader.result as string, alt: file.name };
           this.appControllerService.addGlobalImage(
-            new globalImg(image.src, image.alt, this)
+            new GlobalImg(image.src, image.alt, this)
           );
           this._snackBar.open(`✅ Image imported successfully!`, 'Close', {
             duration: 3000,
