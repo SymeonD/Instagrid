@@ -1,6 +1,6 @@
 # SlydCut — Instagram Grid Splitter
 
-A browser-based tool to compose, preview, and export Instagram carousel grids at full quality — no backend, no uploads, no account needed.
+A browser-based tool to compose, preview, and export Instagram carousel grids at full quality, no backend, no uploads, no account needed.
 
 **[Live demo →](https://symeond.github.io/Instagrid/)**
 
@@ -34,41 +34,6 @@ Everything runs in the browser. No server, no account, no image ever leaves your
 ---
 
 ## Architecture
-
-```
-┌──────────────────────────────────────────────────────────────┐
-│                         MainLayout                           │
-│  ┌─────────────┐   ┌──────────────────────┐   ┌───────────┐ │
-│  │ LeftColumn  │   │       AppGrid        │   │RightColumn│ │
-│  │             │   │  drag · resize       │   │           │ │
-│  │  preview    │   │  multi-select        │   │  image    │ │
-│  │  download   │   │  keyboard delete     │   │  library  │ │
-│  │  delete     │   │                      │   │           │ │
-│  └─────────────┘   └──────────────────────┘   └───────────┘ │
-│                  ┌───────────────────────────┐               │
-│                  │       ImportPrompt        │               │
-│                  │  grid size selector (1–9) │               │
-│                  │  + live crop preview      │               │
-│                  └───────────────────────────┘               │
-└──────────────────────────────────────────────────────────────┘
-                   ↕  RxJS BehaviorSubjects  ↕
-┌──────────────────────────────────────────────────────────────┐
-│                        Core Services                         │
-│                                                              │
-│  AppControllerService          ImageProcessingService        │
-│  · globalImages$               · cropImage()                 │
-│  · gridImages$                 · divideImage()               │
-│  · selectedGridImage$          · createLowResImage()         │
-│                                · createZip()                 │
-│  ──────────────────────────────────────────────────────────  │
-│  ImportPromptService     LeftColumnService                   │
-│  · modal state           · panel open/close state           │
-│                          RightColumnService                  │
-└──────────────────────────────────────────────────────────────┘
-                         ↕  Models  ↕
-         globalImg  — library image + low-res preview cache
-         gridImg    — positioned tile: (x, y, w, h) + cropped src
-```
 
 State flows in one direction: services own state as observables, components subscribe and render. No two-way bindings across component boundaries.
 
