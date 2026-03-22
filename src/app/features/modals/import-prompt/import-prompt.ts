@@ -50,13 +50,19 @@ export class ImportPrompt {
 
   constructor(private appControllerService: AppControllerService, private imageProcessing: ImageProcessingService, private rightColumnService: RightColumnService) {
     // Pieces
-    this.image && this.imageProcessing.cropImage(new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true).then(src => this.croppedImageSrc = src);
+    if (this.image) {
+      this.imageProcessing.cropImage(new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true)
+        .then(src => this.croppedImageSrc = src)
+        .catch(err => console.error('Failed to crop image:', err));
+    }
   }
 
   ngOnChanges() {
     // Store the original src only once, when the image input changes
     if (this.image) {
-      this.imageProcessing.cropImage(new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true).then(src => this.croppedImageSrc = src); // Always update pieces when image changes
+      this.imageProcessing.cropImage(new gridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true)
+        .then(src => this.croppedImageSrc = src)
+        .catch(err => console.error('Failed to crop image:', err));
     }
   }
 
@@ -110,7 +116,9 @@ export class ImportPrompt {
   onPlaceholderClick(index: number): void {
     // Lock the selection
     this.selectedSize = index+1;
-    this.imageProcessing.cropImage(new gridImg(this.image!, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true).then(src => this.croppedImageSrc = src);
+    this.imageProcessing.cropImage(new gridImg(this.image!, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true)
+      .then(src => this.croppedImageSrc = src)
+      .catch(err => console.error('Failed to crop image:', err));
   }
 
   // Send the pieces to the grid

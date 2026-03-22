@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { AppControllerService } from '../../core/services/app-controller.service';
@@ -22,10 +23,12 @@ export class RightColumn {
   showImportPrompt = false;
   modalImage: any = null;
 
+  private destroyRef = inject(DestroyRef);
+
   constructor(private appControllerService: AppControllerService, private imageProcessing: ImageProcessingService, private _snackBar: MatSnackBar, private importPromptService: ImportPromptService) {}
 
   ngOnInit() {
-    this.appControllerService.globalImages$.subscribe(globalImgs => {
+    this.appControllerService.globalImages$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(globalImgs => {
       this.images = globalImgs;
       this.updateColumns();
     });

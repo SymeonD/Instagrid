@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterOutlet } from '@angular/router';
 import { AppGrid } from '../../features/app-grid/app-grid';
 import { LeftColumn } from '../../features/left-column/left-column';
@@ -26,6 +27,7 @@ import { ClickOutsideDirective } from '../../shared/directives/click-outside-dir
   styleUrl: './main-layout.scss'
 })
 export class MainLayout {
+  private destroyRef = inject(DestroyRef);
   protected readonly title = signal('Instagrid');
   protected selectedImage : gridImg | null = null;
   protected showImportPrompt = false;
@@ -37,12 +39,11 @@ export class MainLayout {
   constructor(private appControllerService: AppControllerService, private importPromptService: ImportPromptService, private imageProcessing: ImageProcessingService, private leftColumnService: LeftColumnService, private rightColumnService: RightColumnService) {}
 
   ngOnInit() {
-    this.appControllerService.selectedGridImage$.subscribe(img => this.selectedImage = img);
-    this.importPromptService.modalImage$.subscribe(img => this.modalImage = img); 
-    this.importPromptService.modalOpen$.subscribe(open => this.showImportPrompt = open);
-
-    this.leftColumnService.openState$.subscribe(open => this.isLeftColumnOpen = open);
-    this.rightColumnService.openState$.subscribe(open => this.isRightColumnOpen = open);
+    this.appControllerService.selectedGridImage$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(img => this.selectedImage = img);
+    this.importPromptService.modalImage$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(img => this.modalImage = img);
+    this.importPromptService.modalOpen$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(open => this.showImportPrompt = open);
+    this.leftColumnService.openState$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(open => this.isLeftColumnOpen = open);
+    this.rightColumnService.openState$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(open => this.isRightColumnOpen = open);
   }
 
   toggleLeftColumn() {
@@ -54,8 +55,8 @@ export class MainLayout {
   }
 
   onOutsideClick() {
-    this.isLeftColumnOpen ? this.leftColumnService.close() : null;
-    this.isRightColumnOpen ? this.rightColumnService.close() : null;
+    if (this.isLeftColumnOpen) this.leftColumnService.close();
+    if (this.isRightColumnOpen) this.rightColumnService.close();
   }
 
   closeImportPrompt() {

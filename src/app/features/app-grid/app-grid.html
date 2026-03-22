@@ -22,9 +22,6 @@
                     }"
         (pointerdown)="pointerDownItemSelection($event, item)"
         (pointerup)="pointerUpItemSelection($event, item)">
-            <!-- Your grid item content goes here -->
-            <!-- <img [src]="this.items[+item.id].src" style="width: 100%; height: 100%; object-fit: cover;"/> -->
-
             <ng-container *ngIf="item;">
                 <img [src]="item.globalImg.lowResSrc" [alt]="item.globalImg.alt" style="width: 100%; height: 100%; object-fit: cover;" />
             </ng-container>

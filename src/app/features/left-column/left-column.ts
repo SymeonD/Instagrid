@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { AppControllerService } from '../../core/services/app-controller.service';
@@ -21,7 +22,7 @@ export class LeftColumn {
     private imageProcessing: ImageProcessingService,
     private leftColumnService: LeftColumnService
   ) {
-    this.appControllerService.selectedGridImage$.subscribe(img => this.selectedImage = img);
+    this.appControllerService.selectedGridImage$.pipe(takeUntilDestroyed()).subscribe(img => this.selectedImage = img);
   }
 
   protected async downloadImage() {

@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component, HostListener, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnDestroy, ViewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { KtdDragEnd, KtdDragStart, KtdGridBackgroundCfg, ktdGridCompact, KtdGridComponent, KtdGridLayout, KtdGridLayoutItem, KtdGridModule, KtdResizeEnd, KtdResizeStart } from '@katoid/angular-grid-layout';
 import { ktdTrackById } from '@katoid/angular-grid-layout';
@@ -16,7 +17,7 @@ import { ImageProcessingService } from '../../core/services/image-processing-ser
   styleUrl: './app-grid.scss'
 })
 
-export class AppGrid {
+export class AppGrid implements OnDestroy {
 
   private placeholderLayout: gridImg[] = [];
 
@@ -24,9 +25,10 @@ export class AppGrid {
   trackById = ktdTrackById;
 
   // Settings for the grid
+  private readonly ASPECT_RATIO = 1350 / 1010;
   cols = 3;
   gridWidth = document.getElementById('image-grid-container')?.clientWidth || window.innerWidth*0.5;
-  rowHeight = 1350 / 1010 * (this.gridWidth / this.cols);
+  rowHeight = this.ASPECT_RATIO * (this.gridWidth / this.cols);
   compactType: 'vertical' | 'horizontal' | null = 'vertical';
   selectedItems: string[] = [];
   layout: gridImg[] = this.placeholderLayout;
@@ -41,24 +43,28 @@ export class AppGrid {
 
     private _isDraggingResizing: boolean = false;
 
+    private readonly onResize = () => {
+        this.gridWidth = document.getElementById('image-grid-container')?.clientWidth || window.innerWidth * 0.5;
+        this.rowHeight = this.ASPECT_RATIO * (this.gridWidth / this.cols);
+    };
+
     ngOnInit() {
-        // Update gridWidth and rowHeight on window resize
-        window.addEventListener('resize', () => {
-            this.gridWidth = document.getElementById('image-grid-container')?.clientWidth || window.innerWidth*0.5;
-            this.rowHeight = 1350 / 1010 * (this.gridWidth / this.cols);
-        });
+        window.addEventListener('resize', this.onResize);
+    }
+
+    ngOnDestroy() {
+        window.removeEventListener('resize', this.onResize);
     }
 
     ngAfterViewInit() {
-        // TODO: Centralize
         this.gridWidth = document.getElementById('image-grid-container')?.clientWidth || window.innerWidth*0.5;
-        this.rowHeight = 1350 / 1010 * (this.gridWidth / this.cols);
+        this.rowHeight = this.ASPECT_RATIO * (this.gridWidth / this.cols);
         this.cdr.detectChanges();
     }
 
     constructor(protected appControllerService: AppControllerService, protected imageProcessing: ImageProcessingService, private cdr: ChangeDetectorRef) {
         // Subscription to the list of grid images
-        this.appControllerService.gridImages$.subscribe(gridImgs => {
+        this.appControllerService.gridImages$.pipe(takeUntilDestroyed()).subscribe(gridImgs => {
 
             // clear layout
             this.layout = [];
@@ -91,10 +97,12 @@ export class AppGrid {
             if (itemIndex !== -1) {
                 this.layout[itemIndex].w = event.layoutItem.w;
                 this.layout[itemIndex].h = event.layoutItem.h;
-                this.imageProcessing.cropImage(new gridImg(this.layout[itemIndex].globalImg, -1, -1, this.layout[itemIndex].w, this.layout[itemIndex].h), true).then(src => {
-                    this.layout[itemIndex].croppedSrc = src; 
-                    this.appControllerService.setGridImages(this.layout);
-                });
+                this.imageProcessing.cropImage(new gridImg(this.layout[itemIndex].globalImg, -1, -1, this.layout[itemIndex].w, this.layout[itemIndex].h), true)
+                    .then(src => {
+                        this.layout[itemIndex].croppedSrc = src;
+                        this.appControllerService.setGridImages(this.layout);
+                    })
+                    .catch(err => console.error('Failed to crop resized image:', err));
             }
         }
     }
@@ -158,7 +166,7 @@ export class AppGrid {
             if (!selectedItemExist) {
                 // Click an element outside selection group
                 // Clean all selections and select the new item
-                if (event.button == 2) {
+                if (event.button === 2) {
                     this.selectedItems = [];
                 } else {
                     this.selectedItems = [selectedItem.id];
