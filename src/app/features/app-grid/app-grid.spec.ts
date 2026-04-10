@@ -3,15 +3,15 @@ import { AppGrid } from './app-grid';
 import { AppControllerService } from '../../core/services/app-controller.service';
 import { ImageProcessingService } from '../../core/services/image-processing-service';
 import { BehaviorSubject } from 'rxjs';
-import { gridImg } from '../../core/models/grid-img-class';
-import { globalImg } from '../../core/models/global-img-class';
+import { GridImg } from '../../core/models/grid-img-class';
+import { GlobalImg } from '../../core/models/global-img-class';
 import { KtdGridComponent, KtdGridModule } from '@katoid/angular-grid-layout';
 import { CommonModule } from '@angular/common';
 
 // 🧩 Create service mocks
 class MockAppControllerService {
-  gridImages$ = new BehaviorSubject<gridImg[]>([]);
-  selectedGridImage$ = new BehaviorSubject<gridImg | null>(null);
+  gridImages$ = new BehaviorSubject<GridImg[]>([]);
+  selectedGridImage$ = new BehaviorSubject<GridImg | null>(null);
   removeGridImage = jasmine.createSpy('removeGridImage');
   setGridImages = jasmine.createSpy('setGridImages');
   setSelectedGridImage = jasmine.createSpy('setSelectedGridImage');
@@ -51,7 +51,7 @@ describe('AppGrid', () => {
 
   // ✅ Test layout subscription
   it('should subscribe to grid images and update layout', () => {
-    const img = new gridImg(new globalImg('src', 'alt'), 0, 0, 1, 1);
+    const img = new GridImg(new GlobalImg('src', 'alt'), 0, 0, 1, 1);
     mockAppController.gridImages$.next([img]);
 
     expect(component.layout.length).toBe(1);
@@ -60,7 +60,7 @@ describe('AppGrid', () => {
 
   // ✅ Test addItemToLayout()
   it('should add an item to the layout', () => {
-    const item = new gridImg(new globalImg('src', 'alt'), 0, 0, 1, 1);
+    const item = new GridImg(new GlobalImg('src', 'alt'), 0, 0, 1, 1);
     component.layout = [];
     component.addItemToLayout(item);
     expect(component.layout).toContain(item);
@@ -77,8 +77,8 @@ describe('AppGrid', () => {
   it('should calculate correct grid height', () => {
     component.rowHeight = 100;
     component.layout = [
-      new gridImg(new globalImg('src', 'alt'), 0, 0, 1, 2),
-      new gridImg(new globalImg('src', 'alt'), 0, 3, 1, 2)
+      new GridImg(new GlobalImg('src', 'alt'), 0, 0, 1, 2),
+      new GridImg(new GlobalImg('src', 'alt'), 0, 3, 1, 2)
     ];
     const height = component.getGridHeight();
     // max y+h = 5 → (5+1)*100 = 600
@@ -87,7 +87,7 @@ describe('AppGrid', () => {
 
   // ✅ Test onResizeEnded()
   it('should update layout and call cropImage on resize end', async () => {
-    const item = new gridImg(new globalImg('src', 'alt'), 0, 0, 1, 1, undefined, 'item1');
+    const item = new GridImg(new GlobalImg('src', 'alt'), 0, 0, 1, 1, undefined, 'item1');
     component.layout = [item];
 
     const event = {
@@ -112,7 +112,7 @@ describe('AppGrid', () => {
 
   // ✅ Test pointerDownItemSelection()
   it('should select item and notify service on click', () => {
-    const selected = new gridImg(new globalImg('src', 'alt'), 0, 0, 1, 1, undefined, 'id1');
+    const selected = new GridImg(new GlobalImg('src', 'alt'), 0, 0, 1, 1, undefined, 'id1');
     const event = new MouseEvent('mousedown', { button: 0 });
 
     component.pointerDownItemSelection(event, selected);

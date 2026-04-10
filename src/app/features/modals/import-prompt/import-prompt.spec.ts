@@ -2,13 +2,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ImportPrompt } from './import-prompt';
 import { AppControllerService } from '../../../core/services/app-controller.service';
 import { ImageProcessingService } from '../../../core/services/image-processing-service';
-import { globalImg } from '../../../core/models/global-img-class';
+import { GlobalImg } from '../../../core/models/global-img-class';
 import { BehaviorSubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 
 class MockAppControllerService {
-  globalImages$ = new BehaviorSubject<globalImg[]>([]);
+  globalImages$ = new BehaviorSubject<GlobalImg[]>([]);
   removeGlobalImage = jasmine.createSpy('removeGlobalImage');
   addGridImage = jasmine.createSpy('addGridImage');
 }
@@ -37,7 +37,7 @@ describe('ImportPrompt', () => {
 
     fixture = TestBed.createComponent(ImportPrompt);
     component = fixture.componentInstance;
-    component.image = new globalImg('highres.jpg', 'alt');
+    component.image = new GlobalImg('highres.jpg', 'alt');
     fixture.detectChanges();
   });
 
@@ -83,7 +83,7 @@ describe('ImportPrompt', () => {
   // ✅ deleteImage should call removeGlobalImage and emit close
   it('should delete image and emit close', () => {
     spyOn(component.close, 'emit');
-    component.image = new globalImg('src', 'alt');
+    component.image = new GlobalImg('src', 'alt');
     component.image.id = 'img123';
 
     (component as any).deleteImage();
@@ -103,7 +103,7 @@ describe('ImportPrompt', () => {
   it('should send image to grid and emit close', () => {
     spyOn(component.close, 'emit');
     component.croppedImageSrc = 'mockSrc';
-    component.image = new globalImg('src', 'alt');
+    component.image = new GlobalImg('src', 'alt');
 
     component.sendImage();
 

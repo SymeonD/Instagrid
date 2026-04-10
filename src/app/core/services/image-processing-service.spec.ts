@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { ImageProcessingService } from './image-processing-service';
-import { gridImg } from '../../core/models/grid-img-class';
-import { globalImg } from '../../core/models/global-img-class';
+import { GridImg } from '../../core/models/grid-img-class';
+import { GlobalImg } from '../../core/models/global-img-class';
 
 describe('ImageProcessingService', () => {
   let service: ImageProcessingService;
@@ -26,8 +26,8 @@ describe('ImageProcessingService', () => {
   });
 
   it('cropImage() should return a cropped base64 string', async () => {
-    const gImg = new globalImg(tinyImageData, 'alt');
-    const img = new gridImg(gImg, 0, 0, 1, 1);
+    const gImg = new GlobalImg(tinyImageData, 'alt');
+    const img = new GridImg(gImg, 0, 0, 1, 1);
     const result = await service.cropImage(img, false);
     expect(result.startsWith('data:image/jpeg;base64')).toBeTrue();
   });

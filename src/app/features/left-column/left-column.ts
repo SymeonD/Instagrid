@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { AppControllerService } from '../../core/services/app-controller.service';
-import { gridImg } from '../../core/models/grid-img-class';
+import { GridImg } from '../../core/models/grid-img-class';
 import { ImageProcessingService } from '../../core/services/image-processing-service';
 import { MatButtonModule } from '@angular/material/button';
 import { LeftColumnService } from '../../core/services/left-column-service';
@@ -14,14 +15,14 @@ import { LeftColumnService } from '../../core/services/left-column-service';
   styleUrl: './left-column.scss'
 })
 export class LeftColumn {
-  selectedImage: gridImg | null = null;
+  selectedImage: GridImg | null = null;
 
   constructor(
     private appControllerService: AppControllerService,
     private imageProcessing: ImageProcessingService,
     private leftColumnService: LeftColumnService
   ) {
-    this.appControllerService.selectedGridImage$.subscribe(img => this.selectedImage = img);
+    this.appControllerService.selectedGridImage$.pipe(takeUntilDestroyed()).subscribe(img => this.selectedImage = img);
   }
 
   protected async downloadImage() {

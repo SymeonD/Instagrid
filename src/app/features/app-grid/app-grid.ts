@@ -1,10 +1,11 @@
-import { ChangeDetectorRef, Component, HostListener, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnDestroy, ViewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { KtdDragEnd, KtdDragStart, KtdGridBackgroundCfg, ktdGridCompact, KtdGridComponent, KtdGridLayout, KtdGridLayoutItem, KtdGridModule, KtdResizeEnd, KtdResizeStart } from '@katoid/angular-grid-layout';
 import { ktdTrackById } from '@katoid/angular-grid-layout';
 import { MatSelectChange } from '@angular/material/select';
 import { AppControllerService } from '../../core/services/app-controller.service';
-import { gridImg } from '../../core/models/grid-img-class';
+import { GridImg } from '../../core/models/grid-img-class';
 import { ImageProcessingService } from '../../core/services/image-processing-service';
 
 
@@ -16,20 +17,21 @@ import { ImageProcessingService } from '../../core/services/image-processing-ser
   styleUrl: './app-grid.scss'
 })
 
-export class AppGrid {
+export class AppGrid implements OnDestroy {
 
-  private placeholderLayout: gridImg[] = [];
+  private placeholderLayout: GridImg[] = [];
 
   @ViewChild(KtdGridComponent, {static: true}) grid: KtdGridComponent | undefined;
   trackById = ktdTrackById;
 
   // Settings for the grid
+  private readonly ASPECT_RATIO = 1350 / 1010;
   cols = 3;
   gridWidth = document.getElementById('image-grid-container')?.clientWidth || window.innerWidth*0.5;
-  rowHeight = 1350 / 1010 * (this.gridWidth / this.cols);
+  rowHeight = this.ASPECT_RATIO * (this.gridWidth / this.cols);
   compactType: 'vertical' | 'horizontal' | null = 'vertical';
   selectedItems: string[] = [];
-  layout: gridImg[] = this.placeholderLayout;
+  layout: GridImg[] = this.placeholderLayout;
   gridBackgroundConfig: Required<KtdGridBackgroundCfg> = { show: 'always',
         borderColor: 'rgba(128, 128, 128, 0.10)',
         gapColor: 'transparent',
@@ -41,30 +43,34 @@ export class AppGrid {
 
     private _isDraggingResizing: boolean = false;
 
+    private readonly onResize = () => {
+        this.gridWidth = document.getElementById('image-grid-container')?.clientWidth || window.innerWidth * 0.5;
+        this.rowHeight = this.ASPECT_RATIO * (this.gridWidth / this.cols);
+    };
+
     ngOnInit() {
-        // Update gridWidth and rowHeight on window resize
-        window.addEventListener('resize', () => {
-            this.gridWidth = document.getElementById('image-grid-container')?.clientWidth || window.innerWidth*0.5;
-            this.rowHeight = 1350 / 1010 * (this.gridWidth / this.cols);
-        });
+        window.addEventListener('resize', this.onResize);
+    }
+
+    ngOnDestroy() {
+        window.removeEventListener('resize', this.onResize);
     }
 
     ngAfterViewInit() {
-        // TODO: Centralize
         this.gridWidth = document.getElementById('image-grid-container')?.clientWidth || window.innerWidth*0.5;
-        this.rowHeight = 1350 / 1010 * (this.gridWidth / this.cols);
+        this.rowHeight = this.ASPECT_RATIO * (this.gridWidth / this.cols);
         this.cdr.detectChanges();
     }
 
     constructor(protected appControllerService: AppControllerService, protected imageProcessing: ImageProcessingService, private cdr: ChangeDetectorRef) {
         // Subscription to the list of grid images
-        this.appControllerService.gridImages$.subscribe(gridImgs => {
+        this.appControllerService.gridImages$.pipe(takeUntilDestroyed()).subscribe(imgs => {
 
             // clear layout
             this.layout = [];
 
-            gridImgs.forEach((gridImg) => {
-            this.addItemToLayout(gridImg);
+            imgs.forEach((img) => {
+            this.addItemToLayout(img);
             });
         });
     };
@@ -91,10 +97,12 @@ export class AppGrid {
             if (itemIndex !== -1) {
                 this.layout[itemIndex].w = event.layoutItem.w;
                 this.layout[itemIndex].h = event.layoutItem.h;
-                this.imageProcessing.cropImage(new gridImg(this.layout[itemIndex].globalImg, -1, -1, this.layout[itemIndex].w, this.layout[itemIndex].h), true).then(src => {
-                    this.layout[itemIndex].croppedSrc = src; 
-                    this.appControllerService.setGridImages(this.layout);
-                });
+                this.imageProcessing.cropImage(new GridImg(this.layout[itemIndex].globalGridImg, -1, -1, this.layout[itemIndex].w, this.layout[itemIndex].h), true)
+                    .then(src => {
+                        this.layout[itemIndex].croppedSrc = src;
+                        this.appControllerService.setGridImages(this.layout);
+                    })
+                    .catch(err => console.error('Failed to crop resized image:', err));
             }
         }
     }
@@ -118,7 +126,7 @@ export class AppGrid {
     }
 
     /** Adds a grid item to the layout */
-    addItemToLayout(item: gridImg){
+    addItemToLayout(item: GridImg){
         // Important: Don't mutate the array, create new instance. This way notifies the Grid component that the layout has changed.
         this.layout = [item, ...this.layout];
         const compacted: KtdGridLayout = ktdGridCompact(this.layout, this.compactType, this.cols);
@@ -148,7 +156,7 @@ export class AppGrid {
      */
     pointerDownItemSelection(
         event: MouseEvent,
-        selectedItem: gridImg
+        selectedItem: GridImg
     ) {
         const ctrlOrCmd = event.ctrlKey;
         if (!ctrlOrCmd) {
@@ -158,7 +166,7 @@ export class AppGrid {
             if (!selectedItemExist) {
                 // Click an element outside selection group
                 // Clean all selections and select the new item
-                if (event.button == 2) {
+                if (event.button === 2) {
                     this.selectedItems = [];
                 } else {
                     this.selectedItems = [selectedItem.id];

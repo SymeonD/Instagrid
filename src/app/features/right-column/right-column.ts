@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { AppControllerService } from '../../core/services/app-controller.service';
-import { globalImg } from '../../core/models/global-img-class';
+import { GlobalImg } from '../../core/models/global-img-class';
 import { ImageProcessingService } from '../../core/services/image-processing-service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,17 +17,19 @@ import { ImportPromptService } from '../../core/services/import-prompt.service';
   styleUrl: './right-column.scss'
 })
 export class RightColumn {
-  columns: globalImg[][] = [];
-  images: globalImg[] = [];
+  columns: GlobalImg[][] = [];
+  images: GlobalImg[] = [];
 
   showImportPrompt = false;
-  modalImage: any = null;
+  modalImage: GlobalImg | null = null;
+
+  private destroyRef = inject(DestroyRef);
 
   constructor(private appControllerService: AppControllerService, private imageProcessing: ImageProcessingService, private _snackBar: MatSnackBar, private importPromptService: ImportPromptService) {}
 
   ngOnInit() {
-    this.appControllerService.globalImages$.subscribe(globalImgs => {
-      this.images = globalImgs;
+    this.appControllerService.globalImages$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(GlobalImgs => {
+      this.images = GlobalImgs;
       this.updateColumns();
     });
     // Remove local images array logic
@@ -47,7 +50,7 @@ export class RightColumn {
   }
 
   // Open image prompt
-  protected openImportPrompt(image: any): void {
+  protected openImportPrompt(image: GlobalImg): void {
     this.importPromptService.openImportPrompt(image);
   }
 }
