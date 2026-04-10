@@ -95,11 +95,30 @@ export class AppGrid implements OnDestroy {
         if (resizedItem && this.layout) {
             const itemIndex = this.layout.findIndex(item => item.id === event.layoutItem.id);
             if (itemIndex !== -1) {
-                this.layout[itemIndex].w = event.layoutItem.w;
-                this.layout[itemIndex].h = event.layoutItem.h;
-                this.imageProcessing.cropImage(new GridImg(this.layout[itemIndex].globalGridImg, -1, -1, this.layout[itemIndex].w, this.layout[itemIndex].h), true)
+                const old = this.layout[itemIndex];
+
+                // Create a new GridImg instance so that @Input change detection
+                // fires in CropEditor (same reference would not trigger ngOnChanges)
+                const updated = new GridImg(
+                    old.globalGridImg,
+                    old.x, old.y,
+                    event.layoutItem.w, event.layoutItem.h,
+                    undefined,  // croppedSrc — computed below
+                    old.id      // preserve id so ktd trackById keeps the tile
+                    // cropX, cropY, cropZoom default to 0.5, 0.5, 1.0 (reset)
+                );
+                this.layout[itemIndex] = updated;
+
+                // If this tile was selected, push the new reference so the
+                // left column and CropEditor re-init with the updated span
+                const selected = this.appControllerService.getSelectedGridImage();
+                if (selected?.id === updated.id) {
+                    this.appControllerService.setSelectedGridImage(updated);
+                }
+
+                this.imageProcessing.cropImage(updated, true)
                     .then(src => {
-                        this.layout[itemIndex].croppedSrc = src;
+                        updated.croppedSrc = src;
                         this.appControllerService.setGridImages(this.layout);
                     })
                     .catch(err => console.error('Failed to crop resized image:', err));

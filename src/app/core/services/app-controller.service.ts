@@ -55,6 +55,10 @@ export class AppControllerService {
     }
 
     // Selected Image
+    getSelectedGridImage(): GridImg | null {
+        return this.selectedGridImageSubject.value;
+    }
+
     setSelectedGridImage(image: GridImg | null) {
         this.selectedGridImageSubject.next(image);
     }

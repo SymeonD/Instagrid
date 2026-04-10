@@ -36,8 +36,16 @@ export class ImageProcessingService {
           cropWidth = Math.round(cropHeight * aspectRatio);
         }
 
-        const sx = Math.floor((img.width - cropWidth) / 2);
-        const sy = Math.floor((img.height - cropHeight) / 2);
+        // Apply zoom: a zoom > 1 uses a smaller source region (punches in)
+        const zoom = image.cropZoom ?? 1.0;
+        const zoomedCropWidth  = cropWidth  / zoom;
+        const zoomedCropHeight = cropHeight / zoom;
+
+        // cropX / cropY (0–1) position the zoomed region within the available space
+        const cropX = image.cropX ?? 0.5;
+        const cropY = image.cropY ?? 0.5;
+        const sx = Math.round((img.width  - zoomedCropWidth)  * cropX);
+        const sy = Math.round((img.height - zoomedCropHeight) * cropY);
 
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d');
@@ -51,7 +59,7 @@ export class ImageProcessingService {
 
         context.drawImage(
           img,
-          sx, sy, cropWidth, cropHeight,
+          sx, sy, zoomedCropWidth, zoomedCropHeight,
           0, 0, targetWidth, targetHeight
         );
 

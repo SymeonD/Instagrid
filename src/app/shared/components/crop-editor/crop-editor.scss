@@ -1,0 +1,115 @@
+.crop-editor {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+// ─── Image area ─────────────────────────────────────────────────────────────
+
+.image-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #000;
+  cursor: crosshair;
+  max-height: 50vh;
+}
+
+.full-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 50vh;
+  object-fit: contain;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+// ─── Crop rectangle ─────────────────────────────────────────────────────────
+
+.crop-rect {
+  position: absolute;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.52);
+  border-radius: 2px;
+  box-sizing: border-box;
+  cursor: grab;
+  will-change: left, top, width, height;
+
+  &.dragging {
+    cursor: grabbing;
+  }
+}
+
+// ─── Side resize handles ─────────────────────────────────────────────────────
+// Transparent hit areas along each edge — wider than the border for easy grabbing
+
+.side-handle {
+  position: absolute;
+  z-index: 2;
+
+  // Visible bar shown on hover
+  &::after {
+    content: '';
+    position: absolute;
+    background: rgba(255, 255, 255, 0.75);
+    border-radius: 2px;
+    transition: opacity 0.15s;
+    opacity: 0;
+  }
+
+  &:hover::after {
+    opacity: 1;
+  }
+}
+
+.side-left, .side-right {
+  top: 15%;
+  bottom: 15%;
+  width: 16px;
+  cursor: ew-resize;
+
+  &::after {
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 28px;
+  }
+}
+
+.side-left {
+  left: -8px;
+  &::after { left: 50%; transform: translate(-50%, -50%); }
+}
+
+.side-right {
+  right: -8px;
+  &::after { left: 50%; transform: translate(-50%, -50%); }
+}
+
+.side-top, .side-bottom {
+  left: 15%;
+  right: 15%;
+  height: 16px;
+  cursor: ns-resize;
+
+  &::after {
+    left: 50%;
+    transform: translateX(-50%);
+    height: 3px;
+    width: 28px;
+  }
+}
+
+.side-top {
+  top: -8px;
+  &::after { top: 50%; transform: translate(-50%, -50%); }
+}
+
+.side-bottom {
+  bottom: -8px;
+  &::after { bottom: 50%; transform: translate(-50%, 50%); }
+}
+
