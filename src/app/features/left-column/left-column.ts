@@ -35,13 +35,10 @@ export class LeftColumn {
     this.selectedImage.cropY = values.cropY;
     this.selectedImage.cropZoom = values.cropZoom;
 
-    // Re-generate the low-res cropped preview and update the grid tile
+    // Re-generate the low-res cropped preview — Zone.js CD picks up the mutation
+    // automatically when the Promise resolves, so no setGridImages needed.
     const newSrc = await this.imageProcessing.cropImage(this.selectedImage, true);
     this.selectedImage.croppedSrc = newSrc;
-
-    // Emit a new array reference so the grid subscription picks up the mutation
-    const current = this.appControllerService.getGridImages();
-    this.appControllerService.setGridImages([...current]);
   }
 
   protected async downloadImage() {

@@ -119,7 +119,10 @@ export class AppGrid implements OnDestroy {
                 this.imageProcessing.cropImage(updated, true)
                     .then(src => {
                         updated.croppedSrc = src;
-                        this.appControllerService.setGridImages(this.layout);
+                        // Create a new array reference so ktd-grid picks up the change
+                        // without corrupting the gridImages$ order via setGridImages.
+                        this.layout = [...this.layout];
+                        this.cdr.detectChanges();
                     })
                     .catch(err => console.error('Failed to crop resized image:', err));
             }
