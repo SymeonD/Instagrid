@@ -24,6 +24,9 @@ Quick reference for what's done, what's next, and what's coming later.
 - [ ] Fix header when import modal is open
 - [ ] Change right panel mobile state management to a dedicated service
 - [ ] Make "Add image" button background truly transparent
+- [ ] Sometimes the grid snaps back into place after dragging but not to the right spots — investigate and fix
+- [x] Fix preview quality, it is too low on mobile and some desktop screens; consider adding a "preview quality" setting in the right panel
+- [ ] Change grid background color, from Red to a more neutral tone
 
 ---
 

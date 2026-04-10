@@ -90,31 +90,54 @@ export class ImageProcessingService {
   }
 
   async createLowResImage(src: string): Promise<string> {
-    const maxSize = 400;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const maxSize = Math.round(800 * dpr);
 
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.src = src;
-      img.onload = () => {
+    try {
+      // Decode the data URL back to a Blob so createImageBitmap can use Lanczos downscaling
+      const blob = await fetch(src).then(r => r.blob());
+
+      const tempBitmap = await createImageBitmap(blob);
+      const { width, height } = tempBitmap;
+      tempBitmap.close();
+
+      const aspectRatio = width / height;
+      const resizeWidth  = width > height ? maxSize : Math.round(maxSize * aspectRatio);
+      const resizeHeight = width > height ? Math.round(maxSize / aspectRatio) : maxSize;
+
+      const bitmap = await createImageBitmap(blob, { resizeWidth, resizeHeight, resizeQuality: 'high' });
+
+      const canvas = document.createElement('canvas');
+      canvas.width  = resizeWidth;
+      canvas.height = resizeHeight;
+      canvas.getContext('2d')!.drawImage(bitmap, 0, 0);
+      bitmap.close();
+
+      return canvas.toDataURL('image/webp', 0.85);
+
+    } catch {
+      // Fallback for browsers that don't support createImageBitmap resize options (e.g. Firefox)
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.src = src;
+        img.onload = () => {
           const canvas = document.createElement('canvas');
-          const context = canvas.getContext('2d');
-          if (!context) return;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) return reject('Cannot get canvas context');
           const aspectRatio = img.width / img.height;
           if (img.width > img.height) {
-              canvas.width = maxSize;
-              canvas.height = maxSize / aspectRatio;
+            canvas.width  = maxSize;
+            canvas.height = Math.round(maxSize / aspectRatio);
           } else {
-              canvas.height = maxSize;
-              canvas.width = maxSize * aspectRatio;
+            canvas.height = maxSize;
+            canvas.width  = Math.round(maxSize * aspectRatio);
           }
-          context.drawImage(img, 0, 0, canvas.width, canvas.height);
-          const newSrc = canvas.toDataURL('image/jpeg');
-          resolve(newSrc);
-      };
-      img.onerror = (error) => {
-          reject(error);
-      };
-    });
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL('image/webp', 0.85));
+        };
+        img.onerror = reject;
+      });
+    }
   }
 
   divideImage(srcImage: string, cols: number, rows: number, overlap: number = 70): Promise<string[]> {
