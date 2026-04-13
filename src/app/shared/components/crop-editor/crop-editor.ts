@@ -136,6 +136,18 @@ export class CropEditor implements OnChanges {
     this.rectY = Math.max(0, Math.min(this.availableY, this.availableY * this.gridImg.cropY));
   }
 
+  // ─── Window resize ────────────────────────────────────────────────────────
+
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    if (!this.imageEl?.nativeElement || this.imageDisplayW === 0) return;
+    const img = this.imageEl.nativeElement;
+    this.imageDisplayW = img.clientWidth;
+    this.imageDisplayH = img.clientHeight - 1;
+    this.computeRect();
+    this.cdr.detectChanges();
+  }
+
   // ─── Drag start (move) ────────────────────────────────────────────────────
 
   onRectMouseDown(event: MouseEvent): void {

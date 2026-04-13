@@ -70,6 +70,12 @@ $dark-theme: mat.define-theme((
   --theme-grid-color-selected: #f0f0f0;
 }
 
+// Override ktd-grid drag placeholder colour
+.ktd-grid-item-placeholder-default {
+  background: var(--theme-accent) !important;
+  border: 2px dashed var(--theme-accent) !important;
+}
+
 body {
   margin: 0;
   font-family: Roboto, Arial, sans-serif;
