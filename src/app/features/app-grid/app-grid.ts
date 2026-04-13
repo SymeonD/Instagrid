@@ -63,15 +63,20 @@ export class AppGrid implements OnDestroy {
     }
 
     constructor(protected appControllerService: AppControllerService, protected imageProcessing: ImageProcessingService, private cdr: ChangeDetectorRef) {
-        // Subscription to the list of grid images
+        // Subscription to the list of grid images — diff-based to preserve visual order
         this.appControllerService.gridImages$.pipe(takeUntilDestroyed()).subscribe(imgs => {
+            const newIds  = new Set(imgs.map(i => i.id));
+            const oldIds  = new Set(this.layout.map(l => l.id));
 
-            // clear layout
-            this.layout = [];
+            // Items removed: drop them and recompact in-place (preserves relative order)
+            if ([...oldIds].some(id => !newIds.has(id))) {
+                this.layout = this.layout.filter(l => newIds.has(l.id));
+                const compacted = ktdGridCompact(this.layout, this.compactType, this.cols);
+                this.onLayoutUpdated(compacted);
+            }
 
-            imgs.forEach((img) => {
-            this.addItemToLayout(img);
-            });
+            // Items added: prepend so newest appears on top
+            imgs.filter(i => !oldIds.has(i.id)).forEach(img => this.addItemToLayout(img));
         });
     };
 
