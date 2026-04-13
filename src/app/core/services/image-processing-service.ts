@@ -36,8 +36,16 @@ export class ImageProcessingService {
           cropWidth = Math.round(cropHeight * aspectRatio);
         }
 
-        const sx = Math.floor((img.width - cropWidth) / 2);
-        const sy = Math.floor((img.height - cropHeight) / 2);
+        // Apply zoom: a zoom > 1 uses a smaller source region (punches in)
+        const zoom = image.cropZoom ?? 1.0;
+        const zoomedCropWidth  = cropWidth  / zoom;
+        const zoomedCropHeight = cropHeight / zoom;
+
+        // cropX / cropY (0–1) position the zoomed region within the available space
+        const cropX = image.cropX ?? 0.5;
+        const cropY = image.cropY ?? 0.5;
+        const sx = Math.round((img.width  - zoomedCropWidth)  * cropX);
+        const sy = Math.round((img.height - zoomedCropHeight) * cropY);
 
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d');
@@ -51,35 +59,9 @@ export class ImageProcessingService {
 
         context.drawImage(
           img,
-          sx, sy, cropWidth, cropHeight,
+          sx, sy, zoomedCropWidth, zoomedCropHeight,
           0, 0, targetWidth, targetHeight
         );
-
-        // If the image is low resolution, draw white lines, 10px wide
-        // they need to be drawn on top of the image, depending on the gridX and gridY
-        // The number of horizontal lines is gridX - 1, the number of vertical lines is gridY - 1
-        // They need to be spaced evenly on the canvas
-        if (lowResolution) {
-          const stepX = targetWidth / (gridX);
-          const stepY = targetHeight / (gridY);
-          // Get body background color
-          const bgColor = window.getComputedStyle(document.body, null).getPropertyValue('background-color'); 
-          context.strokeStyle = bgColor;
-          // Grid line width, 10px for large screens, 15px for small screens
-          context.lineWidth = window.innerWidth > 768 ? 10 : 15;
-          for (let i = 0; i < gridX; i++) {
-            context.beginPath();
-            context.moveTo(i * stepX, 0);
-            context.lineTo(i * stepX, targetHeight);
-            context.stroke();
-          }
-          for (let i = 0; i < gridY; i++) {
-            context.beginPath();
-            context.moveTo(0, i * stepY);
-            context.lineTo(targetWidth, i * stepY);
-            context.stroke();
-          }
-        }
 
         const newSrc = canvas.toDataURL('image/jpeg');
         resolve(newSrc);
@@ -90,31 +72,54 @@ export class ImageProcessingService {
   }
 
   async createLowResImage(src: string): Promise<string> {
-    const maxSize = 400;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const maxSize = Math.round(800 * dpr);
 
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.src = src;
-      img.onload = () => {
+    try {
+      // Decode the data URL back to a Blob so createImageBitmap can use Lanczos downscaling
+      const blob = await fetch(src).then(r => r.blob());
+
+      const tempBitmap = await createImageBitmap(blob);
+      const { width, height } = tempBitmap;
+      tempBitmap.close();
+
+      const aspectRatio = width / height;
+      const resizeWidth  = width > height ? maxSize : Math.round(maxSize * aspectRatio);
+      const resizeHeight = width > height ? Math.round(maxSize / aspectRatio) : maxSize;
+
+      const bitmap = await createImageBitmap(blob, { resizeWidth, resizeHeight, resizeQuality: 'high' });
+
+      const canvas = document.createElement('canvas');
+      canvas.width  = resizeWidth;
+      canvas.height = resizeHeight;
+      canvas.getContext('2d')!.drawImage(bitmap, 0, 0);
+      bitmap.close();
+
+      return canvas.toDataURL('image/webp', 0.85);
+
+    } catch {
+      // Fallback for browsers that don't support createImageBitmap resize options (e.g. Firefox)
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.src = src;
+        img.onload = () => {
           const canvas = document.createElement('canvas');
-          const context = canvas.getContext('2d');
-          if (!context) return;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) return reject('Cannot get canvas context');
           const aspectRatio = img.width / img.height;
           if (img.width > img.height) {
-              canvas.width = maxSize;
-              canvas.height = maxSize / aspectRatio;
+            canvas.width  = maxSize;
+            canvas.height = Math.round(maxSize / aspectRatio);
           } else {
-              canvas.height = maxSize;
-              canvas.width = maxSize * aspectRatio;
+            canvas.height = maxSize;
+            canvas.width  = Math.round(maxSize * aspectRatio);
           }
-          context.drawImage(img, 0, 0, canvas.width, canvas.height);
-          const newSrc = canvas.toDataURL('image/jpeg');
-          resolve(newSrc);
-      };
-      img.onerror = (error) => {
-          reject(error);
-      };
-    });
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL('image/webp', 0.85));
+        };
+        img.onerror = reject;
+      });
+    }
   }
 
   divideImage(srcImage: string, cols: number, rows: number, overlap: number = 70): Promise<string[]> {

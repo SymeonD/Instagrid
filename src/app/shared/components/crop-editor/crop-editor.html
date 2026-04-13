@@ -1,0 +1,46 @@
+@if (gridImg && gridImg.globalGridImg.lowResSrc) {
+  <div class="crop-editor">
+    <div class="image-wrapper" #wrapper>
+      <img
+        #imageEl
+        [src]="gridImg.globalGridImg.lowResSrc"
+        [alt]="gridImg.globalGridImg.alt"
+        class="full-image"
+        (load)="onImageLoad()"
+        draggable="false"
+      />
+
+      @if (imageDisplayW > 0) {
+        <div
+          class="crop-rect"
+          [style.left.px]="rectX"
+          [style.top.px]="rectY"
+          [style.width.px]="rectW"
+          [style.height.px]="rectH"
+          [class.dragging]="isDragging"
+          (mousedown)="onRectMouseDown($event)"
+          (touchstart)="onRectTouchStart($event)"
+        >
+          <!-- Side resize handles -->
+          <div class="side-handle side-left"
+            (mousedown)="onSideMouseDown($event, 'resize-left')"
+            (touchstart)="onSideTouchStart($event, 'resize-left')">
+          </div>
+          <div class="side-handle side-right"
+            (mousedown)="onSideMouseDown($event, 'resize-right')"
+            (touchstart)="onSideTouchStart($event, 'resize-right')">
+          </div>
+          <div class="side-handle side-top"
+            (mousedown)="onSideMouseDown($event, 'resize-top')"
+            (touchstart)="onSideTouchStart($event, 'resize-top')">
+          </div>
+          <div class="side-handle side-bottom"
+            (mousedown)="onSideMouseDown($event, 'resize-bottom')"
+            (touchstart)="onSideTouchStart($event, 'resize-bottom')">
+          </div>
+
+        </div>
+      }
+    </div>
+  </div>
+}

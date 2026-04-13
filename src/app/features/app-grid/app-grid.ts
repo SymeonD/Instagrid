@@ -63,15 +63,20 @@ export class AppGrid implements OnDestroy {
     }
 
     constructor(protected appControllerService: AppControllerService, protected imageProcessing: ImageProcessingService, private cdr: ChangeDetectorRef) {
-        // Subscription to the list of grid images
+        // Subscription to the list of grid images — diff-based to preserve visual order
         this.appControllerService.gridImages$.pipe(takeUntilDestroyed()).subscribe(imgs => {
+            const newIds  = new Set(imgs.map(i => i.id));
+            const oldIds  = new Set(this.layout.map(l => l.id));
 
-            // clear layout
-            this.layout = [];
+            // Items removed: drop them and recompact in-place (preserves relative order)
+            if ([...oldIds].some(id => !newIds.has(id))) {
+                this.layout = this.layout.filter(l => newIds.has(l.id));
+                const compacted = ktdGridCompact(this.layout, this.compactType, this.cols);
+                this.onLayoutUpdated(compacted);
+            }
 
-            imgs.forEach((img) => {
-            this.addItemToLayout(img);
-            });
+            // Items added: prepend so newest appears on top
+            imgs.filter(i => !oldIds.has(i.id)).forEach(img => this.addItemToLayout(img));
         });
     };
 
@@ -95,12 +100,34 @@ export class AppGrid implements OnDestroy {
         if (resizedItem && this.layout) {
             const itemIndex = this.layout.findIndex(item => item.id === event.layoutItem.id);
             if (itemIndex !== -1) {
-                this.layout[itemIndex].w = event.layoutItem.w;
-                this.layout[itemIndex].h = event.layoutItem.h;
-                this.imageProcessing.cropImage(new GridImg(this.layout[itemIndex].globalGridImg, -1, -1, this.layout[itemIndex].w, this.layout[itemIndex].h), true)
+                const old = this.layout[itemIndex];
+
+                // Create a new GridImg instance so that @Input change detection
+                // fires in CropEditor (same reference would not trigger ngOnChanges)
+                const updated = new GridImg(
+                    old.globalGridImg,
+                    old.x, old.y,
+                    event.layoutItem.w, event.layoutItem.h,
+                    undefined,  // croppedSrc — computed below
+                    old.id      // preserve id so ktd trackById keeps the tile
+                    // cropX, cropY, cropZoom default to 0.5, 0.5, 1.0 (reset)
+                );
+                this.layout[itemIndex] = updated;
+
+                // If this tile was selected, push the new reference so the
+                // left column and CropEditor re-init with the updated span
+                const selected = this.appControllerService.getSelectedGridImage();
+                if (selected?.id === updated.id) {
+                    this.appControllerService.setSelectedGridImage(updated);
+                }
+
+                this.imageProcessing.cropImage(updated, true)
                     .then(src => {
-                        this.layout[itemIndex].croppedSrc = src;
-                        this.appControllerService.setGridImages(this.layout);
+                        updated.croppedSrc = src;
+                        // Create a new array reference so ktd-grid picks up the change
+                        // without corrupting the gridImages$ order via setGridImages.
+                        this.layout = [...this.layout];
+                        this.cdr.detectChanges();
                     })
                     .catch(err => console.error('Failed to crop resized image:', err));
             }

@@ -5,26 +5,28 @@
             <mat-icon>close</mat-icon>
         </button>
     </div>
+
+    <!-- Crop editor replaces the static preview -->
     <div class="image-preview">
-        <img [src]="croppedImageSrc" alt="Image Preview" style="max-width: 100%; max-height: 100%;" />
+        @if (cropGridImg) {
+            <crop-editor
+                [gridImg]="cropGridImg"
+                (cropChange)="onCropChange($event)"
+            ></crop-editor>
+        }
     </div>
+
     <div class="image-editor">
-        <div class="grid-size-selector"
-        (mouseleave)="onPlaceholderHover(-1)">
-            <!-- The grid size selector is a 3x3 grid of 1080x1350 aspect ratio grey squares -->
-            <!-- When hovered, the elements change color to a lighter grey -->
-             <!-- It is not based on a list of elements -->
+        <div class="grid-size-selector" (mouseleave)="onPlaceholderHover(-1)">
             <div class="grid">
-                <div class="grid-item" 
-                *ngFor="let size of [1,2,3,4,5,6,7,8,9]; let i = index" 
-                [class.darkened]="isDarkened(i)"
-                [class.selected]="isSelected(i)"
-                (mouseenter)="onPlaceholderHover(i)"
-                (click)="onPlaceholderClick(i)">
-                    <ng-template #placeholder>
-                        <!-- <div class="placeholder"></div> -->
-                    </ng-template>
-                </div>
+                @for (size of [1,2,3,4,5,6,7,8,9]; track size; let i = $index) {
+                    <div class="grid-item"
+                        [class.darkened]="isDarkened(i)"
+                        [class.selected]="isSelected(i)"
+                        (mouseenter)="onPlaceholderHover(i)"
+                        (click)="onPlaceholderClick(i)">
+                    </div>
+                }
             </div>
         </div>
         <div class="image-controls">

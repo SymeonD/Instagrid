@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { AppControllerService } from '../../../core/services/app-controller.service';
@@ -6,14 +6,15 @@ import { GridImg } from '../../../core/models/grid-img-class';
 import { GlobalImg } from '../../../core/models/global-img-class';
 import { ImageProcessingService } from '../../../core/services/image-processing-service';
 import { RightColumnService } from '../../../core/services/right-column-service';
+import { CropEditor, CropValues } from '../../../shared/components/crop-editor/crop-editor';
 
 @Component({
   selector: 'import-prompt',
-  imports: [MatIcon, CommonModule],
+  imports: [MatIcon, CommonModule, CropEditor],
   templateUrl: './import-prompt.html',
   styleUrl: './import-prompt.scss'
 })
-export class ImportPrompt {
+export class ImportPrompt implements OnChanges {
   @Input() image: GlobalImg | null = null;
   @Output() close = new EventEmitter<void>();
 
@@ -30,7 +31,7 @@ export class ImportPrompt {
     8: [0, 1, 3, 4, 6, 7],
     9: [0, 1, 2, 3, 4, 5, 6, 7, 8]
   };
-  // number: [line, column]
+  // number: [rows, cols]
   private gridImageSizes: { [key: number]: number[] } = {
     0: [],
     1: [1, 1],
@@ -44,36 +45,40 @@ export class ImportPrompt {
     9: [3, 3]
   };
 
-  private hoveredSize = 0; // Default to 0
-  private selectedSize = 1; // Default to 0
-  croppedImageSrc = '';
+  private hoveredSize = 0;
+  private selectedSize = 1;
 
-  constructor(private appControllerService: AppControllerService, private imageProcessing: ImageProcessingService, private rightColumnService: RightColumnService) {
-    // Pieces
+  // The live GridImg used by the crop editor and for export
+  cropGridImg: GridImg | null = null;
+
+  constructor(
+    private appControllerService: AppControllerService,
+    private imageProcessing: ImageProcessingService,
+    private rightColumnService: RightColumnService
+  ) {}
+
+  ngOnChanges(): void {
     if (this.image) {
-      this.imageProcessing.cropImage(new GridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true)
-        .then(src => this.croppedImageSrc = src)
-        .catch(err => console.error('Failed to crop image:', err));
+      this.buildCropGridImg(this.selectedSize);
     }
   }
 
-  ngOnChanges() {
-    // Store the original src only once, when the image input changes
-    if (this.image) {
-      this.imageProcessing.cropImage(new GridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true)
-        .then(src => this.croppedImageSrc = src)
-        .catch(err => console.error('Failed to crop image:', err));
-    }
+  /** Build (or rebuild) cropGridImg for the given span, resetting crop to center */
+  private buildCropGridImg(size: number): void {
+    if (!this.image) return;
+    const [w, h] = this.gridImageSizes[size];
+    this.cropGridImg = new GridImg(this.image, -1, -1, w, h);
+    // cropX, cropY, cropZoom default to 0.5, 0.5, 1.0 from the constructor
   }
 
   protected async downloadImages(): Promise<void> {
-    if (!this.image) return;
-
-    const downloadableImage : GridImg = new GridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1], this.croppedImageSrc)
+    if (!this.image || !this.cropGridImg) return;
 
     try {
-      const cropped = await this.imageProcessing.cropImage(downloadableImage, false);
-      const divided = await this.imageProcessing.divideImage(cropped, downloadableImage.w, downloadableImage.h);
+      const cropped = await this.imageProcessing.cropImage(this.cropGridImg, false);
+      const divided = await this.imageProcessing.divideImage(
+        cropped, this.cropGridImg.w, this.cropGridImg.h
+      );
       const zipBlob = await this.imageProcessing.createZip(divided);
 
       const url = window.URL.createObjectURL(zipBlob);
@@ -87,7 +92,6 @@ export class ImportPrompt {
     }
   }
 
-  // Method to delete the selected image
   protected deleteImage(): void {
     if (this.image) {
       this.appControllerService.removeGlobalImage(this.image.id!);
@@ -95,12 +99,10 @@ export class ImportPrompt {
     }
   }
 
-  // Call this method when you want to close the modal
   closePrompt() {
     this.close.emit();
   }
 
-  // Method to set isDarkened for grid items
   isDarkened(index: number): boolean {
     return this.gridSizes[this.hoveredSize].includes(index);
   }
@@ -110,25 +112,43 @@ export class ImportPrompt {
   }
 
   onPlaceholderHover(index: number): void {
-    this.hoveredSize = index+1;
+    this.hoveredSize = index + 1;
   }
 
   onPlaceholderClick(index: number): void {
-    // Lock the selection
-    this.selectedSize = index+1;
-    this.imageProcessing.cropImage(new GridImg(this.image!, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1]), true)
-      .then(src => this.croppedImageSrc = src)
-      .catch(err => console.error('Failed to crop image:', err));
+    this.selectedSize = index + 1;
+    // Rebuild with new span — crop resets to center
+    this.buildCropGridImg(this.selectedSize);
   }
 
-  // Send the pieces to the grid
-  sendImage(): void {
-    if (this.image && this.croppedImageSrc) {
-      // Add the image to the grid
-      this.appControllerService.addGridImage(new GridImg(this.image, -1, -1, this.gridImageSizes[this.selectedSize][0], this.gridImageSizes[this.selectedSize][1], this.croppedImageSrc));
-      //Close the right column if open
-      this.rightColumnService.close();
-      this.close.emit();
-    }
+  /** Crop editor emits on drag/zoom end — store the new values */
+  onCropChange(values: CropValues): void {
+    if (!this.cropGridImg) return;
+    this.cropGridImg.cropX = values.cropX;
+    this.cropGridImg.cropY = values.cropY;
+    this.cropGridImg.cropZoom = values.cropZoom;
+  }
+
+  /** Send the image to the grid with current span and crop */
+  async sendImage(): Promise<void> {
+    if (!this.image || !this.cropGridImg) return;
+
+    // Compute the low-res cropped preview for immediate grid display
+    const croppedSrc = await this.imageProcessing.cropImage(this.cropGridImg, true);
+
+    this.appControllerService.addGridImage(new GridImg(
+      this.image,
+      -1, -1,
+      this.cropGridImg.w,
+      this.cropGridImg.h,
+      croppedSrc,
+      undefined,
+      this.cropGridImg.cropX,
+      this.cropGridImg.cropY,
+      this.cropGridImg.cropZoom
+    ));
+
+    this.rightColumnService.close();
+    this.close.emit();
   }
 }

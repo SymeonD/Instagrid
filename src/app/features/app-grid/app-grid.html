@@ -23,7 +23,7 @@
         (pointerdown)="pointerDownItemSelection($event, item)"
         (pointerup)="pointerUpItemSelection($event, item)">
             <ng-container *ngIf="item;">
-                <img [src]="item.globalGridImg.lowResSrc" [alt]="item.globalGridImg.alt" style="width: 100%; height: 100%; object-fit: cover;" />
+                <img [src]="item.croppedSrc || item.globalGridImg.lowResSrc" [alt]="item.globalGridImg.alt" style="width: 100%; height: 100%; object-fit: cover;" />
             </ng-container>
 
         </ktd-grid-item>
