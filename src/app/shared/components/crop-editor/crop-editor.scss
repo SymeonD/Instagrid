@@ -31,12 +31,24 @@
 
 .crop-rect {
   position: absolute;
-  border: 2px solid rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.92);
   box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.52);
   border-radius: 2px;
   box-sizing: border-box;
   cursor: grab;
   will-change: left, top, width, height;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to right,  transparent calc(33.33% - .5px), rgba(255,255,255,0.18) calc(33.33% - .5px), rgba(255,255,255,0.18) calc(33.33% + .5px), transparent calc(33.33% + .5px)),
+      linear-gradient(to right,  transparent calc(66.66% - .5px), rgba(255,255,255,0.18) calc(66.66% - .5px), rgba(255,255,255,0.18) calc(66.66% + .5px), transparent calc(66.66% + .5px)),
+      linear-gradient(to bottom, transparent calc(33.33% - .5px), rgba(255,255,255,0.18) calc(33.33% - .5px), rgba(255,255,255,0.18) calc(33.33% + .5px), transparent calc(33.33% + .5px)),
+      linear-gradient(to bottom, transparent calc(66.66% - .5px), rgba(255,255,255,0.18) calc(66.66% - .5px), rgba(255,255,255,0.18) calc(66.66% + .5px), transparent calc(66.66% + .5px));
+    pointer-events: none;
+  }
 
   &.dragging {
     cursor: grabbing;

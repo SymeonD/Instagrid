@@ -17,11 +17,9 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { LeftColumnService } from '../../core/services/left-column-service';
 import { RightColumnService } from '../../core/services/right-column-service';
-import { ClickOutsideDirective } from '../../shared/directives/click-outside-directive';
-
 @Component({
   selector: 'main-layout',
-  imports: [RouterOutlet, AppGrid, LeftColumn, RightColumn, CommonModule, MatIconModule, AppHeader, ImportPrompt, MatSnackBarModule, MatButtonModule, ClickOutsideDirective],
+  imports: [RouterOutlet, AppGrid, LeftColumn, RightColumn, CommonModule, MatIconModule, AppHeader, ImportPrompt, MatSnackBarModule, MatButtonModule],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.scss'
 })

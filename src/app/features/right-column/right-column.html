@@ -1,12 +1,23 @@
 <div class="right-column">
-    <div class="image-library">
-        <div class="image-column" *ngFor="let column of columns">
-            <div class="image-item" *ngFor="let image of column">
-            <img (click)="openImportPrompt(image)" [src]="image.lowResSrc" [alt]="image.alt" style="max-width: 100%; max-height: 100%;" />
-            </div>
-        </div>
-    </div>
-    <div class="image-picker">
-        <button aria-label="add-image-button" matButton="elevated" class="add-image-button" (click)="importImages()">Add image<mat-icon class="add-icon">add</mat-icon></button>
-    </div>
+  <div class="lib-header">
+    <span class="lib-title">Library</span>
+    <button class="btn-add" (click)="importImages()" aria-label="add image">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add
+    </button>
+  </div>
+
+  <div class="lib-grid">
+    @for (image of images; track image.id) {
+      <div class="lib-item" (click)="openImportPrompt(image)">
+        <img [src]="image.lowResSrc" [alt]="image.alt" />
+      </div>
+    }
+    @if (images.length === 0) {
+      <div class="lib-empty">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <p>No images yet</p>
+      </div>
+    }
+  </div>
 </div>

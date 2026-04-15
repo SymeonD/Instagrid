@@ -39,13 +39,18 @@ export class AppGrid implements OnDestroy {
         rowColor: 'rgba(128, 128, 128, 0.10)',
         columnColor: 'rgba(128, 128, 128, 0.10)',
     };
-    height = this.rowHeight;
+    height = window.innerHeight;
 
     private _isDraggingResizing: boolean = false;
+
+    private updateGridHeight(): void {
+        this.height = Math.max(this.getGridHeight(), window.innerHeight);
+    }
 
     private readonly onResize = () => {
         this.gridWidth = document.getElementById('image-grid-container')?.clientWidth || window.innerWidth * 0.5;
         this.rowHeight = this.ASPECT_RATIO * (this.gridWidth / this.cols);
+        this.updateGridHeight();
     };
 
     ngOnInit() {
@@ -59,6 +64,7 @@ export class AppGrid implements OnDestroy {
     ngAfterViewInit() {
         this.gridWidth = document.getElementById('image-grid-container')?.clientWidth || window.innerWidth*0.5;
         this.rowHeight = this.ASPECT_RATIO * (this.gridWidth / this.cols);
+        this.updateGridHeight();
         this.cdr.detectChanges();
     }
 
@@ -149,7 +155,7 @@ export class AppGrid implements OnDestroy {
         });
 
         // set new grid height
-        this.height = this.getGridHeight();
+        this.updateGridHeight();
     }
 
     /** Adds a grid item to the layout */

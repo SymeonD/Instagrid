@@ -38,10 +38,8 @@ Quick reference for what's done, what's next, and what's coming later.
 - [ ] **Canvas performance**
   - [ ] Use signals and `OnPush` change detection where possible (not on `MainLayout` — side column transitions prevent it)
   - [ ] Move image processing to Web Workers to unblock the UI thread
-- [ ] Add swipe gestures to open/close side panels on mobile
 - [ ] Improve styling system including Material component overrides
 - [ ] Enable selection of output image format (PNG / JPEG / WEBP)
-
 - [ ] Multi-item selection and batch download
 - [ ] Add Instagram account header mock (profile pic + username) for feed preview
 
@@ -109,3 +107,4 @@ Quick reference for what's done, what's next, and what's coming later.
 
 - ~~Add explanatory text in import prompts about preview quality~~ — removed; not needed with live preview
 - ~~Add visible image separation lines on grid tiles in the canvas view~~ — discarded for now; may revisit if users find it hard to position images without them, but the current design is cleaner and less distracting
+- ~~Add swipe gestures to open/close side panels on mobile~~ — removed, side panels are now full-height modals that open on button click, which is more intuitive and discoverable on mobile

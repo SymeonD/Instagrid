@@ -1,18 +1,16 @@
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
-import { MatIcon } from '@angular/material/icon';
 import { AppControllerService } from '../../core/services/app-controller.service';
 import { GlobalImg } from '../../core/models/global-img-class';
 import { ImageProcessingService } from '../../core/services/image-processing-service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatButtonModule } from '@angular/material/button';
 import { ImportPromptService } from '../../core/services/import-prompt.service';
 
 
 @Component({
   selector: 'right-column',
-  imports: [CommonModule, MatIcon, MatSnackBarModule, MatButtonModule],
+  imports: [CommonModule, MatSnackBarModule],
   templateUrl: './right-column.html',
   styleUrl: './right-column.scss'
 })

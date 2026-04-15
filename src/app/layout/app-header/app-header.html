@@ -1,16 +1,18 @@
-<header>
+<header class="topbar">
   <div class="logo">
-    <img src="SlydCut.png" alt="Logo">
-    <div class="title">
-      <h1>SlydCut</h1>
-      <a href="https://www.linkedin.com/in/symeon-de-almeida" target="_blank"><h2>by Syméon De Almeida</h2></a>
+    <div class="logo-icon">
+      <span></span><span></span><span></span><span></span>
+    </div>
+    <div class="logo-titles">
+      <div class="logo-text">SlydCut</div>
+      <a href="https://www.linkedin.com/in/symeon-de-almeida" target="_blank" class="logo-sub">by Syméon De Almeida</a>
     </div>
   </div>
-  
 
-  <button aria-label="toggle-dark-mode-button" matFab color="primary" (click)="toggleDarkMode()" class="fab">
-    <mat-icon>
-      {{ darkMode ? 'brightness_5' : 'brightness_3' }}
-    </mat-icon>
-  </button>
+  <div class="topbar-right">
+    <button class="tb-btn" (click)="toggleDarkMode()">
+      <mat-icon>{{ darkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      {{ darkMode ? 'Light' : 'Dark' }}
+    </button>
+  </div>
 </header>
