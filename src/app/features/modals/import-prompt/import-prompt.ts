@@ -128,10 +128,6 @@ export class ImportPrompt implements OnChanges {
   onPlaceholderClick(index: number): void {
     this.selectedSize = index + 1;
     this.buildCropGridImg(this.selectedSize);
-    // On mobile, auto-advance to crop step
-    if (this.isMobile()) {
-      this.nextStep();
-    }
   }
 
   /** Crop editor emits on drag/zoom end — store the new values */

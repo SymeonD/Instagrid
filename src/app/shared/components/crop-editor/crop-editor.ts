@@ -88,7 +88,19 @@ export class CropEditor implements OnChanges {
   }
 
   onImageLoad(): void {
-    const img = this.imageEl.nativeElement;
+    this.initFromImage();
+  }
+
+  private initFromImage(retries = 0): void {
+    const img = this.imageEl?.nativeElement;
+    if (!img) return;
+
+    // If the element is inside a display:none ancestor (e.g. a hidden mobile step),
+    // clientWidth will be 0. Retry on the next animation frame until it's visible.
+    if (img.clientWidth === 0 && retries < 30) {
+      requestAnimationFrame(() => this.initFromImage(retries + 1));
+      return;
+    }
 
     // Use the actual rendered dimensions so CSS constraints (max-height, etc.)
     // are accounted for — avoids the rect overflowing a capped wrapper.
@@ -140,8 +152,9 @@ export class CropEditor implements OnChanges {
 
   @HostListener('window:resize')
   onWindowResize(): void {
-    if (!this.imageEl?.nativeElement || this.imageDisplayW === 0) return;
+    if (!this.imageEl?.nativeElement) return;
     const img = this.imageEl.nativeElement;
+    if (img.clientWidth === 0) return;
     this.imageDisplayW = img.clientWidth;
     this.imageDisplayH = img.clientHeight - 1;
     this.computeRect();

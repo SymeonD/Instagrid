@@ -24,7 +24,7 @@ export class ImageProcessingService {
       const aspectRatio = targetWidth / targetHeight;
 
       const img = new window.Image();
-      img.crossOrigin = 'anonymous'; // if images are external
+      img.crossOrigin = 'anonymous';
       img.src = lowResolution ? image.globalGridImg.lowResSrc! : image.globalGridImg.highResSrc;
 
       img.onload = () => {
@@ -185,7 +185,7 @@ export class ImageProcessingService {
 
   // TODO: optimize this function to handle large number of images without blocking the UI
   // Use web workers if necessary
-  importImages(rightColumnService? : RightColumnService): void {
+  importImages(rightColumnService?: RightColumnService): void {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
@@ -213,17 +213,22 @@ export class ImageProcessingService {
         }
 
         const reader = new FileReader();
-        reader.onload = () => {
-          const image = { src: reader.result as string, alt: file.name };
-          this.appControllerService.addGlobalImage(
-            new GlobalImg(image.src, image.alt, this)
-          );
-          this._snackBar.open(`✅ Image imported successfully!`, 'Close', {
-            duration: 3000,
-            panelClass: ['snackbar-success']
-          });
+        reader.onload = async () => {
+          const src = reader.result as string;
+          const globalImg = new GlobalImg(src, file.name);
 
+          // Add immediately so the library shows a loading skeleton at once
+          this.appControllerService.addGlobalImage(globalImg);
           rightColumnService?.open();
+
+          try {
+            globalImg.lowResSrc = await this.createLowResImage(src);
+          } catch {
+            globalImg.lowResSrc = src;
+          }
+
+          // Re-emit so Angular picks up the now-populated lowResSrc
+          this.appControllerService.refreshGlobalImages();
         };
         reader.readAsDataURL(file);
       });

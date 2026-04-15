@@ -23,32 +23,6 @@
   text-transform: uppercase;
 }
 
-.btn-add {
-  height: 26px;
-  padding: 0 10px;
-  border-radius: var(--r-sm);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 11px;
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  border: 1px solid var(--border2);
-  background: var(--text);
-  color: var(--accent-fg);
-  transition: opacity 0.15s;
-
-  svg {
-    width: 11px;
-    height: 11px;
-  }
-
-  &:hover {
-    opacity: 0.85;
-  }
-}
-
 /* ── Library grid ──────────────────────────────────────────────── */
 
 .lib-grid {
@@ -83,52 +57,57 @@
   }
 }
 
-/* ── Empty state ───────────────────────────────────────────────── */
+/* ── Loading skeleton tile ──────────────────────────────────────── */
 
-.lib-empty {
-  grid-column: 1 / -1;
+.lib-loading {
+  background: var(--surface2);
+  border-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+}
+
+.lib-loading-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border2);
+  border-top-color: var(--text3);
+  border-radius: 50%;
+  animation: lib-spin 0.7s linear infinite;
+}
+
+@keyframes lib-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Add image placeholder tile ─────────────────────────────────── */
+
+.lib-add {
+  background: var(--surface2);
+  border: 1.5px dashed var(--border2);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 32px 16px;
+  gap: 5px;
   color: var(--text3);
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
 
   svg {
-    width: 28px;
-    height: 28px;
-    opacity: 0.35;
+    width: 18px;
+    height: 18px;
   }
 
-  p {
-    font-size: 11px;
-    text-align: center;
-    margin: 0;
+  &:hover {
+    border-color: var(--text2);
+    color: var(--text2);
+    background: var(--surface3);
   }
 }
 
-/* ── Mobile: horizontal scroll ─────────────────────────────────── */
-
-@media screen and (max-width: 768px) {
-  .lib-grid {
-    display: flex;
-    flex-direction: row;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding: 8px 12px 16px;
-    gap: 8px;
-    align-content: unset;
-  }
-
-  .lib-item {
-    width: 72px;
-    height: 72px;
-    flex-shrink: 0;
-    aspect-ratio: unset;
-  }
-
-  .lib-empty {
-    flex: 1;
-  }
+.lib-add-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
 }

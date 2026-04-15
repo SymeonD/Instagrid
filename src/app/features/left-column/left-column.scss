@@ -110,13 +110,14 @@
 .panel-actions {
   padding: 10px 12px 14px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 6px;
   margin-top: auto;
   flex-shrink: 0;
 }
 
 .btn-export {
+  flex: 1;
   height: 33px;
   background: var(--text);
   color: var(--accent-fg);
@@ -130,48 +131,22 @@
   align-items: center;
   justify-content: center;
   gap: 5px;
-  width: 100%;
   transition: opacity 0.15s;
+
+  svg {
+    width: 12px;
+    height: 12px;
+  }
 
   &:hover {
     opacity: 0.85;
   }
 }
 
-.btn-row {
-  display: flex;
-  gap: 6px;
-}
-
-.btn-sm-ghost {
-  flex: 1;
-  height: 29px;
-  background: transparent;
-  color: var(--text3);
-  border: none;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 11px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  border-radius: var(--r-sm);
-  transition: background 0.15s;
-
-  svg {
-    width: 11px;
-    height: 11px;
-  }
-
-  &:hover {
-    background: var(--surface2);
-  }
-}
-
 .btn-sm-danger {
-  flex: 1;
-  height: 29px;
+  height: 33px;
+  width: 75px;
+  flex-shrink: 0;
   background: var(--danger-bg);
   color: var(--danger);
   border: none;
@@ -183,12 +158,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
   transition: opacity 0.15s;
 
   svg {
-    width: 11px;
-    height: 11px;
+    width: 13px;
+    height: 13px;
   }
 
   &:hover {

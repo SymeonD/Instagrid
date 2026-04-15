@@ -49,8 +49,8 @@ Quick reference for what's done, what's next, and what's coming later.
 
 > Longer-term features. Scope not yet defined.
 
-- [ ] Drag and drop to reorder images directly on the grid
-- [ ] Drag and drop to import images (replace file picker)
+- [ ] ++Drag and drop to reorder images directly on the grid
+- [ ] ++Drag and drop to import images (replace file picker)
 - [ ] Direct Instagram upload (OAuth)
 - [ ] Cloud upload integrations: Google Drive, Dropbox, OneDrive, iCloud, Nextcloud
 - [ ] Multi-language support
@@ -108,3 +108,10 @@ Quick reference for what's done, what's next, and what's coming later.
 - ~~Add explanatory text in import prompts about preview quality~~ — removed; not needed with live preview
 - ~~Add visible image separation lines on grid tiles in the canvas view~~ — discarded for now; may revisit if users find it hard to position images without them, but the current design is cleaner and less distracting
 - ~~Add swipe gestures to open/close side panels on mobile~~ — removed, side panels are now full-height modals that open on button click, which is more intuitive and discoverable on mobile
+
+
+On mobile I do not really like the library button to open it, would it be possible to make it a draggable bottom sheet ? Also it would allow the library to be vertical and not horizontal in a vertical container which is weird.
+
+On mobile too there is no way to open the edit panel, I think it was supposed to open when an image on the grid was clicked ? How does it work now or what do you think should be done ?
+
+Finally, we will check later but it looks like the light/dark mode is not working properly, not all elements on the page are changin colors at the same speed.

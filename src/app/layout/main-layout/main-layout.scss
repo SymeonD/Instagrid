@@ -22,6 +22,7 @@ app-header {
 
 .left-column {
   width: var(--panel-w);
+  max-width: var(--panel-mw);
   background: var(--surface);
   border-right: 1px solid var(--border);
   flex-shrink: 0;
@@ -38,10 +39,34 @@ app-header {
   background: var(--bg);
   padding: 28px 24px;
   transition: background-color 0.3s ease;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-color: var(--grid-cell-color) transparent;
+  scrollbar-gutter: stable both-edges;
+}
+
+.center-column::-webkit-scrollbar {
+  width: 8px;
+}
+
+.center-column::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.center-column::-webkit-scrollbar-thumb {
+  background-color: var(--grid-cell-color);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+  transition: background-color 0.3s ease;
+}
+
+.center-column::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 .right-column {
   width: var(--panel-w);
+  max-width: var(--panel-mw);
   background: var(--surface);
   border-left: 1px solid var(--border);
   flex-shrink: 0;
@@ -87,41 +112,38 @@ app-header {
     border-radius: var(--r-xl) var(--r-xl) 0 0;
     border: 1px solid var(--border2);
     border-bottom: none;
-    transform: translateY(100%);
-    transition: transform 0.3s ease;
     z-index: 20;
     overflow-y: auto;
   }
 
-  .left-column.show,
-  .right-column.show {
+  /* Left panel uses CSS class toggle */
+  .left-column {
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+  }
+
+  .left-column.show {
     transform: translateY(0);
   }
+
+  /* Right panel transform is set inline from TS (sheetTransform / sheetTransition) */
 
   /* Mobile panel drag handle */
   .panel-handle {
     display: flex;
     justify-content: center;
-    padding: 8px 0 4px;
+    align-items: center;
+    padding: 12px 0 8px;
     flex-shrink: 0;
+    cursor: grab;
+    touch-action: none;
   }
 
-  .panel-close-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--text3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4px;
-    border-radius: 50%;
-
-    mat-icon {
-      font-size: 24px;
-      width: 24px;
-      height: 24px;
-    }
+  .handle-bar {
+    width: 40px;
+    height: 4px;
+    background: var(--border2);
+    border-radius: 2px;
   }
 
   /* Mobile backdrop */
@@ -157,6 +179,10 @@ app-header {
       font-size: 20px;
       width: 20px;
       height: 20px;
+    }
+
+    &.hidden {
+      display: none !important;
     }
   }
 }

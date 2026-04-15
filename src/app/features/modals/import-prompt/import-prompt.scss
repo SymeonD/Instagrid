@@ -205,12 +205,7 @@
 .modal-actions {
   margin-top: auto;
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.modal-btn-row {
-  display: flex;
+  flex-direction: row;
   gap: 6px;
 }
 
@@ -266,10 +261,6 @@
     flex: 1;
     overflow: hidden;
     gap: 16px;
-
-    &.hidden {
-      display: none;
-    }
   }
 
   crop-editor {

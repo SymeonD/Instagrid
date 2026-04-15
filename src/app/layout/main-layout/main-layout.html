@@ -4,13 +4,9 @@
   <!-- Left panel: crop editor + file info + actions -->
   <div class="left-column" [class.show]="isLeftColumnOpen">
     <!-- Mobile close handle -->
-    @if (selectedImage) {
-      <div class="panel-handle">
-        <button class="panel-close-btn" (click)="toggleLeftColumn()" aria-label="close panel">
-          <mat-icon>keyboard_arrow_down</mat-icon>
-        </button>
-      </div>
-    }
+    <div class="panel-handle" (click)="toggleLeftColumn()">
+      <div class="handle-bar"></div>
+    </div>
     <left-column></left-column>
   </div>
 
@@ -19,13 +15,17 @@
     <app-grid></app-grid>
   </div>
 
-  <!-- Right panel: image library -->
-  <div class="right-column" [class.show]="isRightColumnOpen">
-    <!-- Mobile close handle -->
-    <div class="panel-handle">
-      <button class="panel-close-btn" (click)="toggleRightColumn()" aria-label="close panel">
-        <mat-icon>keyboard_arrow_down</mat-icon>
-      </button>
+  <!-- Right panel: image library (draggable on mobile) -->
+  <div class="right-column"
+    [style.transform]="sheetTransform"
+    [style.transition]="sheetTransition">
+    <!-- Mobile drag handle -->
+    <div class="panel-handle"
+      (touchstart)="onSheetTouchStart($event)"
+      (touchmove)="onSheetTouchMove($event)"
+      (touchend)="onSheetTouchEnd()"
+      (click)="!sheetDragging && isRightColumnOpen && toggleRightColumn()">
+      <div class="handle-bar"></div>
     </div>
     <right-column></right-column>
   </div>
@@ -43,8 +43,9 @@
     <div class="modal-backdrop" (click)="onOutsideClick()"></div>
   }
 
-  <!-- Mobile: library open button -->
-  <button class="mobile-lib-btn drawer-button" (click)="toggleRightColumn()" aria-label="open library">
+  <!-- Mobile: floating library open button -->
+  <button class="mobile-lib-btn" (click)="toggleRightColumn()" aria-label="open library"
+    [class.hidden]="isRightColumnOpen || isLeftColumnOpen">
     <mat-icon>photo_library</mat-icon>
     <span>Library</span>
   </button>

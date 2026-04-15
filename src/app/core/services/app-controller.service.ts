@@ -29,6 +29,10 @@ export class AppControllerService {
         this.globalImagesSubject.next([...this.globalImagesSubject.value, image]);
     }
 
+    refreshGlobalImages() {
+        this.globalImagesSubject.next([...this.globalImagesSubject.value]);
+    }
+
     removeGlobalImage(imageId: string) {
         this.globalImagesSubject.next(this.globalImagesSubject.value.filter(img => img.id !== imageId));}
 

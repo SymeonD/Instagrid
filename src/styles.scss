@@ -56,6 +56,7 @@ $dark-theme: mat.define-theme((
   --danger-bg: rgba(217, 64, 64, 0.09);
   --accent-fg: #FFFFFF;
   --panel-w: 400px;
+  --panel-mw: 30vw;
   --topbar-h: 60px;
   --r-sm: 7px;
   --r-md: 10px;
@@ -72,6 +73,7 @@ $dark-theme: mat.define-theme((
   --theme-grid-color-selected: var(--text3);
   --theme-red: var(--danger);
   --theme-green: #4caf50;
+  --grid-cell-color: #DDDCD9;
 }
 
 .dark-theme {
@@ -89,6 +91,13 @@ $dark-theme: mat.define-theme((
   --danger: #E87070;
   --danger-bg: rgba(232, 112, 112, 0.10);
   --accent-fg: #18170F;
+  --grid-cell-color: #242423;
+}
+
+@media screen and (max-width: 768px) {
+  :root, :host, .light-theme, .dark-theme {
+    --panel-mw: 100vw;
+  }
 }
 
 // Override ktd-grid drag placeholder colour
