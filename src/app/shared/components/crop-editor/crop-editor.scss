@@ -10,21 +10,24 @@
 
 .image-wrapper {
   position: relative;
-  width: 100%;
+  width: fit-content;
+  margin: 0 auto;
   overflow: hidden;
-  background: #000;
   cursor: crosshair;
-  max-height: 50vh;
 }
 
 .full-image {
   display: block;
-  width: 100%;
+  width: auto;
   height: auto;
+  max-width: 100%;
   max-height: 50vh;
-  object-fit: contain;
   pointer-events: none;
   -webkit-user-drag: none;
+
+  @media screen and (max-width: 768px) {
+    max-height: 40vh;
+  }
 }
 
 // ─── Crop rectangle ─────────────────────────────────────────────────────────

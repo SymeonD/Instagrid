@@ -190,47 +190,39 @@ export class ImageProcessingService {
     input.type = 'file';
     input.accept = 'image/*';
     input.multiple = true;
+    input.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0;';
+    document.body.appendChild(input);
 
     input.onchange = (event: Event) => {
       const target = event.target as HTMLInputElement;
       if (!target.files) return;
+      
 
       const files = Array.from(target.files);
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
-      const allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'svg'];
 
       files.forEach((file) => {
-        const ext = file.name.toLowerCase().split('.').pop();
-
-        // Check both MIME type and extension
-        if (!allowedTypes.includes(file.type) || !allowedExtensions.includes(ext!)) {
+        // Accept any image/* — mobile browsers report varying MIME types (image/jpg, image/heic, etc.)
+        if (!file.type.startsWith('image/')) {
           this._snackBar.open(
-            `⚠️ ${file.type} is not supported. Please upload JPG, JPEG, PNG, WEBP, or SVG files.`,
+            `⚠️ "${file.name}" is not a supported image file.`,
             'Close',
-            { duration: 50000, panelClass: ['snackbar-warning'] }
+            { duration: 5000, panelClass: ['snackbar-warning'] }
           );
           return;
         }
+        
+        // createObjectURL is synchronous and works on all mobile browsers.
+        // FileReader.readAsDataURL can silently hang on Android with gallery content URIs.
+        const blobUrl = URL.createObjectURL(file);
+        const globalImg = new GlobalImg(blobUrl, file.name, undefined, blobUrl);
 
-        const reader = new FileReader();
-        reader.onload = async () => {
-          const src = reader.result as string;
-          const globalImg = new GlobalImg(src, file.name);
+        this.appControllerService.addGlobalImage(globalImg);
+        rightColumnService?.open();
 
-          // Add immediately so the library shows a loading skeleton at once
-          this.appControllerService.addGlobalImage(globalImg);
-          rightColumnService?.open();
-
-          try {
-            globalImg.lowResSrc = await this.createLowResImage(src);
-          } catch {
-            globalImg.lowResSrc = src;
-          }
-
-          // Re-emit so Angular picks up the now-populated lowResSrc
-          this.appControllerService.refreshGlobalImages();
-        };
-        reader.readAsDataURL(file);
+        this.createLowResImage(blobUrl)
+          .then(lowRes => { globalImg.lowResSrc = lowRes; })
+          .catch(() => { /* keep blobUrl as lowResSrc fallback */ })
+          .finally(() => this.appControllerService.refreshGlobalImages());
       });
     };
     input.click();
