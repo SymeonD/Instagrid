@@ -53,7 +53,7 @@ export class MainLayout {
       this.selectedImage = img;
       // On mobile: auto-open the edit panel when an image is selected
       if (img && window.innerWidth <= 768) {
-        this.leftColumnService.open();
+        setTimeout(() => this.leftColumnService.open(), 0);
       }
     });
     this.importPromptService.modalImage$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(img => this.modalImage = img);
@@ -72,6 +72,10 @@ export class MainLayout {
   onOutsideClick() {
     if (this.isLeftColumnOpen) this.leftColumnService.close();
     if (this.isRightColumnOpen) this.rightColumnService.close();
+    // If any was open, also clear the selected image to reset state
+    if (this.isLeftColumnOpen || this.isRightColumnOpen) {
+      this.appControllerService.setSelectedGridImage(null);
+    }
   }
 
   closeImportPrompt() { this.importPromptService.closeImportPrompt(); }

@@ -115,3 +115,5 @@ On mobile I do not really like the library button to open it, would it be possib
 On mobile too there is no way to open the edit panel, I think it was supposed to open when an image on the grid was clicked ? How does it work now or what do you think should be done ?
 
 Finally, we will check later but it looks like the light/dark mode is not working properly, not all elements on the page are changin colors at the same speed.
+
+Remove blue background from image drag in the grid.

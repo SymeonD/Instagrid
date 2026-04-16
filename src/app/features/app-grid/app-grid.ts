@@ -22,6 +22,7 @@ export class AppGrid implements OnDestroy {
   private placeholderLayout: GridImg[] = [];
 
   @ViewChild(KtdGridComponent, {static: true}) grid: KtdGridComponent | undefined;
+
   trackById = ktdTrackById;
 
   // Settings for the grid
@@ -42,6 +43,29 @@ export class AppGrid implements OnDestroy {
     height = window.innerHeight;
 
     private _isDraggingResizing: boolean = false;
+
+    // ─── Mobile touch state ────────────────────────────────────────────────────
+
+    isMobile(): boolean { return window.innerWidth <= 768; }
+
+    private touchState: {
+        startX: number;
+        startY: number;
+        startTime: number;
+        itemId: string;
+        timer: ReturnType<typeof setTimeout> | null;
+        startEvent: PointerEvent;
+    } | null = null;
+
+    private resizeState: {
+        itemId: string;
+        startX: number;
+        startY: number;
+        startW: number;
+        startH: number;
+    } | null = null;
+
+    resizeActiveItemId: string | null = null;
 
     private updateGridHeight(): void {
         this.height = Math.max(this.getGridHeight(), window.innerHeight);
@@ -85,6 +109,143 @@ export class AppGrid implements OnDestroy {
             imgs.filter(i => !oldIds.has(i.id)).forEach(img => this.addItemToLayout(img));
         });
     };
+
+    // ─── Mobile pointer handlers ───────────────────────────────────────────────
+
+    onItemPointerDown(event: PointerEvent, item: GridImg): void {
+        if (!this.isMobile()) {
+            this.pointerDownItemSelection(event as unknown as MouseEvent, item);
+            return;
+        }
+        event.preventDefault();
+        this.cancelTouchState();
+        this.touchState = {
+            startX: event.clientX,
+            startY: event.clientY,
+            startTime: Date.now(),
+            itemId: item.id,
+            timer: null,
+            startEvent: event
+        };
+    }
+
+    onCornerPointerDown(event: PointerEvent, item: GridImg): void {
+        event.stopPropagation();
+        event.preventDefault();
+        this.cancelTouchState();
+        this.touchState = {
+            startX: event.clientX,
+            startY: event.clientY,
+            startTime: Date.now(),
+            itemId: item.id,
+            timer: setTimeout(() => this.activateResize(item, event), 500),
+            startEvent: event
+        };
+    }
+
+    onItemPointerMove(event: PointerEvent): void {
+        if (!this.touchState) return;
+        const dx = Math.abs(event.clientX - this.touchState.startX);
+        const dy = Math.abs(event.clientY - this.touchState.startY);
+        if (dx + dy > 8) {
+            this.cancelTouchState();
+        }
+    }
+
+    @HostListener('document:pointermove', ['$event'])
+    onDocumentPointerMove(event: PointerEvent): void {
+        if (!this.resizeState) return;
+        const cellW = this.gridWidth / this.cols;
+        const cellH = this.rowHeight;
+        const deltaX = event.clientX - this.resizeState.startX;
+        const deltaY = event.clientY - this.resizeState.startY;
+        const item = this.layout.find(i => i.id === this.resizeState!.itemId);
+        if (!item) return;
+        const newW = Math.max(1, Math.min(this.cols - item.x,
+            Math.round((this.resizeState.startW * cellW + deltaX) / cellW)));
+        const newH = Math.max(1, Math.round((this.resizeState.startH * cellH + deltaY) / cellH));
+        if (item.w !== newW || item.h !== newH) {
+            item.w = newW;
+            item.h = newH;
+            this.layout = [...this.layout];
+            this.updateGridHeight();
+            this.cdr.detectChanges();
+        }
+    }
+
+    @HostListener('document:pointerup')
+    onDocumentPointerUp(): void {
+        if (this.resizeState) {
+            const itemId = this.resizeState.itemId;
+            this.resizeState = null;
+            this.resizeActiveItemId = null;
+            this._isDraggingResizing = false;
+            const item = this.layout.find(i => i.id === itemId);
+            if (item) {
+                item.cropX = 0.5; item.cropY = 0.5; item.cropZoom = 1.0;
+                this.imageProcessing.cropImage(item, true)
+                    .then(src => {
+                        item.croppedSrc = src;
+                        this.layout = [...this.layout];
+                        this.cdr.detectChanges();
+                    })
+                    .catch(err => console.error('Crop error after resize:', err));
+            }
+        }
+        this.cancelTouchState();
+    }
+
+    @HostListener('document:pointercancel')
+    onDocumentPointerCancel(): void {
+        this.cancelTouchState();
+    }
+
+    onItemPointerUp(event: PointerEvent, item: GridImg): void {
+        if (!this.isMobile()) {
+            this.pointerUpItemSelection(event as unknown as MouseEvent, item);
+            return;
+        }
+        if (this.resizeState) return; // handled by document:pointerup
+
+        const wasTap = this.touchState &&
+            Math.abs(event.clientX - this.touchState.startX) < 8 &&
+            Math.abs(event.clientY - this.touchState.startY) < 8 &&
+            Date.now() - this.touchState.startTime < 350 &&
+            !this._isDraggingResizing;
+
+        this.cancelTouchState();
+
+        if (wasTap) {
+            event.preventDefault();
+            this.selectedItems = [item.id];
+            this.appControllerService.setSelectedGridImage(item);
+        }
+    }
+
+    onPointerCancel(): void {
+        this.cancelTouchState();
+    }
+
+    private cancelTouchState(): void {
+        if (this.touchState?.timer) clearTimeout(this.touchState.timer);
+        this.touchState = null;
+    }
+
+    private activateResize(item: GridImg, event: PointerEvent): void {
+        if (this.touchState) this.touchState.timer = null;
+        navigator.vibrate?.(30);
+        this._isDraggingResizing = true;
+        this.resizeActiveItemId = item.id;
+        this.resizeState = {
+            itemId: item.id,
+            startX: event.clientX,
+            startY: event.clientY,
+            startW: item.w,
+            startH: item.h
+        };
+    }
+
+    // ─── ktd drag/resize callbacks ─────────────────────────────────────────────
 
     onDragStarted(event: KtdDragStart) {
         this._isDraggingResizing = true;
