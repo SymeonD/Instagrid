@@ -11,7 +11,7 @@ export class GridImg implements KtdGridLayoutItem {
         public w: number,
         public h: number,
         public croppedSrc?: string,
-        public id: string = crypto.randomUUID(),
+        public id: string = typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : 'id-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2),
         public cropX: number = 0.5,
         public cropY: number = 0.5,
         public cropZoom: number = 1.0

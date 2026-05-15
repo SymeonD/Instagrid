@@ -25,20 +25,16 @@ describe('AppControllerService', () => {
 
   describe('Global Images', () => {
     it('should add a global image', async () => {
-      const img = new GlobalImg('highRes.jpg', 'alt text', imageProcessingSpy);
-      // Wait for lowResSrc to resolve
-      await Promise.resolve();
-
+      const img = new GlobalImg('highRes.jpg', 'alt text');
       service.addGlobalImage(img);
       const images = service.getGlobalImages();
       expect(images.length).toBe(1);
       expect(images[0]).toEqual(img);
-      expect(images[0].lowResSrc).toBe('low-highRes.jpg');
     });
 
     it('should remove a global image by id', () => {
-      const img1 = new GlobalImg('src1.jpg', 'alt1', undefined, 'id1');
-      const img2 = new GlobalImg('src2.jpg', 'alt2', undefined, 'id2');
+      const img1 = new GlobalImg('src1.jpg', 'alt1', 'id1');
+      const img2 = new GlobalImg('src2.jpg', 'alt2', 'id2');
 
       service.addGlobalImage(img1);
       service.addGlobalImage(img2);

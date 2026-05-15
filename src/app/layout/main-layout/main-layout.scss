@@ -2,171 +2,171 @@
   touch-action: manipulation;
 }
 
-app-header{
-  height: 10vh;
-  max-height: 100px;
-  display: flex;
+app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
 }
 
-/* Style the colums */
+.main {
+  display: flex;
+  height: calc(100vh - var(--topbar-h));
+  margin-top: var(--topbar-h);
+  overflow: hidden;
+  position: relative;
+}
+
+/* ── Desktop panels ────────────────────────────────────────────── */
+
 .left-column {
-  width: 25%;
-  height: 90vh; /* Full height */
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  transition: transform 0.3s ease;
+  width: var(--panel-w);
+  max-width: var(--panel-mw);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+  transition: background-color 0.3s ease;
 }
 
 .center-column {
-  width: 50%;
-  height: 100vh; /* Full height */
-  margin: 0 auto; /* Center the column */
-  padding: 2vh 0 0 0;
+  flex: 1;
+  overflow-y: auto;
+  background: var(--bg);
+  padding: 28px 24px;
+  transition: background-color 0.3s ease;
+  scrollbar-color: var(--border2) transparent;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable both-edges;
 }
+
 
 .right-column {
-  width: 25%;
-  height: 90vh; /* Full height */
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  transition: transform 0.3s ease-in-out;
+  width: var(--panel-w);
+  max-width: var(--panel-mw);
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: background-color 0.3s ease;
 }
 
-.drawer-button{
+/* Hide mobile-only elements on desktop */
+.panel-handle {
   display: none;
 }
 
-.image-picker{
+.mobile-lib-btn {
   display: none;
 }
 
-/* On mobile: drawers act as slide-in modals */
+/* ── Mobile ────────────────────────────────────────────────────── */
+
 @media screen and (max-width: 768px) {
 
-  .modal-backdrop{
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 10;
+  .main {
+    flex-direction: column;
+    overflow: visible;
   }
 
   .center-column {
-    width: 80vw;
-  }
-
-  .left-column{
-    transform: translateX(-100%);
-    width: 80vw;
-    max-width: 300px;
-    z-index: 14;
-    height: 80vh;
-  }
-
-  .right-column{
-    transform: translateX(100%);
-    width: 80vw;
-    max-width: 300px;
-    z-index: 11;
-    height: 80vh;
-  }
-
-  .left-column.show, .right-column.show {
-    transform: translateX(0);
-  }
-
-  .open-right-column-button{
-    position: absolute;
-    left: -45px;
-    margin-top: 12%;
-    background-color: var(--theme-accent);
-    border: none;
-    border-radius: 30px 0 30px 30px;
-    width: 100px;
-    height: 60px;
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    color: var(--theme-font);
-
-    mat-icon{
-      font-size: 32px;
-      height: 32px;
-      width: 32px;
-      justify-self: center;
-    }
-  }
-
-  .open-left-column-button{
-    position: absolute;
-    right: -45px;
-    margin-top: 12%;
-    background-color: var(--theme-accent);
-    border: none;
-    border-radius: 0 30px 30px 30px;
-    width: 100px;
-    height: 60px;
-    display: flex;
-    justify-content: end;
-    align-items: center;
-    color: var(--theme-font);
-
-    mat-icon{
-      font-size: 32px;
-      height: 32px;
-      width: 32px;
-      justify-self: center;
-    }
-  }
-
-  .image-picker{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5%;
-    position: fixed;
-    bottom: 1%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60vw;
-    z-index: 12;
-  }
-
-  .add-icon{
-    padding: 5px 15px;
-    background-color: var(--theme-background-level-1);
-    border-radius: 10px;
-    color: var(--theme-accent);   
-    align-items: center; 
-    display: flex;
-    justify-content: center;
-    margin: 0;
-    box-shadow: inset 0 2px 2px rgba(0,0,0,0.2);
-  }
-
-  .add-image-button{
-    height: 48px;
-    background-color: var(--theme-accent) !important;
-    font-size: 18px;
-    border: none;
-    border-radius: 15px;
-    padding: 0 20px;
-    display: flex;
-    align-items: center;
-    justify-content: start;
-    cursor: pointer;
-    box-shadow: var(--mat-button-protected-container-elevation-shadow);
     width: 100%;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    color: var(--theme-background-level-1) !important;
-    transition: all 0.2s ease-in-out;
+    padding: 16px 12px 80px;
+    min-height: calc(100vh - var(--topbar-h));
+    overflow-y: auto;
   }
 
-  .add-image-button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  .left-column,
+  .right-column {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 65vh;
+    border-radius: var(--r-xl) var(--r-xl) 0 0;
+    border: 1px solid var(--border2);
+    border-bottom: none;
+    z-index: 20;
+    overflow-y: auto;
+  }
+
+  /* Left panel uses CSS class toggle */
+  .left-column {
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+  }
+
+  .left-column.show {
+    transform: translateY(0);
+  }
+
+  /* Right panel transform is set inline from TS (sheetTransform / sheetTransition) */
+
+  /* Mobile panel drag handle */
+  .panel-handle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 0 8px;
+    flex-shrink: 0;
+    cursor: grab;
+    touch-action: none;
+  }
+
+  .handle-bar {
+    width: 40px;
+    height: 4px;
+    background: var(--border2);
+    border-radius: 2px;
+  }
+
+  /* Mobile backdrop */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 15;
+  }
+
+  /* Mobile library open button */
+  .mobile-lib-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    position: fixed;
+    bottom: 20px;
+    right: 16px;
+    height: 56px;
+    padding: 0 24px;
+    gap: 8px;
+    background: var(--text);
+    color: var(--accent-fg);
+    border: none;
+    border-radius: var(--r-lg);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    z-index: 14;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    mat-icon {
+      font-size: 22px;
+      width: 22px;
+      height: 22px;
+      color: var(--accent-fg);
+    }
+
+    &.hidden {
+      display: none !important;
+    }
   }
 }

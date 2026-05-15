@@ -24,7 +24,7 @@ export class ImageProcessingService {
       const aspectRatio = targetWidth / targetHeight;
 
       const img = new window.Image();
-      img.crossOrigin = 'anonymous'; // if images are external
+      img.crossOrigin = 'anonymous';
       img.src = lowResolution ? image.globalGridImg.lowResSrc! : image.globalGridImg.highResSrc;
 
       img.onload = () => {
@@ -185,47 +185,44 @@ export class ImageProcessingService {
 
   // TODO: optimize this function to handle large number of images without blocking the UI
   // Use web workers if necessary
-  importImages(rightColumnService? : RightColumnService): void {
+  importImages(rightColumnService?: RightColumnService): void {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
     input.multiple = true;
+    input.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0;';
+    document.body.appendChild(input);
 
     input.onchange = (event: Event) => {
       const target = event.target as HTMLInputElement;
       if (!target.files) return;
+      
 
       const files = Array.from(target.files);
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
-      const allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'svg'];
 
       files.forEach((file) => {
-        const ext = file.name.toLowerCase().split('.').pop();
-
-        // Check both MIME type and extension
-        if (!allowedTypes.includes(file.type) || !allowedExtensions.includes(ext!)) {
+        // Accept any image/* — mobile browsers report varying MIME types (image/jpg, image/heic, etc.)
+        if (!file.type.startsWith('image/')) {
           this._snackBar.open(
-            `⚠️ ${file.type} is not supported. Please upload JPG, JPEG, PNG, WEBP, or SVG files.`,
+            `⚠️ "${file.name}" is not a supported image file.`,
             'Close',
-            { duration: 50000, panelClass: ['snackbar-warning'] }
+            { duration: 5000, panelClass: ['snackbar-warning'] }
           );
           return;
         }
+        
+        // createObjectURL is synchronous and works on all mobile browsers.
+        // FileReader.readAsDataURL can silently hang on Android with gallery content URIs.
+        const blobUrl = URL.createObjectURL(file);
+        const globalImg = new GlobalImg(blobUrl, file.name);
 
-        const reader = new FileReader();
-        reader.onload = () => {
-          const image = { src: reader.result as string, alt: file.name };
-          this.appControllerService.addGlobalImage(
-            new GlobalImg(image.src, image.alt, this)
-          );
-          this._snackBar.open(`✅ Image imported successfully!`, 'Close', {
-            duration: 3000,
-            panelClass: ['snackbar-success']
-          });
+        this.appControllerService.addGlobalImage(globalImg);
+        rightColumnService?.open();
 
-          rightColumnService?.open();
-        };
-        reader.readAsDataURL(file);
+        this.createLowResImage(blobUrl)
+          .then(lowRes => { globalImg.lowResSrc = lowRes; })
+          .catch(() => { globalImg.lowResSrc = blobUrl; })
+          .finally(() => this.appControllerService.refreshGlobalImages());
       });
     };
     input.click();

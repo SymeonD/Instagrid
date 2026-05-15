@@ -19,14 +19,15 @@ Quick reference for what's done, what's next, and what's coming later.
 
 > Immediate backlog. These ship in the next version.
 
-- [ ] **V0.2** Add image crop settings — moveable crop zone linked to the left panel
+- [x] **V0.2** Add image crop settings — moveable crop zone linked to the left panel
 - [ ] **V0.2** Add onboarding
-- [ ] Fix header when import modal is open
+- [x] Fix header when import modal is open
 - [ ] Change right panel mobile state management to a dedicated service
 - [ ] Make "Add image" button background truly transparent
-- [ ] Sometimes the grid snaps back into place after dragging but not to the right spots — investigate and fix
+- [x] Sometimes the grid snaps back into place after dragging but not to the right spots — investigate and fix
 - [x] Fix preview quality, it is too low on mobile and some desktop screens; consider adding a "preview quality" setting in the right panel
-- [ ] Change grid background color, from Red to a more neutral tone
+- [x] Change grid background color, from Red to a more neutral tone
+- [ ] Fix image size in import prompt when image proportions are extreme (e.g. 3×1) - the image glitches out of the prompt container
 
 ---
 
@@ -37,10 +38,8 @@ Quick reference for what's done, what's next, and what's coming later.
 - [ ] **Canvas performance**
   - [ ] Use signals and `OnPush` change detection where possible (not on `MainLayout` — side column transitions prevent it)
   - [ ] Move image processing to Web Workers to unblock the UI thread
-- [ ] Add swipe gestures to open/close side panels on mobile
 - [ ] Improve styling system including Material component overrides
 - [ ] Enable selection of output image format (PNG / JPEG / WEBP)
-- [ ] Add visible image separation lines on grid tiles in the canvas view
 - [ ] Multi-item selection and batch download
 - [ ] Add Instagram account header mock (profile pic + username) for feed preview
 
@@ -50,8 +49,8 @@ Quick reference for what's done, what's next, and what's coming later.
 
 > Longer-term features. Scope not yet defined.
 
-- [ ] Drag and drop to reorder images directly on the grid
-- [ ] Drag and drop to import images (replace file picker)
+- [ ] ++Drag and drop to reorder images directly on the grid
+- [ ] ++Drag and drop to import images (replace file picker)
 - [ ] Direct Instagram upload (OAuth)
 - [ ] Cloud upload integrations: Google Drive, Dropbox, OneDrive, iCloud, Nextcloud
 - [ ] Multi-language support
@@ -107,3 +106,8 @@ Quick reference for what's done, what's next, and what's coming later.
 ## ❌ Discarded
 
 - ~~Add explanatory text in import prompts about preview quality~~ — removed; not needed with live preview
+- ~~Add visible image separation lines on grid tiles in the canvas view~~ — discarded for now; may revisit if users find it hard to position images without them, but the current design is cleaner and less distracting
+- ~~Add swipe gestures to open/close side panels on mobile~~ — removed, side panels are now full-height modals that open on button click, which is more intuitive and discoverable on mobile
+
+
+The image import on phone takes a long time and the screen is frozen while they are loading.

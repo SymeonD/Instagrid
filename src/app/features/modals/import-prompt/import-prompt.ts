@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatIcon } from '@angular/material/icon';
 import { AppControllerService } from '../../../core/services/app-controller.service';
 import { GridImg } from '../../../core/models/grid-img-class';
 import { GlobalImg } from '../../../core/models/global-img-class';
@@ -10,7 +9,7 @@ import { CropEditor, CropValues } from '../../../shared/components/crop-editor/c
 
 @Component({
   selector: 'import-prompt',
-  imports: [MatIcon, CommonModule, CropEditor],
+  imports: [CommonModule, CropEditor],
   templateUrl: './import-prompt.html',
   styleUrl: './import-prompt.scss'
 })
@@ -31,7 +30,7 @@ export class ImportPrompt implements OnChanges {
     8: [0, 1, 3, 4, 6, 7],
     9: [0, 1, 2, 3, 4, 5, 6, 7, 8]
   };
-  // number: [rows, cols]
+  // [w, h] = [grid columns, grid rows]
   private gridImageSizes: { [key: number]: number[] } = {
     0: [],
     1: [1, 1],
@@ -48,6 +47,9 @@ export class ImportPrompt implements OnChanges {
   private hoveredSize = 0;
   private selectedSize = 1;
 
+  // Mobile step state
+  mobileStep: 1 | 2 = 1;
+
   // The live GridImg used by the crop editor and for export
   cropGridImg: GridImg | null = null;
 
@@ -59,8 +61,21 @@ export class ImportPrompt implements OnChanges {
 
   ngOnChanges(): void {
     if (this.image) {
+      this.mobileStep = 1;
       this.buildCropGridImg(this.selectedSize);
     }
+  }
+
+  isMobile(): boolean {
+    return window.innerWidth <= 768;
+  }
+
+  nextStep(): void {
+    this.mobileStep = 2;
+  }
+
+  prevStep(): void {
+    this.mobileStep = 1;
   }
 
   /** Build (or rebuild) cropGridImg for the given span, resetting crop to center */
@@ -68,7 +83,6 @@ export class ImportPrompt implements OnChanges {
     if (!this.image) return;
     const [w, h] = this.gridImageSizes[size];
     this.cropGridImg = new GridImg(this.image, -1, -1, w, h);
-    // cropX, cropY, cropZoom default to 0.5, 0.5, 1.0 from the constructor
   }
 
   protected async downloadImages(): Promise<void> {
@@ -99,10 +113,6 @@ export class ImportPrompt implements OnChanges {
     }
   }
 
-  closePrompt() {
-    this.close.emit();
-  }
-
   isDarkened(index: number): boolean {
     return this.gridSizes[this.hoveredSize].includes(index);
   }
@@ -117,7 +127,6 @@ export class ImportPrompt implements OnChanges {
 
   onPlaceholderClick(index: number): void {
     this.selectedSize = index + 1;
-    // Rebuild with new span — crop resets to center
     this.buildCropGridImg(this.selectedSize);
   }
 
@@ -133,7 +142,6 @@ export class ImportPrompt implements OnChanges {
   async sendImage(): Promise<void> {
     if (!this.image || !this.cropGridImg) return;
 
-    // Compute the low-res cropped preview for immediate grid display
     const croppedSrc = await this.imageProcessing.cropImage(this.cropGridImg, true);
 
     this.appControllerService.addGridImage(new GridImg(

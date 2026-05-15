@@ -1,12 +1,27 @@
 <div class="right-column">
-    <div class="image-library">
-        <div class="image-column" *ngFor="let column of columns">
-            <div class="image-item" *ngFor="let image of column">
-            <img (click)="openImportPrompt(image)" [src]="image.lowResSrc" [alt]="image.alt" style="max-width: 100%; max-height: 100%;" />
-            </div>
+  <div class="lib-header">
+    <span class="lib-title">Library</span>
+  </div>
+
+  <div class="lib-grid">
+    <!-- Add image placeholder — always first -->
+    <div class="lib-item lib-add" (click)="importImages()" title="Add image">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      <span class="lib-add-label">Add</span>
+    </div>
+
+    @for (image of images; track image.id) {
+      @if (image.lowResSrc) {
+        <div class="lib-item" (click)="openImportPrompt(image)">
+          <img [src]="image.lowResSrc" [alt]="image.alt" />
         </div>
-    </div>
-    <div class="image-picker">
-        <button aria-label="add-image-button" matButton="elevated" class="add-image-button" (click)="importImages()">Add image<mat-icon class="add-icon">add</mat-icon></button>
-    </div>
+      } @else {
+        <div class="lib-item lib-loading" title="{{ image.alt }}">
+          <div class="lib-loading-spinner"></div>
+        </div>
+      }
+    }
+  </div>
 </div>

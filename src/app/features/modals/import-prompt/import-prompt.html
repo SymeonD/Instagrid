@@ -1,44 +1,88 @@
 <div class="modal-backdrop" (click)="close.emit()"></div>
-<div class="modal-container">
-    <div>
-        <button aria-label="close-button" class="close-button" (click)="close.emit()">
-            <mat-icon>close</mat-icon>
-        </button>
+
+<div class="modal-box">
+  <div class="modal-topbar">
+    <span class="modal-title">Import Image</span>
+    <button class="modal-close-btn" (click)="close.emit()" aria-label="close">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <!-- ── Desktop: two-column layout ── -->
+  <div class="desktop-body">
+    <div class="modal-crop-side">
+      @if (cropGridImg) {
+        <crop-editor
+          [gridImg]="cropGridImg"
+          (cropChange)="onCropChange($event)"
+        ></crop-editor>
+      }
     </div>
 
-    <!-- Crop editor replaces the static preview -->
-    <div class="image-preview">
-        @if (cropGridImg) {
-            <crop-editor
-                [gridImg]="cropGridImg"
-                (cropChange)="onCropChange($event)"
-            ></crop-editor>
+    <div class="modal-controls-side">
+      <p class="controls-label">Cut</p>
+      <div class="cut-grid" (mouseleave)="onPlaceholderHover(-1)">
+        @for (size of [1,2,3,4,5,6,7,8,9]; track size; let i = $index) {
+          <div class="cut-cell"
+            [class.darkened]="isDarkened(i)"
+            [class.selected]="isSelected(i)"
+            (mouseenter)="onPlaceholderHover(i)"
+            (click)="onPlaceholderClick(i)">
+          </div>
         }
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-import" (click)="sendImage()">Import</button>
+        <button class="btn-icon-danger" (click)="deleteImage()" title="Delete">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Mobile: step-based layout ── -->
+  <div class="mobile-body">
+    <div class="step-indicator">
+      <div class="step-dot" [class.active]="mobileStep === 1"></div>
+      <div class="step-dot" [class.active]="mobileStep === 2"></div>
     </div>
 
-    <div class="image-editor">
-        <div class="grid-size-selector" (mouseleave)="onPlaceholderHover(-1)">
-            <div class="grid">
-                @for (size of [1,2,3,4,5,6,7,8,9]; track size; let i = $index) {
-                    <div class="grid-item"
-                        [class.darkened]="isDarkened(i)"
-                        [class.selected]="isSelected(i)"
-                        (mouseenter)="onPlaceholderHover(i)"
-                        (click)="onPlaceholderClick(i)">
-                    </div>
-                }
+    <!-- Step 1: Cut selector -->
+    @if (mobileStep === 1) {
+      <div class="mobile-step">
+        <p class="controls-label">Choose a cut</p>
+        <div class="cut-grid" (mouseleave)="onPlaceholderHover(-1)">
+          @for (size of [1,2,3,4,5,6,7,8,9]; track size; let i = $index) {
+            <div class="cut-cell"
+              [class.darkened]="isDarkened(i)"
+              [class.selected]="isSelected(i)"
+              (mouseenter)="onPlaceholderHover(i)"
+              (click)="onPlaceholderClick(i)">
             </div>
+          }
         </div>
-        <div class="image-controls">
-            <button aria-label="download-button" class="download-button" (click)="downloadImages()">
-                <mat-icon>download</mat-icon>
-            </button>
-            <button aria-label="check-button" class="check-button" (click)="sendImage()">
-                <mat-icon>check</mat-icon> Import
-            </button>
-            <button aria-label="delete-button" class="delete-button" (click)="deleteImage()">
-                <mat-icon>delete</mat-icon>
-            </button>
+        <button class="btn-next" (click)="nextStep()">Next →</button>
+      </div>
+    }
+
+    <!-- Step 2: Crop editor -->
+    @if (mobileStep === 2) {
+      <div class="mobile-step">
+        @if (cropGridImg) {
+          <crop-editor
+            [gridImg]="cropGridImg"
+            (cropChange)="onCropChange($event)"
+          ></crop-editor>
+        }
+        <div class="mobile-actions">
+          <button class="btn-back" (click)="prevStep()">← Back</button>
+          <button class="btn-import" (click)="sendImage()">Import</button>
+          <button class="btn-icon-danger" (click)="deleteImage()" title="Delete">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          </button>
         </div>
-    </div>
+      </div>
+    }
+  </div>
 </div>
