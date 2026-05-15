@@ -24,7 +24,13 @@ jobs:
         run: npm ci --legacy-peer-deps
 
       - name: Build
-        run: npm run build -- --base-href /Instagrid/ --output-path docs --configuration production
+        run: npm run build -- --base-href /Instagrid/ --configuration production
+
+      - name: Prepare docs folder
+        run: |
+          rm -rf docs
+          cp -r dist/Instagrid/browser docs
+          cp docs/index.html docs/404.html
 
       - name: Commit and push docs
         run: |
