@@ -265,6 +265,14 @@ private updateGridHeight(): void {
         }
         if (this.resizeState) return; // handled by document:pointerup
 
+        // Safety reset: long press fired but user released before ktd emitted dragEnded
+        if (this._isDraggingResizing && !this.resizeState) {
+            this._isDraggingResizing = false;
+            this.dragActiveItemId = null;
+            this.cancelTouchState();
+            return;
+        }
+
         const wasTap = this.touchState &&
             Math.abs(event.clientX - this.touchState.startX) < 8 &&
             Math.abs(event.clientY - this.touchState.startY) < 8 &&
