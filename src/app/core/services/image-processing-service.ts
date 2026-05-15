@@ -214,14 +214,14 @@ export class ImageProcessingService {
         // createObjectURL is synchronous and works on all mobile browsers.
         // FileReader.readAsDataURL can silently hang on Android with gallery content URIs.
         const blobUrl = URL.createObjectURL(file);
-        const globalImg = new GlobalImg(blobUrl, file.name, undefined, blobUrl);
+        const globalImg = new GlobalImg(blobUrl, file.name);
 
         this.appControllerService.addGlobalImage(globalImg);
         rightColumnService?.open();
 
         this.createLowResImage(blobUrl)
           .then(lowRes => { globalImg.lowResSrc = lowRes; })
-          .catch(() => { /* keep blobUrl as lowResSrc fallback */ })
+          .catch(() => { globalImg.lowResSrc = blobUrl; })
           .finally(() => this.appControllerService.refreshGlobalImages());
       });
     };

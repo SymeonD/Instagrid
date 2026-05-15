@@ -34,7 +34,12 @@ export class AppControllerService {
     }
 
     removeGlobalImage(imageId: string) {
-        this.globalImagesSubject.next(this.globalImagesSubject.value.filter(img => img.id !== imageId));}
+        const toRemove = this.globalImagesSubject.value.find(img => img.id === imageId);
+        if (toRemove?.highResSrc.startsWith('blob:')) {
+            URL.revokeObjectURL(toRemove.highResSrc);
+        }
+        this.globalImagesSubject.next(this.globalImagesSubject.value.filter(img => img.id !== imageId));
+    }
 
     // Grid Images
     getGridImages(): GridImg[] {
