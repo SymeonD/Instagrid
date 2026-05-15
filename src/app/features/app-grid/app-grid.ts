@@ -3,7 +3,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { KtdDragEnd, KtdDragStart, KtdGridBackgroundCfg, ktdGridCompact, KtdGridComponent, KtdGridItemComponent, KtdGridLayout, KtdGridLayoutItem, KtdGridModule, KtdResizeEnd, KtdResizeStart } from '@katoid/angular-grid-layout';
 import { ktdTrackById } from '@katoid/angular-grid-layout';
-import { MatSelectChange } from '@angular/material/select';
 import { AppControllerService } from '../../core/services/app-controller.service';
 import { GridImg } from '../../core/models/grid-img-class';
 import { ImageProcessingService } from '../../core/services/image-processing-service';
@@ -71,6 +70,7 @@ export class AppGrid implements OnDestroy {
     private scrollMode = false;
     private lastScrollY = 0;
     private readonly onGridTouchStart = (e: TouchEvent) => e.preventDefault();
+    scrollableParent: HTMLElement | null = null;
 
 private updateGridHeight(): void {
         this.height = Math.max(this.getGridHeight(), window.innerHeight);
@@ -95,6 +95,7 @@ private updateGridHeight(): void {
     ngAfterViewInit() {
         this.gridWidth = document.getElementById('image-grid-container')?.clientWidth || window.innerWidth*0.5;
         this.rowHeight = this.ASPECT_RATIO * (this.gridWidth / this.cols);
+        this.scrollableParent = document.querySelector('.center-column') as HTMLElement | null;
         this.updateGridHeight();
         this.cdr.detectChanges();
         // Non-passive touchstart prevents the Android OS long-press detection,
@@ -181,6 +182,23 @@ private updateGridHeight(): void {
 
     @HostListener('document:pointermove', ['$event'])
     onDocumentPointerMove(event: PointerEvent): void {
+        // Mobile drag edge-scroll: ktd's scrollableParent uses getBoundingClientRect which
+        // reports the full content height on mobile (not viewport height), so we handle it
+        // ourselves using viewport coordinates instead.
+        if (this._isDraggingResizing && this.isMobile()) {
+            const edgeZone = 80;
+            const vh = window.innerHeight;
+            let scrollDelta = 0;
+            if (event.clientY > vh - edgeZone) {
+                scrollDelta = Math.round(8 * ((event.clientY - (vh - edgeZone)) / edgeZone));
+            } else if (event.clientY < edgeZone) {
+                scrollDelta = Math.round(-8 * ((edgeZone - event.clientY) / edgeZone));
+            }
+            if (scrollDelta !== 0 && this.scrollableParent) {
+                this.scrollableParent.scrollTop += scrollDelta;
+            }
+        }
+
         if (!this.resizeState) return;
         const cellW = this.gridWidth / this.cols;
         const cellH = this.rowHeight;
@@ -302,16 +320,16 @@ private updateGridHeight(): void {
 
     // ─── ktd drag/resize callbacks ─────────────────────────────────────────────
 
-    onDragStarted(event: KtdDragStart) {
+    onDragStarted(_event: KtdDragStart) {
         this._isDraggingResizing = true;
     }
 
-    onDragEnded(event: KtdDragEnd) {
+    onDragEnded(_event: KtdDragEnd) {
         this._isDraggingResizing = false;
         this.dragActiveItemId = null;
     }
 
-    onResizeStarted(event: KtdResizeStart) {
+    onResizeStarted(_event: KtdResizeStart) {
         this._isDraggingResizing = true;
     }
 

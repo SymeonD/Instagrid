@@ -97,13 +97,26 @@ $dark-theme: mat.define-theme((
 @media screen and (max-width: 768px) {
   :root, :host, .light-theme, .dark-theme {
     --panel-mw: 100vw;
+    --topbar-h: 72px;
   }
+}
+
+// ── Center column scrollbar (global — Angular encapsulation breaks ::-webkit-scrollbar selectors)
+.center-column::-webkit-scrollbar-thumb {
+  background-color: var(--grid-cell-color);
+  border-radius: 999px;
+}
+
+.center-column::-webkit-scrollbar-track,
+.center-column::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 // Override ktd-grid drag placeholder colour
 .ktd-grid-item-placeholder-default {
-  background: var(--theme-accent) !important;
-  border: 2px dashed var(--theme-accent) !important;
+  background: var(--surface2) !important;
+  border: 2px dashed var(--text2) !important;
+  opacity: 0.9 !important;
 }
 
 body {

@@ -3,9 +3,11 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  scrollbar-width: thin;
   scrollbar-color: var(--border2) transparent;
+  background: var(--surface);
+  transition: background-color 0.3s ease;
 }
+
 
 .right-column {
   display: flex;
@@ -23,6 +25,7 @@
   top: 0;
   z-index: 1;
   background: var(--surface);
+  transition: background-color 0.3s ease;
 }
 
 .lib-title {
@@ -72,6 +75,7 @@
   align-items: center;
   justify-content: center;
   cursor: default;
+  transition: background-color 0.3s ease;
 }
 
 .lib-loading-spinner {
@@ -98,7 +102,7 @@
   justify-content: center;
   gap: 5px;
   color: var(--text3);
-  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  transition: border-color 0.15s, color 0.15s, background 0.15s, background-color 0.3s ease;
 
   svg {
     width: 18px;

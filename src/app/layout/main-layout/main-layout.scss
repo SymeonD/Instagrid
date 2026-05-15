@@ -39,30 +39,11 @@ app-header {
   background: var(--bg);
   padding: 28px 24px;
   transition: background-color 0.3s ease;
+  scrollbar-color: var(--border2) transparent;
   -webkit-overflow-scrolling: touch;
-  scrollbar-color: var(--grid-cell-color) transparent;
   scrollbar-gutter: stable both-edges;
 }
 
-.center-column::-webkit-scrollbar {
-  width: 8px;
-}
-
-.center-column::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.center-column::-webkit-scrollbar-thumb {
-  background-color: var(--grid-cell-color);
-  border-radius: 999px;
-  border: 2px solid transparent;
-  background-clip: content-box;
-  transition: background-color 0.3s ease;
-}
-
-.center-column::-webkit-scrollbar-corner {
-  background: transparent;
-}
 
 .right-column {
   width: var(--panel-w);
@@ -160,25 +141,28 @@ app-header {
     align-items: center;
     gap: 6px;
     position: fixed;
-    bottom: 16px;
+    bottom: 20px;
     right: 16px;
-    height: 44px;
-    padding: 0 16px;
+    height: 56px;
+    padding: 0 24px;
+    gap: 8px;
     background: var(--text);
     color: var(--accent-fg);
     border: none;
-    border-radius: 22px;
+    border-radius: var(--r-lg);
     font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 500;
     cursor: pointer;
     z-index: 14;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+    transition: background-color 0.3s ease, color 0.3s ease;
 
     mat-icon {
-      font-size: 20px;
-      width: 20px;
-      height: 20px;
+      font-size: 22px;
+      width: 22px;
+      height: 22px;
+      color: var(--accent-fg);
     }
 
     &.hidden {
