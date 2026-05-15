@@ -15,11 +15,12 @@
         @for (item of layout; track item.id) {
             <ktd-grid-item
                 [id]="item.id"
-                [dragStartThreshold]="isMobile() ? 15 : 0"
+                [draggable]="!isMobile()"
                 [resizable]="!isMobile()"
                 [ngClass]="{
                     'grid-item-content--selected': isItemSelected(item),
-                    'grid-item-resize-active': resizeActiveItemId === item.id
+                    'grid-item-resize-active': resizeActiveItemId === item.id,
+                    'grid-item-drag-active': dragActiveItemId === item.id
                 }"
                 (pointerdown)="onItemPointerDown($event, item)"
                 (pointermove)="onItemPointerMove($event)"

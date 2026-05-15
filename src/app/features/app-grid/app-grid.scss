@@ -22,6 +22,14 @@ ktd-grid-item {
   user-select: none;
 }
 
+@media screen and (max-width: 768px) {
+  ktd-grid-item {
+    // none from the very first touch — browser never decides to scroll on this element,
+    // so pointercancel never fires. Scroll is handled manually in app-grid.ts.
+    touch-action: none !important;
+  }
+}
+
 .grid-item-content--selected::after {
   content: '';
   position: absolute;
@@ -31,7 +39,14 @@ ktd-grid-item {
   border-radius: 1px;
 }
 
-// ─── Mobile resize mode ───────────────────────────────────────────────────────
+// ─── Mobile touch modes ───────────────────────────────────────────────────────
+// Override ktd's inline touch-action:auto (draggable=false) only when drag is
+// intentionally activated via long press, so the browser yields to ktd's drag engine.
+.grid-item-drag-active {
+  touch-action: none !important;
+}
+
+
 
 .grid-item-resize-active {
   transform: scale(1.04);

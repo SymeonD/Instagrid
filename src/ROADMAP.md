@@ -112,8 +112,11 @@ Quick reference for what's done, what's next, and what's coming later.
 
 On mobile I do not really like the library button to open it, would it be possible to make it a draggable bottom sheet ? Also it would allow the library to be vertical and not horizontal in a vertical container which is weird.
 
-On mobile too there is no way to open the edit panel, I think it was supposed to open when an image on the grid was clicked ? How does it work now or what do you think should be done ?
-
 Finally, we will check later but it looks like the light/dark mode is not working properly, not all elements on the page are changin colors at the same speed.
 
 Remove blue background from image drag in the grid.
+
+The edit panel opens but bugs when trying to open the same one twice in a row (maybe reset the selected image and grid selected image ?)
+The tap to scroll worked before but not anymore it just moves the images ?
+
+No scroll in the library on desktop ?
