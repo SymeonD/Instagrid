@@ -114,9 +114,9 @@ $dark-theme: mat.define-theme((
 
 // Override ktd-grid drag placeholder colour
 .ktd-grid-item-placeholder-default {
-  background: var(--surface2) !important;
-  border: 2px dashed var(--text2) !important;
-  opacity: 0.9 !important;
+  background-color: rgba(128, 128, 128, 0.25) !important;
+  border: 2px dashed rgba(128, 128, 128, 0.6) !important;
+  opacity: 1 !important;
 }
 
 body {
